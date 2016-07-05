@@ -2,6 +2,10 @@ package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 import java.util.List;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.utils.TextFileReader;
 
@@ -9,6 +13,8 @@ import com.mpii.saarland.germany.utils.TextFileReader;
  * This class is to handle rules mined from pattern: P(x, y) ^ T(y) ^ Q(x, z) ^ R(x).
  */
 public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
+
+	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetForm3Miner.class);
 
 	protected InstanceSetForm3Miner() {
 	}
@@ -28,8 +34,8 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 
 	@Override
 	public void findInstances() {
-		for (String ptrq : positiveRules) {
-			String[] parts = ptrq.split("\t");
+		for (String rule : positiveRules) {
+			String[] parts = rule.split("\t");
 			String p = parts[0];
 			String t = parts[1];
 			String r = parts[2];

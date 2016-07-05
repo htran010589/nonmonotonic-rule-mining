@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class InstanceSetMiner {
+
+	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetMiner.class);
 
 	protected Set<String> positiveRules;
 
@@ -27,13 +32,8 @@ public abstract class InstanceSetMiner {
 
 	public abstract void findInstances();
 
-	public void prepareForIlp() {
-		int cnt = 0;
+	public void findPositiveNegativeExamples() {
 		for (String rule : positiveRules) {
-			cnt++;
-			if (cnt % 10 == 0) {
-				System.out.println("Processed rules: " + cnt);
-			}
 			Set<String> normalSet = rule2NormalSet.get(rule);
 			Set<String> abnormalSet = rule2AbnormalSet.get(rule);
 			List<Set<String>> normalComponents = new ArrayList<Set<String>>();
@@ -88,10 +88,8 @@ public abstract class InstanceSetMiner {
 				}
 			}
 			// Done non-conflict & conflict cases
-			double rate1 = ePlusNonConflict.size() * 1.0 / (ePlusNonConflict.size() + ePlusConflict.size());
-			double rate2 = eMinusNonConflict.size() * 1.0 / (eMinusNonConflict.size() + eMinusConflict.size());
-			System.out.println(rule + "\t" + ePlusNonConflict.size() + "\t" + rate1 + "\t" + rate2);
 		}
+		LOG.info("Done with E+ and E-");
 	}
 
 	public Set<String> getPositiveRules() {

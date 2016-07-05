@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.utils.TextFileReader;
 import com.mpii.saarland.germany.utils.Utils;
@@ -13,6 +17,8 @@ import com.mpii.saarland.germany.utils.Utils;
  * This class is to handle rules mined from pattern: P(x, y) ^ Q(y, z) -> H(x, z).
  */
 public class InstanceSetForm2Miner extends InstanceSetMiner {
+
+	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetForm2Miner.class);
 
 	protected Set<String> pqPatterns;
 
@@ -40,12 +46,7 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 	@Override
 	public void findInstances() {
 		Map<String, Set<String>> pattern2Instance = new HashMap<>();
-		int cnt = 0;
 		for (String fact : FactIndexer.getInstace().getXpySet()) {
-			cnt++;
-			if (cnt % 100000 == 0) {
-				System.out.println("Processed lines: " + cnt);
-			}
 			String[] parts = fact.split("\t");
 			String y = parts[0];
 			String q = parts[1];
@@ -94,6 +95,7 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 			rule2NormalSet.put(pattern, normalInstance);
 			rule2AbnormalSet.put(pattern, abnormalInstance);
 		}
+		LOG.info("Done with normal and abnormal sets");
 	}
 
 }
