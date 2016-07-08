@@ -1,5 +1,10 @@
 package com.mpii.saarland.germany.utils;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ *
+ */
 public final class Settings {
 
 	public static final String IMDB_FACT_FILE_NAME = "data/imdb.facts.tsv";

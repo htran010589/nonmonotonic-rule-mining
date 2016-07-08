@@ -12,8 +12,11 @@ import org.slf4j.Logger;
 import com.mpii.saarland.germany.utils.Settings;
 import com.mpii.saarland.germany.utils.Utils;
 
-/*
- * This class is to index facts with the form: <x> <p> <y>
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ * This class is to index facts with the form: <x> <p> <y>.
  */
 public class FactIndexer {
 
@@ -37,6 +40,10 @@ public class FactIndexer {
 
 	private Set<String> xpySet;
 
+	private Map<String, Integer> t2Id;
+
+	private Map<Integer, String> id2T;
+
 	public static FactIndexer getInstace() {
 		if (INSTANCE == null) {
 			INSTANCE = new FactIndexer();
@@ -53,6 +60,8 @@ public class FactIndexer {
 		p2XySet = new HashMap<String, Set<String>>();
 		xy2PSet = new HashMap<String, Set<String>>();
 		xpySet = new HashSet<String>();
+		t2Id = new HashMap<String, Integer>();
+		id2T = new HashMap<Integer, String>();
 		index(Settings.USING_YAGO_DATA);
 	}
 
@@ -139,6 +148,13 @@ public class FactIndexer {
 			}
 		}
 		LOG.info("Done with loading patterns pt2X");
+		int id = 0;
+		for (String t : getTSet()) {
+			id++;
+			t2Id.put(t, id);
+			id2T.put(id, t);
+		}
+		LOG.info("Done with converting types to id");
 	}
 
 	private void index(boolean usingYagoData) {
