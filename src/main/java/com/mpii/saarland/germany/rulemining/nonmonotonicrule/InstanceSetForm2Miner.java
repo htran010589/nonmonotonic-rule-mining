@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.utils.TextFileReader;
 import com.mpii.saarland.germany.utils.Utils;
+
 /**
  * 
  * @author Hai Dang Tran

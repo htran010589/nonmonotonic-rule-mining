@@ -8,10 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.utils.TextFileReader;
+
 /**
  * 
  * @author Hai Dang Tran
- *
+ * 
  * This class is to handle rules mined from pattern: P(x, y) ^ T(y) ^ Q(x, z) ^ R(x).
  */
 public abstract class InstanceSetForm3Miner extends InstanceSetMiner {

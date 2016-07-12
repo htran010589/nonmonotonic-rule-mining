@@ -96,7 +96,7 @@ public abstract class InstanceSetMiner {
 
 			System.out.println(rule);
 			for (int i = 0; i < 2; ++i) {
-				ExceptionCandidateMiner.findCandidates(ePlusNonConflict, eMinusNonConflict, i);
+				ExceptionCandidateMiner.findCandidates(rule, ePlusNonConflict, eMinusNonConflict, i);
 				System.out.println("-----");
 			}
 			System.out.println("\n");

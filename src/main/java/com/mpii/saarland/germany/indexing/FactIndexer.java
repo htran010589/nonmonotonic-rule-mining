@@ -36,13 +36,13 @@ public class FactIndexer {
 
 	private Map<String, Set<String>> p2XySet;
 
+	private Map<String, Set<String>> p2XSet;
+
+	private Map<String, Set<String>> p2YSet;
+
 	private Map<String, Set<String>> xy2PSet;
 
 	private Set<String> xpySet;
-
-	private Map<String, Integer> t2Id;
-
-	private Map<Integer, String> id2T;
 
 	public static FactIndexer getInstace() {
 		if (INSTANCE == null) {
@@ -58,14 +58,14 @@ public class FactIndexer {
 		t2XSet = new HashMap<String, Set<String>>();
 		pt2XSet = new HashMap<String, Set<String>>();
 		p2XySet = new HashMap<String, Set<String>>();
+		p2XSet = new HashMap<String, Set<String>>();
+		p2YSet = new HashMap<String, Set<String>>();
 		xy2PSet = new HashMap<String, Set<String>>();
 		xpySet = new HashSet<String>();
-		t2Id = new HashMap<String, Integer>();
-		id2T = new HashMap<Integer, String>();
 		index(Settings.USING_YAGO_DATA);
 	}
 
-	private void indexTypes(String fileName) {
+	public void indexTypes(String fileName) {
 		LOG.info("Start loading types");
 		BufferedReader typeReader = null;
 		try {
@@ -93,7 +93,22 @@ public class FactIndexer {
 		LOG.info("Done with loading types");
 	}
 
-	private void indexFacts(String fileName) {
+	public void indexFact(String[] parts) {
+		if (!parts[1].equals("type")) {
+			Utils.addKeyString(x2PySet, parts[0], parts[1] + "\t" + parts[2]);
+			Utils.addKeyString(y2PxSet, parts[2], parts[1] + "\t" + parts[0]);
+			Utils.addKeyString(p2XySet, parts[1], parts[0] + "\t" + parts[2]);
+			Utils.addKeyString(p2XSet, parts[1], parts[0]);
+			Utils.addKeyString(p2YSet, parts[1], parts[2]);
+			Utils.addKeyString(xy2PSet, parts[0] + "\t" + parts[2], parts[1]);
+			xpySet.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
+		} else {
+			Utils.addKeyString(x2TSet, parts[0], parts[2]);
+			Utils.addKeyString(t2XSet, parts[2], parts[0]);
+		}
+	}
+
+	public void indexFacts(String fileName) {
 		LOG.info("Start loading facts");
 		BufferedReader factReader = null;
 		try {
@@ -113,16 +128,7 @@ public class FactIndexer {
 				if (parts.length < 3) {
 					continue;
 				}
-				if (!parts[1].equals("type")) {
-					Utils.addKeyString(x2PySet, parts[0], parts[1] + "\t" + parts[2]);
-					Utils.addKeyString(y2PxSet, parts[2], parts[1] + "\t" + parts[0]);
-					Utils.addKeyString(p2XySet, parts[1], parts[0] + "\t" + parts[2]);
-					Utils.addKeyString(xy2PSet, parts[0] + "\t" + parts[2], parts[1]);
-					xpySet.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
-				} else {
-					Utils.addKeyString(x2TSet, parts[0], parts[2]);
-					Utils.addKeyString(t2XSet, parts[2], parts[0]);
-				}
+				indexFact(parts);
 			}
 		} catch (IOException ex) {
 			LOG.error(ex.getMessage());
@@ -136,28 +142,25 @@ public class FactIndexer {
 		LOG.info("Done with loading facts");
 	}
 
-	private void indexPatterns() {
-		for (String fact : xpySet) {
-			String[] parts = fact.split("\t");
-			Set<String> tSet = x2TSet.get(parts[2]);
-			if (tSet == null) {
-				continue;
-			}
-			for (String t : tSet) {
-				Utils.addKeyString(pt2XSet, parts[1] + "\t" + t, parts[0]);
-			}
+	public void indexPattern(String[] parts) {
+		Set<String> tSet = x2TSet.get(parts[2]);
+		if (tSet == null) {
+			return;
 		}
-		LOG.info("Done with loading patterns pt2X");
-		int id = 0;
-		for (String t : getTSet()) {
-			id++;
-			t2Id.put(t, id);
-			id2T.put(id, t);
-		}
-		LOG.info("Done with converting types to id");
+		for (String t : tSet) {
+			Utils.addKeyString(pt2XSet, parts[1] + "\t" + t, parts[0]);
+		}		
 	}
 
-	private void index(boolean usingYagoData) {
+	public void indexPatterns() {
+		for (String fact : xpySet) {
+			String[] parts = fact.split("\t");
+			indexPattern(parts);
+		}
+		LOG.info("Done with loading patterns pt2X");
+	}
+
+	public void index(boolean usingYagoData) {
 		if (usingYagoData) {
 			LOG.info("Index YAGO data");
 			indexTypes(Settings.YAGO_TYPE_FILE_NAME);
@@ -199,6 +202,14 @@ public class FactIndexer {
 
 	public Set<String> getXySetFromP(String p) {
 		return p2XySet.get(p);
+	}
+
+	public Set<String> getXSetFromP(String p) {
+		return p2XSet.get(p);
+	}
+
+	public Set<String> getYSetFromP(String p) {
+		return p2YSet.get(p);
 	}
 
 	public Set<String> getPSetFromXy(String xy) {

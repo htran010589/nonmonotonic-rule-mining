@@ -16,7 +16,10 @@ import com.mpii.saarland.germany.utils.Utils;
  */
 public class ExceptionCandidateMiner {
 
-	public static void findCandidates(Set<String> positivePairs, Set<String> negativePairs, int idx) {
+	private static Map<String, Set<String>> rule2ExceptionCandidateSet;
+
+	public static void findCandidates(String rule, Set<String> positivePairs, Set<String> negativePairs, int idx) {
+		rule2ExceptionCandidateSet = new HashMap<String, Set<String>>();
 		Map<String, Long> t2Support = new HashMap<String, Long>();
 		Set<String> xSet = new HashSet<>();
 		for (String pair : positivePairs) {
@@ -37,10 +40,15 @@ public class ExceptionCandidateMiner {
 				t2Support.remove(t);
 			}
 		}
-		List<String> topCandidates = Utils.getTopK(t2Support, 10);
-		for (String candidate : topCandidates) {
-			System.out.println(candidate);
-		}
+		rule2ExceptionCandidateSet.put(rule, t2Support.keySet());
+//		List<String> topCandidates = Utils.getTopK(t2Support, 10);
+//		for (String candidate : topCandidates) {
+//			System.out.println(candidate);
+//		}
+	}
+
+	public static Set<String> getExceptionCandidateSet(String rule) {
+		return rule2ExceptionCandidateSet.get(rule);
 	}
 
 }
