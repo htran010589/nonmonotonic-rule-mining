@@ -42,6 +42,8 @@ public class FactIndexer {
 
 	private Map<String, Set<String>> xy2PSet;
 
+	private Map<String, Set<String>> py2XSet;
+
 	private Set<String> xpySet;
 
 	public static FactIndexer getInstace() {
@@ -62,6 +64,7 @@ public class FactIndexer {
 		p2YSet = new HashMap<String, Set<String>>();
 		xy2PSet = new HashMap<String, Set<String>>();
 		xpySet = new HashSet<String>();
+		py2XSet = new HashMap<String, Set<String>>();
 		index(Settings.USING_YAGO_DATA);
 	}
 
@@ -101,6 +104,7 @@ public class FactIndexer {
 			Utils.addKeyString(p2XSet, parts[1], parts[0]);
 			Utils.addKeyString(p2YSet, parts[1], parts[2]);
 			Utils.addKeyString(xy2PSet, parts[0] + "\t" + parts[2], parts[1]);
+			Utils.addKeyString(py2XSet, parts[1] + "\t" + parts[2], parts[0]);
 			xpySet.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
 		} else {
 			Utils.addKeyString(x2TSet, parts[0], parts[2]);
@@ -216,8 +220,19 @@ public class FactIndexer {
 		return xy2PSet.get(xy);
 	}
 
+	public Set<String> getXSetFromPy(String py) {
+		return py2XSet.get(py);
+	}
+
 	public Set<String> getPSet() {
 		return p2XySet.keySet();
+	}
+
+	public boolean checkXpy(String xpy) {
+		if (xpySet.contains(xpy)) {
+			return true;
+		}
+		return false;
 	}
 
 }

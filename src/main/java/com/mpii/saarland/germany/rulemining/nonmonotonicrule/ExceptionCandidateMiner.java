@@ -18,8 +18,11 @@ public class ExceptionCandidateMiner {
 
 	private static Map<String, Set<String>> rule2ExceptionCandidateSet;
 
-	public static void findCandidates(String rule, Set<String> positivePairs, Set<String> negativePairs, int idx) {
+	static {
 		rule2ExceptionCandidateSet = new HashMap<String, Set<String>>();
+	}
+
+	public static void findCandidates(String rule, Set<String> positivePairs, Set<String> negativePairs, int idx) {
 		Map<String, Long> t2Support = new HashMap<String, Long>();
 		Set<String> xSet = new HashSet<>();
 		for (String pair : positivePairs) {
@@ -29,6 +32,9 @@ public class ExceptionCandidateMiner {
 			}
 			xSet.add(parts[idx]);
 			Set<String> tSet = FactIndexer.getInstace().getTSetFromX(parts[idx]);
+			if (tSet == null) {
+				continue;
+			}
 			for (String t : tSet) {
 				Utils.addKeyLong(t2Support, t, 1);
 			}
@@ -36,11 +42,19 @@ public class ExceptionCandidateMiner {
 		for (String pair : negativePairs) {
 			String[] parts = pair.split("\t");
 			Set<String> tSet = FactIndexer.getInstace().getTSetFromX(parts[idx]);
+			if (tSet == null) {
+				continue;
+			}
 			for (String t : tSet) {
 				t2Support.remove(t);
 			}
 		}
 		rule2ExceptionCandidateSet.put(rule, t2Support.keySet());
+		System.out.println("rule = " + rule);
+		for (String str : t2Support.keySet()) {
+			System.out.println(str);
+		}
+		System.out.println("+++++");
 //		List<String> topCandidates = Utils.getTopK(t2Support, 10);
 //		for (String candidate : topCandidates) {
 //			System.out.println(candidate);
@@ -48,6 +62,7 @@ public class ExceptionCandidateMiner {
 	}
 
 	public static Set<String> getExceptionCandidateSet(String rule) {
+//		System.out.println("rule lan nay la: " + rule);
 		return rule2ExceptionCandidateSet.get(rule);
 	}
 

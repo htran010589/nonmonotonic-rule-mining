@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * @author Hai Dang Tran
- *
+ * 
  */
 public abstract class InstanceSetMiner {
 
@@ -94,12 +94,12 @@ public abstract class InstanceSetMiner {
 			}
 			// Done non-conflict & conflict cases
 
-			System.out.println(rule);
-			for (int i = 0; i < 2; ++i) {
-				ExceptionCandidateMiner.findCandidates(rule, ePlusNonConflict, eMinusNonConflict, i);
-				System.out.println("-----");
-			}
-			System.out.println("\n");
+//			System.out.println(rule);
+//			for (int i = 0; i < 2; ++i) {
+				ExceptionCandidateMiner.findCandidates(rule, ePlusNonConflict, eMinusNonConflict, 0);
+//				System.out.println("-----");
+//			}
+//			System.out.println("\n");
 		}
 		LOG.info("Done with E+ and E-");
 	}

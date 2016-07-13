@@ -33,24 +33,29 @@ public class Utils {
 		key2Total.put(key, total);
 	}
 
-	public static List<String> getTopK(Map<String, Long> key2Total, int k) {
-		Map<String, Long> key2SortedTotal = new TreeMap<String, Long>(new Comparator<String>() {
+	public static <K extends Comparable<? super K>, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> key2Value) {
+		Map<K, V> key2SortedValue = new TreeMap<K, V>(new Comparator<K>() {
 
 			@Override
-			public int compare(String key1, String key2) {
-				long total1 = key2Total.get(key1);
-				long total2 = key2Total.get(key2);
-				if (total1 > total2) {
+			public int compare(K key1, K key2) {
+				V value1 = key2Value.get(key1);
+				V value2 = key2Value.get(key2);
+				if (value1.compareTo(value2) > 0) {
 					return -1;
 				}
-				if (total1 < total2) {
+				if (value1.compareTo(value2) < 0) {
 					return 1;
 				}
 				return key1.compareTo(key2);
 			}
 
 		});
-		key2SortedTotal.putAll(key2Total);
+		key2SortedValue.putAll(key2Value);
+		return key2SortedValue;
+	}
+
+	public static List<String> getTopK(Map<String, Long> key2Total, int k) {
+		Map<String, Long> key2SortedTotal = sortByValue(key2Total);
 		List<String> topResult = new ArrayList<>();
 		int count = 0;
 		for (String key : key2SortedTotal.keySet()) {
