@@ -30,7 +30,7 @@ public abstract class InstanceSetMiner {
 		rule2NormalSet = new HashMap<String, Set<String>>();
 		rule2AbnormalSet = new HashMap<String, Set<String>>();
 	}
-		
+
 	public abstract void loadPositiveRules(String fileName);
 
 	public abstract void createPatterns();
@@ -59,7 +59,8 @@ public abstract class InstanceSetMiner {
 					abnormalComponents.get(i).add(parts[i]);
 				}
 			}
-			// This is for non-conflict & conflict cases
+			// This is for non-conflict & conflict cases, but not a concern anymore
+			/*
 			Set<String> ePlusNonConflict = new HashSet<>();
 			Set<String> ePlusConflict = new HashSet<>();
 			for (String instance : abnormalSet) {
@@ -91,15 +92,10 @@ public abstract class InstanceSetMiner {
 				} else {
 					eMinusConflict.add(instance);
 				}
-			}
+			}*/
 			// Done non-conflict & conflict cases
 
-//			System.out.println(rule);
-//			for (int i = 0; i < 2; ++i) {
-				ExceptionCandidateMiner.findCandidates(rule, ePlusNonConflict, eMinusNonConflict, 0);
-//				System.out.println("-----");
-//			}
-//			System.out.println("\n");
+			ExceptionCandidateMiner.findCandidates(rule, abnormalSet, normalSet);
 		}
 		LOG.info("Done with E+ and E-");
 	}
