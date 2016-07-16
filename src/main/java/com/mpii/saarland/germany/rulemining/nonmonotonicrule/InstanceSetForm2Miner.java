@@ -74,6 +74,11 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 					if (!positiveRules.contains(p + "\t" + q + "\t" + h)) {
 						continue;
 					}
+					
+					if (p.equals("hasChild") && q.equals("hasChild") && h.equals("hasChild")) {
+						System.out.println("bug day ne fix fix fix: " + x + " " + y + " " + z);
+					}
+					
 					Utils.addKeyString(pattern2Instance, p + "\t" + q + "\t" + h, x + "\t" + z);
 				}
 			}
