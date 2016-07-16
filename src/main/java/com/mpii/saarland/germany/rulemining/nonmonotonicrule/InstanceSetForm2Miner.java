@@ -75,6 +75,7 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 						continue;
 					}
 					
+					// bravo ho ho
 					if (p.equals("hasChild") && q.equals("hasChild") && h.equals("hasChild")) {
 						System.out.println("bug day ne fix fix fix: " + x + " " + y + " " + z);
 					}
