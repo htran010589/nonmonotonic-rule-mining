@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
+import com.mpii.saarland.germany.indexing.FactIndexerFactory;
 import com.mpii.saarland.germany.utils.Settings;
 import com.mpii.saarland.germany.utils.Utils;
 
@@ -20,17 +20,13 @@ public class ExceptionRanker {
 
 	private Map<String, Double> rule2Conviction;
 
-	private Map<String, Set<String>> rule2OriginalNegativeInstances;
-
 	public ExceptionRanker() {
 		form2Instances = new InstanceSetForm2Miner();
-		form2Instances.loadPositiveRules(Settings.YAGO_FORM2_POSITIVE_RULE_FILE_NAME);
+		form2Instances.loadPositiveRules(Settings.IMDB_FORM2_PATTERN_FILE_NAME);
 		form2Instances.createPatterns();
 		form2Instances.findInstances();
 		form2Instances.findPositiveNegativeExamples();
 		rule2Conviction = new HashMap<String, Double>();
-		rule2OriginalNegativeInstances = new HashMap<String, Set<String>>();
-		rule2OriginalNegativeInstances.putAll(form2Instances.rule2AbnormalSet);
 	}
 
 	/**
@@ -39,7 +35,7 @@ public class ExceptionRanker {
 	 */
 	public void predict(String rule) {
 		String h = rule.split("\t")[2];
-		Set<String> abnormalSet = rule2OriginalNegativeInstances.get(rule);
+		Set<String> abnormalSet = form2Instances.rule2AbnormalSet.get(rule);
 		for (String negativeExample : abnormalSet) {
 			String[] parts = negativeExample.split("\t");
 			String x = parts[0];
@@ -49,9 +45,9 @@ public class ExceptionRanker {
 				Set<String> exceptionCandidateSet = ExceptionCandidateMiner.getExceptionCandidateSet(rule + "\t" + i);
 				Set<String> tOrPSet = null;
 				if (i < 2) {
-					tOrPSet = FactIndexer.getInstace().getTSetFromX(parts[i]);
+					tOrPSet = FactIndexerFactory.originalFacts.getTSetFromX(parts[i]);
 				} else {
-					tOrPSet = FactIndexer.getInstace().getPSetFromXy(negativeExample);
+					tOrPSet = FactIndexerFactory.originalFacts.getPSetFromXy(negativeExample);
 				}
 				if (tOrPSet != null) {
 					for (String tOrP : tOrPSet) {
@@ -70,8 +66,8 @@ public class ExceptionRanker {
 			}
 //			System.out.println("Add predicted fact: " + x + " " + h + " " + z);
 			parts = new String[] { x, h, z };
-			FactIndexer.getInstace().indexFact(parts);
-			FactIndexer.getInstace().indexPattern(parts);
+			FactIndexerFactory.predictedFacts.indexFact(parts);
+			FactIndexerFactory.predictedFacts.indexPattern(parts);
 		}
 	}
 
@@ -82,9 +78,9 @@ public class ExceptionRanker {
 	}
 
 	public double getRelativeSupport(String head) {
-		double support = FactIndexer.getInstace().getXySetFromP(head).size();
-		double xSupport = FactIndexer.getInstace().getXSetFromP(head).size();
-		double ySupport = FactIndexer.getInstace().getYSetFromP(head).size();
+		double support = FactIndexerFactory.originalFacts.getXySetFromP(head).size();
+		double xSupport = FactIndexerFactory.originalFacts.getXSetFromP(head).size();
+		double ySupport = FactIndexerFactory.originalFacts.getYSetFromP(head).size();
 		return support / (xSupport * ySupport);
 	}
 
@@ -104,16 +100,16 @@ public class ExceptionRanker {
 		String h = parts[2];
 		Set<String> bodyExamples = new HashSet<>();
 		Set<String> ruleExamples = new HashSet<>();
-		for (String yz : FactIndexer.getInstace().getXySetFromP(q)) {
+		for (String yz : FactIndexerFactory.predictedFacts.getXySetFromP(q)) {
 			String y = yz.split("\t")[0];
 			String z = yz.split("\t")[1];
-			Set<String> xSet = FactIndexer.getInstace().getXSetFromPy(p + "\t" + y);
+			Set<String> xSet = FactIndexerFactory.predictedFacts.getXSetFromPy(p + "\t" + y);
 			if (xSet == null) {
 				continue;
 			}
 			for (String x : xSet) {
 				bodyExamples.add(x + "\t" + z);
-				if (FactIndexer.getInstace().checkXpy(x + "\t" + h + "\t" + z)) {
+				if (FactIndexerFactory.predictedFacts.checkXpy(x + "\t" + h + "\t" + z)) {
 					ruleExamples.add(x + "\t" + z);
 				}
 			}
@@ -138,9 +134,9 @@ public class ExceptionRanker {
 			for (int i = 0; i < 3; ++i) {
 				Set<String> tOrPSet = null;
 				if (i < 2) {
-					tOrPSet = FactIndexer.getInstace().getTSetFromX(parts[i]);
+					tOrPSet = FactIndexerFactory.predictedFacts.getTSetFromX(parts[i]);
 				} else {
-					tOrPSet = FactIndexer.getInstace().getPSetFromXy(xz);
+					tOrPSet = FactIndexerFactory.predictedFacts.getPSetFromXy(xz);
 				}
 				if (tOrPSet == null) {
 					continue;
@@ -178,21 +174,40 @@ public class ExceptionRanker {
 		}
 //		Utils.sortByValue(nonmonotonicRule2Conviction);
 //		int topCount = 0;
+		int[] types = new int[3];
+		for (int i = 0; i < 3; ++i) {
+			types[i] = i;
+		}
+		for (int i = 0; i < 3; ++i) {
+			for (int j = i + 1; j < 3; j++) {
+				if (maxConviction[i] < maxConviction[j]) {
+					double tempConv = maxConviction[i];
+					maxConviction[i] = maxConviction[j];
+					maxConviction[j] = tempConv;
+					int tempType = types[i];
+					types[i] = types[j];
+					types[j] = tempType;
+					String tempException = maxException[i];
+					maxException[i] = maxException[j];
+					maxException[j] = tempException;
+				}
+			}
+		}
 		System.out.println("Exceptions:");
 		for (int i = 0; i < 3; ++i) {
 //		for (String exception : nonmonotonicRule2Conviction.keySet()) {
 			if (maxException[i] == null) {
 				continue;
 			}
-			String exception = maxException[i] + "\t" + i;
+			String exception = maxException[i] + "\t" + types[i];
 //			System.out.println(exception);
 			double nonmonotonicConfidence = (double) nonmonotonicRuleCount.get(exception)
 					/ (double) nonmonotonicBodyCount.get(exception);
 			double nonmonotonicConviction = (1 - headSupport) / (1 - nonmonotonicConfidence);
 			System.out.print("not " + maxException[i]);
-			if (i == 0) {
+			if (types[i] == 0) {
 				System.out.print("(x)\t");
-			} else if (i == 1) {
+			} else if (types[i] == 1) {
 				System.out.print("(z)\t");
 			} else {
 				System.out.print("(x, z)\t");

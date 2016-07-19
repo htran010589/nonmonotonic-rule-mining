@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import com.mpii.saarland.germany.indexing.FactIndexer;
+import com.mpii.saarland.germany.indexing.FactIndexerFactory;
 
 /**
  * 
@@ -31,9 +32,9 @@ public class ExceptionCandidateMiner {
 				String[] parts = pair.split("\t");
 				Set<String> posExceptionSet = null;
 				if (i < 2) {
-					posExceptionSet = FactIndexer.getInstace().getTSetFromX(parts[i]);
+					posExceptionSet = FactIndexerFactory.originalFacts.getTSetFromX(parts[i]);
 				} else {
-					posExceptionSet = FactIndexer.getInstace().getPSetFromXy(pair);
+					posExceptionSet = FactIndexerFactory.originalFacts.getPSetFromXy(pair);
 				}
 				if (posExceptionSet == null) {
 					continue;
@@ -44,9 +45,9 @@ public class ExceptionCandidateMiner {
 				String[] parts = pair.split("\t");
 				Set<String> negExceptionSet = null;
 				if (i < 2) {
-					negExceptionSet = FactIndexer.getInstace().getTSetFromX(parts[i]);
+					negExceptionSet = FactIndexerFactory.originalFacts.getTSetFromX(parts[i]);
 				} else {
-					negExceptionSet = FactIndexer.getInstace().getPSetFromXy(pair);
+					negExceptionSet = FactIndexerFactory.originalFacts.getPSetFromXy(pair);
 				}
 				if (negExceptionSet == null) {
 					continue;

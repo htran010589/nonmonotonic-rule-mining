@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
+import com.mpii.saarland.germany.indexing.FactIndexerFactory;
 import com.mpii.saarland.germany.utils.TextFileReader;
 
 /**
@@ -43,11 +44,11 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 			String t = parts[1];
 			String r = parts[2];
 			String q = parts[3];
-			Set<String> xSet = FactIndexer.getInstace().getXSetFromPt(p + "\t" + t);
+			Set<String> xSet = FactIndexerFactory.originalFacts.getXSetFromPt(p + "\t" + t);
 			if (xSet == null) {
 				continue;
 			}
-			Set<String> zSet = FactIndexer.getInstace().getXSetFromT(r);
+			Set<String> zSet = FactIndexerFactory.originalFacts.getXSetFromT(r);
 			if (zSet == null) {
 				continue;
 			}

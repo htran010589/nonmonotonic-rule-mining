@@ -41,24 +41,24 @@ public abstract class InstanceSetMiner {
 		for (String rule : positiveRules) {
 			Set<String> normalSet = rule2NormalSet.get(rule);
 			Set<String> abnormalSet = rule2AbnormalSet.get(rule);
-			List<Set<String>> normalComponents = new ArrayList<Set<String>>();
-			List<Set<String>> abnormalComponents = new ArrayList<Set<String>>();
-			for (int i = 0; i < 2; ++i) {
-				normalComponents.add(new HashSet<String>());
-				abnormalComponents.add(new HashSet<String>());
-			}
-			for (String normalPair : normalSet) {
-				String[] parts = normalPair.split("\t");
-				for (int i = 0; i < 2; ++i) {
-					normalComponents.get(i).add(parts[i]);
-				}
-			}
-			for (String abnormalPair : abnormalSet) {
-				String[] parts = abnormalPair.split("\t");
-				for (int i = 0; i < 2; ++i) {
-					abnormalComponents.get(i).add(parts[i]);
-				}
-			}
+//			List<Set<String>> normalComponents = new ArrayList<Set<String>>();
+//			List<Set<String>> abnormalComponents = new ArrayList<Set<String>>();
+//			for (int i = 0; i < 2; ++i) {
+//				normalComponents.add(new HashSet<String>());
+//				abnormalComponents.add(new HashSet<String>());
+//			}
+//			for (String normalPair : normalSet) {
+//				String[] parts = normalPair.split("\t");
+//				for (int i = 0; i < 2; ++i) {
+//					normalComponents.get(i).add(parts[i]);
+//				}
+//			}
+//			for (String abnormalPair : abnormalSet) {
+//				String[] parts = abnormalPair.split("\t");
+//				for (int i = 0; i < 2; ++i) {
+//					abnormalComponents.get(i).add(parts[i]);
+//				}
+//			}
 			// This is for non-conflict & conflict cases, but not a concern anymore
 			/*
 			Set<String> ePlusNonConflict = new HashSet<>();

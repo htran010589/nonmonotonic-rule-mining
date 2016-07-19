@@ -2,6 +2,7 @@ package com.mpii.saarland.germany.utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,5 +65,16 @@ public class Utils {
 			topResult.add(key + "\t" + key2Total.get(key));
 		}
 		return topResult;
+	}
+
+	public static Map<String, Set<String>> cloneMap(Map<String, Set<String>> key2Values) {
+		Map<String, Set<String>> result = new HashMap<String, Set<String>>();
+		for (String key : key2Values.keySet()) {
+			Set<String> values = key2Values.get(key);
+			for (String value : values) {
+				addKeyString(result, key, value);
+			}
+		}
+		return result;
 	}
 }

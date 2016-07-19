@@ -22,8 +22,6 @@ public class FactIndexer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactIndexer.class);
 
-	public static FactIndexer INSTANCE;
-
 	private Map<String, Set<String>> x2PySet;
 
 	private Map<String, Set<String>> y2PxSet;
@@ -46,14 +44,7 @@ public class FactIndexer {
 
 	private Set<String> xpySet;
 
-	public static FactIndexer getInstace() {
-		if (INSTANCE == null) {
-			INSTANCE = new FactIndexer();
-		}
-		return INSTANCE;
-	}
-
-	private FactIndexer() {
+	public FactIndexer(boolean usingYagoData) {
 		x2PySet = new HashMap<String, Set<String>>();
 		y2PxSet = new HashMap<String, Set<String>>();
 		x2TSet = new HashMap<String, Set<String>>();
@@ -63,9 +54,31 @@ public class FactIndexer {
 		p2XSet = new HashMap<String, Set<String>>();
 		p2YSet = new HashMap<String, Set<String>>();
 		xy2PSet = new HashMap<String, Set<String>>();
-		xpySet = new HashSet<String>();
 		py2XSet = new HashMap<String, Set<String>>();
-		index(Settings.USING_YAGO_DATA);
+		xpySet = new HashSet<String>();
+		index(usingYagoData);
+		LOG.info("Done with creating a new FactIndexer instance");
+	}
+
+	/**
+	 * This constructor is to deeply copy another instance
+	 * 
+	 * @param facts
+	 */
+	public FactIndexer(FactIndexer facts) {
+		x2PySet = Utils.cloneMap(facts.x2PySet);
+		y2PxSet = Utils.cloneMap(facts.y2PxSet);
+		x2TSet = Utils.cloneMap(facts.x2TSet);
+		t2XSet = Utils.cloneMap(facts.t2XSet);
+		pt2XSet = Utils.cloneMap(facts.pt2XSet);
+		p2XySet = Utils.cloneMap(facts.p2XySet);
+		p2XSet = Utils.cloneMap(facts.p2XSet);
+		p2YSet = Utils.cloneMap(facts.p2YSet);
+		xy2PSet = Utils.cloneMap(facts.xy2PSet);
+		py2XSet = Utils.cloneMap(facts.py2XSet);
+		xpySet = new HashSet<String>();
+		xpySet.addAll(facts.xpySet);
+		LOG.info("Done with cloning instance");
 	}
 
 	public void indexTypes(String fileName) {
