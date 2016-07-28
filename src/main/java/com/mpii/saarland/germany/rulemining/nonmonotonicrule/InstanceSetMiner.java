@@ -1,14 +1,16 @@
 package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.mpii.saarland.germany.experiment.Experiment;
+import com.mpii.saarland.germany.indexing.FactIndexer;
 
 /**
  * 
@@ -19,13 +21,16 @@ public abstract class InstanceSetMiner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetMiner.class);
 
+	protected FactIndexer facts;
+
 	protected Set<String> positiveRules;
 
 	protected Map<String, Set<String>> rule2NormalSet;
 
 	protected Map<String, Set<String>> rule2AbnormalSet;
 
-	protected InstanceSetMiner() {
+	protected InstanceSetMiner(FactIndexer facts) {
+		this.facts = facts;
 		positiveRules = new HashSet<String>();
 		rule2NormalSet = new HashMap<String, Set<String>>();
 		rule2AbnormalSet = new HashMap<String, Set<String>>();
@@ -95,9 +100,11 @@ public abstract class InstanceSetMiner {
 			}*/
 			// Done non-conflict & conflict cases
 
-			ExceptionCandidateMiner.findCandidates(rule, abnormalSet, normalSet);
+			ExceptionCandidateMiner.findCandidates(rule, abnormalSet, normalSet, facts);
 		}
-		LOG.info("Done with E+ and E-");
+		Experiment.date2 = new Date();
+//		LOG.info("Done with E+ and E-");
+		System.out.println("Time to find EWS (seconds): " + ((Experiment.date2.getTime() - Experiment.date1.getTime()) / 1000.0));
 	}
 
 	public Set<String> getPositiveRules() {

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.indexing.FactIndexerFactory;
 import com.mpii.saarland.germany.utils.TextFileReader;
 import com.mpii.saarland.germany.utils.Utils;
 
@@ -26,7 +25,8 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 
 	protected Set<String> pqPatterns;
 
-	public InstanceSetForm2Miner() {
+	public InstanceSetForm2Miner(FactIndexer facts) {
+		super(facts);
 	}
 
 	@Override
@@ -50,12 +50,12 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 	@Override
 	public void findInstances() {
 		Map<String, Set<String>> pattern2Instance = new HashMap<>();
-		for (String fact : FactIndexerFactory.originalFacts.getXpySet()) {
+		for (String fact : facts.getXpySet()) {
 			String[] parts = fact.split("\t");
 			String y = parts[0];
 			String q = parts[1];
 			String z = parts[2];
-			Set<String> pxSet = FactIndexerFactory.originalFacts.getPxSetFromY(y);
+			Set<String> pxSet = facts.getPxSetFromY(y);
 			if (pxSet == null) {
 				continue;
 			}
@@ -67,7 +67,7 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 				}
 
 				Utils.addKeyString(pattern2Instance, p + "\t" + q, x + "\t" + z);
-				Set<String> hSet = FactIndexerFactory.originalFacts.getPSetFromXy(x + "\t" + z);
+				Set<String> hSet = facts.getPSetFromXy(x + "\t" + z);
 				if (hSet == null) {
 					continue;
 				}
@@ -75,12 +75,7 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 					if (!positiveRules.contains(p + "\t" + q + "\t" + h)) {
 						continue;
 					}
-					
-//					// bravo ho ho
-//					if (p.equals("hasChild") && q.equals("hasChild") && h.equals("hasChild")) {
-//						System.out.println("bug day ne fix fix fix: " + x + " " + y + " " + z);
-//					}
-					
+
 					Utils.addKeyString(pattern2Instance, p + "\t" + q + "\t" + h, x + "\t" + z);
 				}
 			}

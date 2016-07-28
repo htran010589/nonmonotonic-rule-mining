@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.indexing.FactIndexerFactory;
 import com.mpii.saarland.germany.utils.TextFileReader;
 
 /**
@@ -20,7 +19,8 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetForm3Miner.class);
 
-	protected InstanceSetForm3Miner() {
+	protected InstanceSetForm3Miner(FactIndexer facts) {
+		super(facts);
 	}
 
 	@Override
@@ -44,11 +44,11 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 			String t = parts[1];
 			String r = parts[2];
 			String q = parts[3];
-			Set<String> xSet = FactIndexerFactory.originalFacts.getXSetFromPt(p + "\t" + t);
+			Set<String> xSet = facts.getXSetFromPt(p + "\t" + t);
 			if (xSet == null) {
 				continue;
 			}
-			Set<String> zSet = FactIndexerFactory.originalFacts.getXSetFromT(r);
+			Set<String> zSet = facts.getXSetFromT(r);
 			if (zSet == null) {
 				continue;
 			}
