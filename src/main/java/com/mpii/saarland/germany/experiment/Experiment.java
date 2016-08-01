@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mpii.saarland.germany.indexing.FactDataType;
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker;
 import com.mpii.saarland.germany.utils.Settings;
@@ -139,9 +138,9 @@ public class Experiment {
 
 	public void evaluate() {
 		if (MOD.equals("IMDB")) {
-			facts = new FactIndexer(FactDataType.IMDB);
+			facts = new FactIndexer(IDEAL_DATA);
 		} else {
-			facts = new FactIndexer(FactDataType.YAGO2S);
+			facts = new FactIndexer(IDEAL_DATA);
 		}
 		for (String str : facts.getPSet()) {
 			System.out.println(str);
@@ -208,37 +207,52 @@ public class Experiment {
 		}
 	}
 
+	public int numEntity, numType;
+
+	public void encode(String x, boolean isEntity) {
+		if (toID.containsKey(x)) return;
+		if (isEntity) {
+			numEntity++;
+			toID.put(x, "e" + numEntity);
+		} else {
+			numType++;
+			toID.put(x, "t" + numType);
+		}
+	}
+
 	// Cai nay xong roi, it goi thoi
 	public void encode() {
-		facts = new FactIndexer(FactDataType.IMDB);
+		toID = new HashMap<String, String>();
+		numEntity = numType = 0;
+		facts = new FactIndexer(IDEAL_DATA);
 		// sample2();
 		for (String xpy : facts.getXpySet()) {
 			String[] parts = xpy.split("\t");
 			if (parts[1].equals("subClassOf")) {
-				facts.encode(parts[0], false);
-				facts.encode(parts[2], false);
+				encode(parts[0], false);
+				encode(parts[2], false);
 			}
 		}
 		for (String x : facts.getXSet()) {
 			Set<String> tSet = facts.getTSetFromX(x);
-			facts.encode(x, true);
+			encode(x, true);
 			if (tSet == null)
 				continue;
 			for (String t : tSet) {
 				// System.out.println(x + "\t" + t);
-				facts.encode(t, false);
+				encode(t, false);
 			}
 		}
 		for (String xpy : facts.getXpySet()) {
 			String[] parts = xpy.split("\t");
-			facts.encode(parts[0], true);
-			facts.encode(parts[2], true);
+			encode(parts[0], true);
+			encode(parts[2], true);
 		}
-		// Map<String>
+
 		try {
 			Writer wr = new PrintWriter(new File("data/experiment/IMDB/imdb.mapping.data.txt"));
-			for (String e : facts.getEntities()) {
-				String id = facts.getId(e);
+			for (String e : toID.keySet()) {
+				String id = toID.get(e);
 				wr.write(e + "\t" + id + "\n");
 			}
 			wr.close();
@@ -254,12 +268,57 @@ public class Experiment {
 			readSample2();
 			patternFile = Settings.IMDB_FORM2_PATTERN_FILE_NAME;
 		} else {
-			learningFacts = new FactIndexer(FactDataType.YAGO2);
+			learningFacts = new FactIndexer(TRAIN_DATA);
 			patternFile = Settings.AMIE_YAGO_FORM2_PATTERN_FILE_NAME;
 		}
 		date1 = new Date();
 		ExceptionRanker er = new ExceptionRanker(learningFacts, patternFile);
 		er.rankRulesWithExceptions();
+
+		try {
+			for (String type : Experiment.types) {
+				for (int maxCnt : Experiment.maxCnts) {
+					int cnt = 0;
+					Writer wr = new PrintWriter(new File(Experiment.RULE_FILE + type + maxCnt));
+					double convSum = 0;
+					for (String negRule : er.getNegativeRules()) {
+						cnt++;
+						if (cnt > maxCnt) {
+							break;
+						}
+						String[] parts = negRule.split("\t");
+						String posRule = parts[2] + "(X, Z) :- " + parts[0] + "(X, Y), " + parts[1] + "(Y, Z)";
+						String negation = "";
+						if (parts[4].equals("0")) {
+							negation = Experiment.toID.get(parts[3]) + "(X).";
+						} else if (parts[4].equals("1")) {
+							negation = Experiment.toID.get(parts[3]) + "(Z).";
+						} else {
+							negation = parts[3] + "(X, Z).";
+						}
+						if (type.equals(".neg.")) {
+							wr.write(posRule + ", not " + negation + "\n");
+							double conviction = er.getNegativeRuleConviction(negRule);
+							convSum += conviction;
+						} else if (type.equals(".pos.")) {
+							wr.write(posRule + ".\n");
+							double conviction = er.getPositiveRuleConviction(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
+							convSum += conviction;
+						} else {
+							wr.write(posRule + ", not " + negation + "\n");
+							wr.write("not_" + posRule + ", " + negation + "\n");
+						}
+					}
+					wr.close();
+					System.out.println("Done with " + Experiment.RULE_FILE + type + maxCnt + " file");
+					System.out.println("avg conv = " + (convSum / maxCnt));
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		Experiment.date3 = new Date();
+		System.out.println(date3.getTime());
 	}
 
 	public void loadEncode() throws Exception {
@@ -502,16 +561,16 @@ public class Experiment {
 
 	public void conduct() {
 		try {
-//			loadEncode();
-//			genExceptions();
-//			runDlv();
-//			evaluate();
-//			calConflict();
-//			findDiff();
+			loadEncode();
+			genExceptions();
+			runDlv();
+			evaluate();
+			calConflict();
+			findDiff();
 //			compareWithEvals();
 
 			
-			checkSubsetDLV();
+//			checkSubsetDLV();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

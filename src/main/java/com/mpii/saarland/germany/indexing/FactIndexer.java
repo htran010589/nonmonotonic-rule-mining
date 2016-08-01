@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import com.mpii.saarland.germany.utils.Settings;
 import com.mpii.saarland.germany.utils.Utils;
 
 /**
@@ -22,7 +21,7 @@ public class FactIndexer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactIndexer.class);
 
-	private FactDataType type;
+	private String sourceFile;
 
 	private Map<String, Set<String>> x2PySet;
 
@@ -44,13 +43,7 @@ public class FactIndexer {
 
 	private Map<String, Set<String>> py2XSet;
 
-	private Map<String, String> entity2Id;
-
-	private Map<String, String> id2Entity;
-
 	private Set<String> xpySet;
-
-	private int entityCount, typeCount;
 
 	private void allocate() {
 		x2PySet = new HashMap<String, Set<String>>();
@@ -63,28 +56,23 @@ public class FactIndexer {
 		p2YSet = new HashMap<String, Set<String>>();
 		xy2PSet = new HashMap<String, Set<String>>();
 		py2XSet = new HashMap<String, Set<String>>();
-		entity2Id = new HashMap<String, String>();
-		id2Entity = new HashMap<String, String>();
 		xpySet = new HashSet<String>();
-		entityCount = 0;
-		typeCount = 0;
 	}
 
 	public FactIndexer() {
 		allocate();
 	}
 
-	public FactIndexer(FactDataType type) {
-		this.type = type;
+	public FactIndexer(String sourceFile) {
+		this.sourceFile = sourceFile;
 		allocate();
 		index();
 		LOG.info("Done with creating a new FactIndexer instance");
 	}
 
 	/**
-	 * This constructor is to deeply copy another instance
+	 * This constructor is to clone an instance.
 	 * 
-	 * @param facts
 	 */
 	public FactIndexer cloneFact() {
 		FactIndexer newFacts = new FactIndexer();
@@ -98,56 +86,10 @@ public class FactIndexer {
 		newFacts.p2YSet = Utils.cloneMap(p2YSet);
 		newFacts.xy2PSet = Utils.cloneMap(xy2PSet);
 		newFacts.py2XSet = Utils.cloneMap(py2XSet);
-		newFacts.entity2Id = new HashMap<>();
-		newFacts.entity2Id.putAll(entity2Id);
 		newFacts.xpySet = new HashSet<String>();
 		newFacts.xpySet.addAll(xpySet);
 		LOG.info("Done with cloning instance");
 		return newFacts;
-	}
-
-	public void indexTypes(String fileName) {
-		LOG.info("Start loading types");
-		BufferedReader typeReader = null;
-		try {
-			typeReader = new BufferedReader(new FileReader(fileName));
-			typeReader.readLine();
-			String line;
-			while ((line = typeReader.readLine()) != null) {
-				if (type == FactDataType.YAGO3) {
-					line = line.replace("rdf:type", "<type>");
-					line = line.substring(line.indexOf("\t"));
-				}
-				line = line.trim();
-				line = line.substring(1, line.length() - 1);
-				String[] parts = line.split(">\t<");
-
-				Utils.addKeyString(x2TSet, parts[0], parts[2]);
-				Utils.addKeyString(t2XSet, parts[2], parts[0]);
-			}
-		} catch (IOException ex) {
-			LOG.error(ex.getMessage());
-		} finally {
-			try {
-				typeReader.close();
-			} catch (IOException ex) {
-				LOG.error(ex.getMessage());
-			}
-		}
-		LOG.info("Done with loading types");
-	}
-
-	public void encode(String e, boolean isEntity) {
-		if (entity2Id.containsKey(e)) return;
-		if (isEntity) {
-			entityCount++;
-			entity2Id.put(e, "e" + entityCount);
-			id2Entity.put("e" + entityCount, e);
-		} else {
-			typeCount++;
-			entity2Id.put(e, "t" + typeCount);
-			id2Entity.put("t" + typeCount, e);
-		}
 	}
 
 	public void indexFact(String[] parts) {
@@ -172,19 +114,9 @@ public class FactIndexer {
 		try {
 			factReader = new BufferedReader(new FileReader(fileName));
 			String line;
-			if (type == FactDataType.YAGO3) {
-				factReader.readLine();
-			}
 			while ((line = factReader.readLine()) != null) {
-				if (type == FactDataType.YAGO3) {
-					line = line.substring(line.indexOf("\t"));
-				}
-				line = line.trim();
 				line = line.substring(1, line.length() - 1);
 				String[] parts = line.split(">\t<");
-				if (parts.length < 3) {
-					continue;
-				}
 				indexFact(parts);
 			}
 		} catch (IOException ex) {
@@ -218,22 +150,7 @@ public class FactIndexer {
 	}
 
 	public void index() {
-		if (type == FactDataType.YAGO3) {
-			LOG.info("Index YAGO3 data");
-			indexTypes(Settings.YAGO3_TYPE_FILE_NAME);
-			indexFacts(Settings.YAGO3_FACT_FILE_NAME);
-		} else if (type == FactDataType.YAGO2S) {
-			LOG.info("Index YAGO2S data");
-			indexTypes(Settings.YAGO2_TYPE_FILE_NAME);
-			indexFacts(Settings.YAGO2S_IDEAL_FILE_NAME);
-		} else if (type == FactDataType.YAGO2) {
-			LOG.info("Index YAGO2 data");
-			indexTypes(Settings.YAGO2_TYPE_FILE_NAME);
-			indexFacts(Settings.YAGO2_TRAINING_FILE_NAME);
-		} else if (type == FactDataType.IMDB) {
-			LOG.info("Index IMDB data");
-			indexFacts(Settings.IMDB_FACT_FILE_NAME);
-		}
+		indexFacts(sourceFile);
 		indexPatterns();
 	}
 
@@ -302,18 +219,6 @@ public class FactIndexer {
 			return true;
 		}
 		return false;
-	}
-
-	public String getId(String e) {
-		return entity2Id.get(e);
-	}
-
-	public String getEntity(String id) {
-		return id2Entity.get(id);
-	}
-
-	public Set<String> getEntities() {
-		return entity2Id.keySet();
 	}
 
 }

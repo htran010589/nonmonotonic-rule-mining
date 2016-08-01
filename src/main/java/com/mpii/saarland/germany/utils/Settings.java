@@ -1,7 +1,5 @@
 package com.mpii.saarland.germany.utils;
 
-import com.mpii.saarland.germany.indexing.FactDataType;
-
 /**
  * 
  * @author Hai Dang Tran
