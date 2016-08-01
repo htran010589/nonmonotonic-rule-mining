@@ -484,18 +484,38 @@ public class Experiment {
 		}
 	}
 
+	void checkSubsetDLV() throws Exception {
+		for (int maxCnt : maxCnts) {
+			String file1 = EXT_FILE + ".neg." + maxCnt + ".needcheck";
+			String file2 = EXT_FILE + ".pos." + maxCnt + ".needcheck";
+			List<String> lx = TextFileReader.readLines(file1);
+			List<String> ly = TextFileReader.readLines(file2);
+			Set<String> sy = new HashSet<String>(ly);
+			for (String x : lx) {
+				if (sy.contains(x))
+					continue;
+				System.out.println("sai roi");
+				break;
+			}
+		}		
+	}
+
 	public void conduct() {
 		try {
-			loadEncode();
-			genExceptions();
-			runDlv();
+//			loadEncode();
+//			genExceptions();
+//			runDlv();
 //			evaluate();
 //			calConflict();
 //			findDiff();
 //			compareWithEvals();
+
+			
+			checkSubsetDLV();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
 }
+

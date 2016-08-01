@@ -3,9 +3,12 @@ package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +32,8 @@ public class ExceptionRanker {
 	public Map<String, Double> negRule2Conviction;
 
 	public static Map<String, String> toID;
+
+	private static List<Integer> numExCandidates = new ArrayList<Integer>();
 
 	public ExceptionRanker(FactIndexer facts, String patternFileName) {
 		this.facts = facts;
@@ -152,15 +157,17 @@ public class ExceptionRanker {
 		double confidence = (double) posHeadRuleExamples.size() / (double) bodyExamples.size();
 		double headSupport = getRelativeSupport(h);
 		double conviction = (1 - headSupport) / (1 - confidence);
-//		System.out.println(h + "(x, z) <- " + p + "(x, y) ^ " + q + "(y, z)" + "\t" + conviction + "\t" + confidence
-//				+ "\t" + posHeadRuleExamples.size() + "\t" + bodyExamples.size());
+		System.out.println(h + "(x, z) <- " + p + "(x, y) ^ " + q + "(y, z)" + "\t" + conviction + "\t" + confidence
+				+ "\t" + posHeadRuleExamples.size() + "\t" + bodyExamples.size());
 
 		Map<String, Long> negExBodyCount = new HashMap<String, Long>();
 		Map<String, Long> negExPosHeadRuleCount = new HashMap<String, Long>();
 		Map<String, Long> posExBodyCount = new HashMap<String, Long>();
 		Map<String, Long> posExNegHeadRuleCount = new HashMap<String, Long>();
+		int totalCands = 0;
 		for (int i = 0; i < 3; ++i) {
 			Set<String> exceptionCandidateSet = ExceptionCandidateMiner.getExceptionCandidateSet(rule + "\t" + i);
+			totalCands += exceptionCandidateSet.size();
 			for (String exception : exceptionCandidateSet) {
 				negExBodyCount.put(exception + "\t" + i, (long) bodyExamples.size());
 				negExPosHeadRuleCount.put(exception + "\t" + i, (long) posHeadRuleExamples.size());
@@ -168,6 +175,7 @@ public class ExceptionRanker {
 				posExNegHeadRuleCount.put(exception + "\t" + i, 0L);
 			}
 		}
+		numExCandidates.add(totalCands);
 		for (String xz : bodyExamples) {
 			parts = xz.split("\t");
 			for (int i = 0; i < 3; ++i) {
@@ -251,7 +259,7 @@ public class ExceptionRanker {
 				}
 			}
 		}
-//		System.out.println("Exceptions:");
+		System.out.println("Exceptions:");
 		double maxConv = -1;
 		for (int i = 0; i < 3; ++i) {
 			// for (String exception : nonmonotonicRule2Conviction.keySet()) {
@@ -267,23 +275,23 @@ public class ExceptionRanker {
 			double stdConviction = (1 - headSupport) / (1 - negExPosHeadConfidence);
 			double auxConviction = headSupport / (1 - posExNegHeadConfidence);
 			double posNegConviction = (stdConviction + auxConviction) / 2;
-//			System.out.print("not " + maxException[i]);
-//			if (types[i] == 0) {
-//				System.out.print("(x)\t");
-//			} else if (types[i] == 1) {
-//				System.out.print("(z)\t");
-//			} else {
-//				System.out.print("(x, z)\t");
-//			}
+			System.out.print("not " + maxException[i]);
+			if (types[i] == 0) {
+				System.out.print("(x)\t");
+			} else if (types[i] == 1) {
+				System.out.print("(z)\t");
+			} else {
+				System.out.print("(x, z)\t");
+			}
 			if (i == 0) {
 				maxConv = stdConviction;
 			}
-//			System.out.println(posNegConviction + "\t" + stdConviction + "\t" + auxConviction + "\t"
-//					+ negExPosHeadConfidence + "\t" + posExNegHeadConfidence + "\t"
-//					+ negExPosHeadRuleCount.get(exception) + "\t" + negExBodyCount.get(exception) + "\t"
-//					+ posExNegHeadRuleCount.get(exception) + "\t" + posExBodyCount.get(exception));
+			System.out.println(posNegConviction + "\t" + stdConviction + "\t" + auxConviction + "\t"
+					+ negExPosHeadConfidence + "\t" + posExNegHeadConfidence + "\t"
+					+ negExPosHeadRuleCount.get(exception) + "\t" + negExBodyCount.get(exception) + "\t"
+					+ posExNegHeadRuleCount.get(exception) + "\t" + posExBodyCount.get(exception));
 		}
-//		System.out.println();
+		System.out.println();
 
 		String bestRule = rule;
 		bestRule = bestRule + "\t" + maxException[0] + "\t" + types[0];
@@ -303,6 +311,10 @@ public class ExceptionRanker {
 			predict(rule);
 		}
 		negRule2Conviction = Utils.sortByValue(negRule2Conviction);
+
+		System.out.println("Number of processed rules: " + negRule2Conviction.size());
+		Collections.sort(numExCandidates);
+		System.out.println("Median number of exception cadidates for all rules are: " + numExCandidates.get(numExCandidates.size() / 2));
 
 		try {
 			for (String type : Experiment.types) {
