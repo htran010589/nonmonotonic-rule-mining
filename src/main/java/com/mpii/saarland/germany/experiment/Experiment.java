@@ -48,23 +48,23 @@ public class Experiment {
 
 	static {
 		if (MOD.equals("IMDB")) {
-			IDEAL_DATA = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/imdb.facts.tsv";
+			IDEAL_DATA = "data/imdb.facts.tsv";
 			TYPE_DATA = null;
-			ENCODE_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/imdb.mapping.data.txt";
-			TRAIN_DATA = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/imdb.learning.data.txt";
-			TRAIN_DATA_DLV = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/DLV/imdb.train.kg";
-			RULE_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/DLV/imdb.rule";
-			DLV_BIN_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/DLV/dlv.bin";
-			EXT_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/DLV/imdb.ext.kg";
+			ENCODE_FILE = "data/experiment/IMDB/imdb.mapping.data.txt";
+			TRAIN_DATA = "data/experiment/IMDB/imdb.learning.data.txt";
+			TRAIN_DATA_DLV = "data/experiment/IMDB/DLV/imdb.train.kg";
+			RULE_FILE = "data/experiment/IMDB/DLV/imdb.rule";
+			DLV_BIN_FILE = "data/experiment/IMDB/DLV/dlv.bin";
+			EXT_FILE = "data/experiment/IMDB/DLV/imdb.ext.kg";
 		} else {
-			IDEAL_DATA = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/yago2s.ideal.data.txt";
-			TYPE_DATA = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/yago2.type.txt";
-			ENCODE_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/yago2s.mapping.data.txt";
-			TRAIN_DATA = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/yago2.training.data.txt";
-			TRAIN_DATA_DLV = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/yago2.training.kg";
-			RULE_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/yago.rule";
-			DLV_BIN_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/dlv.bin";
-			EXT_FILE = "/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/yago.ext.kg";
+			IDEAL_DATA = "data/experiment/YAGO/yago2s.ideal.data.txt";
+			TYPE_DATA = "data/experiment/YAGO/yago2.type.txt";
+			ENCODE_FILE = "data/experiment/YAGO/DLV/yago2s.mapping.data.txt";
+			TRAIN_DATA = "data/experiment/YAGO/yago2.training.data.txt";
+			TRAIN_DATA_DLV = "data/experiment/YAGO/DLV/yago2.training.kg";
+			RULE_FILE = "data/experiment/YAGO/DLV/yago.rule";
+			DLV_BIN_FILE = "data/experiment/YAGO/DLV/dlv.bin";
+			EXT_FILE = "data/experiment/YAGO/DLV/yago.ext.kg";
 		}
 	}
 
@@ -272,7 +272,7 @@ public class Experiment {
 			patternFile = Settings.AMIE_YAGO_FORM2_PATTERN_FILE_NAME;
 		}
 		date1 = new Date();
-		ExceptionRanker er = new ExceptionRanker(learningFacts, patternFile);
+		ExceptionRanker er = new ExceptionRanker(patternFile, learningFacts);
 		er.rankRulesWithExceptions();
 
 		try {

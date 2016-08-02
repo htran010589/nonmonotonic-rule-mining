@@ -19,8 +19,7 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetForm3Miner.class);
 
-	protected InstanceSetForm3Miner(FactIndexer facts) {
-		super(facts);
+	protected InstanceSetForm3Miner() {
 	}
 
 	@Override
@@ -32,30 +31,26 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 		}
 	}
 
+	//  To be finished...
 	@Override
-	public void createPatterns() {
-	}
-
-	@Override
-	public void findInstances() {
-		for (String rule : positiveRules) {
-			String[] parts = rule.split("\t");
-			String p = parts[0];
-			String t = parts[1];
-			String r = parts[2];
-			String q = parts[3];
-			Set<String> xSet = facts.getXSetFromPt(p + "\t" + t);
-			if (xSet == null) {
-				continue;
-			}
-			Set<String> zSet = facts.getXSetFromT(r);
-			if (zSet == null) {
-				continue;
-			}
-			/*
-			 * Do something
-			 */
+	public List<Set<String>> findInstances(String positiveRule, FactIndexer facts) {
+		String[] parts = positiveRule.split("\t");
+		String p = parts[0];
+		String t = parts[1];
+		String r = parts[2];
+		String q = parts[3];
+		Set<String> xSet = facts.getXSetFromPt(p + "\t" + t);
+		if (xSet == null) {
+			return null;
 		}
+		Set<String> zSet = facts.getXSetFromT(r);
+		if (zSet == null) {
+			return null;
+		}
+		/*
+		 * Do something
+		 */
+		return null;
 	}
 
 }

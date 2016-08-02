@@ -1,9 +1,8 @@
 package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.utils.TextFileReader;
-import com.mpii.saarland.germany.utils.Utils;
 
 /**
  * 
@@ -23,10 +21,7 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetForm2Miner.class);
 
-	protected Set<String> pqPatterns;
-
-	public InstanceSetForm2Miner(FactIndexer facts) {
-		super(facts);
+	public InstanceSetForm2Miner() {
 	}
 
 	@Override
@@ -35,72 +30,36 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 		for (String positiveRule : lines) {
 			String[] parts = positiveRule.split("\t");
 			positiveRules.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
-		}		
-	}
-
-	@Override
-	public void createPatterns() {
-		pqPatterns = new HashSet<String>();
-		for (String positiveRule : positiveRules) {
-			String[] parts = positiveRule.split("\t");
-			pqPatterns.add(parts[0] + "\t" + parts[1]);
 		}
 	}
 
 	@Override
-	public void findInstances() {
-		Map<String, Set<String>> pattern2Instance = new HashMap<>();
-		for (String fact : facts.getXpySet()) {
-			String[] parts = fact.split("\t");
-			String y = parts[0];
-			String q = parts[1];
-			String z = parts[2];
-			Set<String> pxSet = facts.getPxSetFromY(y);
-			if (pxSet == null) {
+	public List<Set<String>> findInstances(String positiveRule, FactIndexer facts) {
+		String[] parts = positiveRule.split("\t");
+		String p = parts[0];
+		String q = parts[1];
+		String h = parts[2];
+		Set<String> normalExamples = new HashSet<>();
+		Set<String> abnormalExamples = new HashSet<>();
+		for (String yz : facts.getXySetFromP(q)) {
+			String y = yz.split("\t")[0];
+			String z = yz.split("\t")[1];
+			Set<String> xSet = facts.getXSetFromPy(p + "\t" + y);
+			if (xSet == null) {
 				continue;
 			}
-			for (String px : pxSet) {
-				String p = px.split("\t")[0];
-				String x = px.split("\t")[1];
-				if (!pqPatterns.contains(p + "\t" + q)) {
-					continue;
-				}
-
-				Utils.addKeyString(pattern2Instance, p + "\t" + q, x + "\t" + z);
-				Set<String> hSet = facts.getPSetFromXy(x + "\t" + z);
-				if (hSet == null) {
-					continue;
-				}
-				for (String h : hSet) {
-					if (!positiveRules.contains(p + "\t" + q + "\t" + h)) {
-						continue;
-					}
-
-					Utils.addKeyString(pattern2Instance, p + "\t" + q + "\t" + h, x + "\t" + z);
+			for (String x : xSet) {
+				if (facts.checkXpy(x + "\t" + h + "\t" + z)) {
+					normalExamples.add(x + "\t" + z);
+				} else {
+					abnormalExamples.add(x + "\t" + z);
 				}
 			}
 		}
-		for (String pattern : positiveRules) {
-			String[] parts = pattern.split("\t");
-			Set<String> bodyInstance = pattern2Instance.get(parts[0] + "\t" + parts[1]);
-			if (bodyInstance == null) {
-				continue;
-			}
-			Set<String> normalInstance = pattern2Instance.get(parts[0] + "\t" + parts[1] + "\t" + parts[2]); 
-			if (normalInstance == null) {
-				continue;
-			}
-			Set<String> abnormalInstance = new HashSet<>();
-			for (String instance : bodyInstance) {
-				if (normalInstance.contains(instance)) {
-					continue;
-				}
-				abnormalInstance.add(instance);
-			}
-			rule2NormalSet.put(pattern, normalInstance);
-			rule2AbnormalSet.put(pattern, abnormalInstance);
-		}
-		LOG.info("Done with normal and abnormal sets");
+		List<Set<String>> result = new ArrayList<Set<String>>();
+		result.add(normalExamples);
+		result.add(abnormalExamples);
+		return result;
 	}
 
 }

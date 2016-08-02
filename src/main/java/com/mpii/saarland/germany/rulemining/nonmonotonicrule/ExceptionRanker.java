@@ -28,14 +28,13 @@ public class ExceptionRanker {
 
 	private List<Integer> numberOfExceptions = new ArrayList<Integer>();
 
-	public ExceptionRanker(FactIndexer facts, String patternFileName) {
+	public ExceptionRanker(String patternFileName, FactIndexer facts) {
 		this.facts = facts;
 		newFacts = facts.cloneFact();
-		form2Instances = new InstanceSetForm2Miner(facts);
+		form2Instances = new InstanceSetForm2Miner();
 		form2Instances.loadPositiveRules(patternFileName);
-		form2Instances.createPatterns();
-		form2Instances.findInstances();
-		form2Instances.findPositiveNegativeExamples();
+		form2Instances.findInstances(facts);
+		form2Instances.findPositiveNegativeExamples(facts);
 		positiveRule2Conviction = new HashMap<String, Double>();
 		negativeRule2Conviction = new HashMap<String, Double>();
 	}
@@ -46,7 +45,7 @@ public class ExceptionRanker {
 	 */
 	public void predict(String rule) {
 		String h = rule.split("\t")[2];
-		Set<String> abnormalSet = form2Instances.rule2AbnormalSet.get(rule);
+		Set<String> abnormalSet = form2Instances.positiveRule2AbnormalSet.get(rule);
 		if (abnormalSet == null) {
 			return;
 		}
@@ -126,25 +125,13 @@ public class ExceptionRanker {
 		String p = parts[0];
 		String q = parts[1];
 		String h = parts[2];
-		Set<String> bodyExamples = new HashSet<>();
-		Set<String> posHeadRuleExamples = new HashSet<>();
-		Set<String> negHeadRuleExamples = new HashSet<>();
-		for (String yz : newFacts.getXySetFromP(q)) {
-			String y = yz.split("\t")[0];
-			String z = yz.split("\t")[1];
-			Set<String> xSet = newFacts.getXSetFromPy(p + "\t" + y);
-			if (xSet == null) {
-				continue;
-			}
-			for (String x : xSet) {
-				bodyExamples.add(x + "\t" + z);
-				if (newFacts.checkXpy(x + "\t" + h + "\t" + z)) {
-					posHeadRuleExamples.add(x + "\t" + z);
-				} else {
-					negHeadRuleExamples.add(x + "\t" + z);
-				}
-			}
-		}
+		List<Set<String>> instances = form2Instances.findInstances(rule, newFacts);
+		Set<String> bodyExamples = new HashSet<String>();
+		Set<String> posHeadRuleExamples = instances.get(0);
+		bodyExamples.addAll(instances.get(0));
+		Set<String> negHeadRuleExamples = instances.get(1);
+		bodyExamples.addAll(instances.get(1));
+
 		double confidence = (double) posHeadRuleExamples.size() / (double) bodyExamples.size();
 		double headSupport = getRelativeSupport(h);
 		double conviction = (1 - headSupport) / (1 - confidence);
