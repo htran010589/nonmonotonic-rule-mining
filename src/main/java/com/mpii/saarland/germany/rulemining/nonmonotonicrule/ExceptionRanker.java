@@ -83,18 +83,21 @@ public class ExceptionRanker {
 		}
 	}
 
-	public double getConfidence(String rule) {
+	public double getConfidence(String positiveRule) {
 		double headCount = 0;
-		if (form2Instances.getNormalSet(rule) != null) {
-			headCount = form2Instances.getNormalSet(rule).size();
+		if (form2Instances.getNormalSet(positiveRule) != null) {
+			headCount = form2Instances.getNormalSet(positiveRule).size();
 		}
 		double bodyCount = headCount;
-		if (form2Instances.getAbnormalSet(rule) != null) {
-			bodyCount += form2Instances.getAbnormalSet(rule).size();
+		if (form2Instances.getAbnormalSet(positiveRule) != null) {
+			bodyCount += form2Instances.getAbnormalSet(positiveRule).size();
 		}
 		return headCount / bodyCount;
 	}
 
+	/**
+	 * Get relative support of a head predicate.
+	 */
 	public double getRelativeSupport(String head) {
 		double support = 0;
 		if (facts.getXySetFromP(head) != null) {
@@ -111,14 +114,38 @@ public class ExceptionRanker {
 		return support / (xSupport * ySupport);
 	}
 
-	public double getConviction(String rule) {
-		String[] parts = rule.split("\t");
-		return (1 - getRelativeSupport(parts[2])) / (1 - getConfidence(rule));
+	/**
+	 * Get conviction of a positive rule.
+	 */
+	public double getConviction(String positiveRule) {
+		String[] parts = positiveRule.split("\t");
+		return (1 - getRelativeSupport(parts[2])) / (1 - getConfidence(positiveRule));
+	}
+
+	/**
+	 * Get standard, auxiliary, positive negative convictions of negative and
+	 * auxiliary rules.
+	 */
+	public List<Double> getConviction(long negativeExceptionPositiveHeadRuleCount, long negativeExceptionBodyCount,
+			long positiveExceptionNegativeHeadRuleCount, long positiveExceptionBodyCount, double headSupport) {
+		double negativeExceptionPositiveHeadConfidence = 1.0 * negativeExceptionPositiveHeadRuleCount
+				/ negativeExceptionBodyCount;
+		double positiveExceptionNegativeHeadConfidence = 1.0 * positiveExceptionNegativeHeadRuleCount
+				/ positiveExceptionBodyCount;
+		double standardConviction = (1 - headSupport) / (1 - negativeExceptionPositiveHeadConfidence);
+		double auxiliaryConviction = headSupport / (1 - positiveExceptionNegativeHeadConfidence);
+		double positiveNegativeConviction = (standardConviction + auxiliaryConviction) / 2;
+		List<Double> result = new ArrayList<Double>();
+		result.add(standardConviction);
+		result.add(auxiliaryConviction);
+		result.add(positiveNegativeConviction);
+		return result;
 	}
 
 	/**
 	 * 
-	 * This method is to recalculate conviction of negative rules based on old and new facts.
+	 * This method is to recalculate conviction of negative rules based on old
+	 * and new facts.
 	 */
 	public void recalculateConviction(String rule) {
 		String[] parts = rule.split("\t");
@@ -127,16 +154,15 @@ public class ExceptionRanker {
 		String h = parts[2];
 		List<Set<String>> instances = form2Instances.findInstances(rule, newFacts);
 		Set<String> bodyExamples = new HashSet<String>();
-		Set<String> posHeadRuleExamples = instances.get(0);
+		Set<String> positiveHeadRuleExamples = instances.get(0);
 		bodyExamples.addAll(instances.get(0));
-		Set<String> negHeadRuleExamples = instances.get(1);
 		bodyExamples.addAll(instances.get(1));
 
-		double confidence = (double) posHeadRuleExamples.size() / (double) bodyExamples.size();
+		double positiveRuleConfidence = (double) positiveHeadRuleExamples.size() / (double) bodyExamples.size();
 		double headSupport = getRelativeSupport(h);
-		double conviction = (1 - headSupport) / (1 - confidence);
-		System.out.println(h + "(x, z) <- " + p + "(x, y) ^ " + q + "(y, z)" + "\t" + conviction + "\t" + confidence
-				+ "\t" + posHeadRuleExamples.size() + "\t" + bodyExamples.size());
+		double positiveRuleConviction = (1 - headSupport) / (1 - positiveRuleConfidence);
+		System.out.println(h + "(x, z) <- " + p + "(x, y) ^ " + q + "(y, z)" + "\t" + positiveRuleConviction + "\t"
+				+ positiveRuleConfidence + "\t" + positiveHeadRuleExamples.size() + "\t" + bodyExamples.size());
 
 		Map<String, Long> negativeExceptionBodyCount = new HashMap<String, Long>();
 		Map<String, Long> negativeExceptionPositiveHeadRuleCount = new HashMap<String, Long>();
@@ -148,7 +174,8 @@ public class ExceptionRanker {
 			totalCandidates += exceptionCandidateSet.size();
 			for (String exception : exceptionCandidateSet) {
 				negativeExceptionBodyCount.put(exception + "\t" + i, (long) bodyExamples.size());
-				negativeExceptionPositiveHeadRuleCount.put(exception + "\t" + i, (long) posHeadRuleExamples.size());
+				negativeExceptionPositiveHeadRuleCount.put(exception + "\t" + i,
+						(long) positiveHeadRuleExamples.size());
 				positiveExceptionBodyCount.put(exception + "\t" + i, 0L);
 				positiveExceptionNegativeHeadRuleCount.put(exception + "\t" + i, 0L);
 			}
@@ -173,10 +200,12 @@ public class ExceptionRanker {
 					}
 					negativeExceptionBodyCount.put(exception, negativeExceptionBodyCount.get(exception) - 1);
 					positiveExceptionBodyCount.put(exception, positiveExceptionBodyCount.get(exception) + 1);
-					if (posHeadRuleExamples.contains(xz)) {
-						negativeExceptionPositiveHeadRuleCount.put(exception, negativeExceptionPositiveHeadRuleCount.get(exception) - 1);
+					if (positiveHeadRuleExamples.contains(xz)) {
+						negativeExceptionPositiveHeadRuleCount.put(exception,
+								negativeExceptionPositiveHeadRuleCount.get(exception) - 1);
 					} else {
-						positiveExceptionNegativeHeadRuleCount.put(exception, positiveExceptionNegativeHeadRuleCount.get(exception) + 1);
+						positiveExceptionNegativeHeadRuleCount.put(exception,
+								positiveExceptionNegativeHeadRuleCount.get(exception) + 1);
 					}
 				}
 			}
@@ -191,16 +220,15 @@ public class ExceptionRanker {
 		for (String exception : negativeExceptionPositiveHeadRuleCount.keySet()) {
 			parts = exception.split("\t");
 			int type = Integer.parseInt(parts[1]);
-			double negativeExceptionPositiveHeadConfidence = (double) negativeExceptionPositiveHeadRuleCount.get(exception)
-					/ (double) negativeExceptionBodyCount.get(exception);
-			double positiveExceptionNegativeHeadConfidence = (double) positiveExceptionNegativeHeadRuleCount.get(exception)
-					/ (double) positiveExceptionBodyCount.get(exception);
-			double standardConviction = (1 - headSupport) / (1 - negativeExceptionPositiveHeadConfidence);
-			double auxiliaryConviction = headSupport / (1 - positiveExceptionNegativeHeadConfidence);
-			double posNegConviction = (standardConviction + auxiliaryConviction) / 2;
-			if (maximumPositiveNegativeConviction[type] < posNegConviction
-					|| (maximumPositiveNegativeConviction[type] == posNegConviction && maximumStandardConviction[type] < standardConviction)) {
-				maximumPositiveNegativeConviction[type] = posNegConviction;
+			List<Double> convictions = getConviction(negativeExceptionPositiveHeadRuleCount.get(exception),
+					negativeExceptionBodyCount.get(exception), positiveExceptionNegativeHeadRuleCount.get(exception),
+					positiveExceptionBodyCount.get(exception), headSupport);
+			double standardConviction = convictions.get(0);
+			double positiveNegativeConviction = convictions.get(2);
+			if (maximumPositiveNegativeConviction[type] < positiveNegativeConviction
+					|| (maximumPositiveNegativeConviction[type] == positiveNegativeConviction
+							&& maximumStandardConviction[type] < standardConviction)) {
+				maximumPositiveNegativeConviction[type] = positiveNegativeConviction;
 				maximumStandardConviction[type] = standardConviction;
 				maximumException[type] = parts[0];
 			}
@@ -211,8 +239,9 @@ public class ExceptionRanker {
 		}
 		for (int i = 0; i < 3; ++i) {
 			for (int j = i + 1; j < 3; j++) {
-				if (maximumPositiveNegativeConviction[i] < maximumPositiveNegativeConviction[j] || (maximumPositiveNegativeConviction[i] == maximumPositiveNegativeConviction[j]
-						&& maximumStandardConviction[i] < maximumStandardConviction[j])) {
+				if (maximumPositiveNegativeConviction[i] < maximumPositiveNegativeConviction[j]
+						|| (maximumPositiveNegativeConviction[i] == maximumPositiveNegativeConviction[j]
+								&& maximumStandardConviction[i] < maximumStandardConviction[j])) {
 					double tempConv = maximumPositiveNegativeConviction[i];
 					maximumPositiveNegativeConviction[i] = maximumPositiveNegativeConviction[j];
 					maximumPositiveNegativeConviction[j] = tempConv;
@@ -238,14 +267,17 @@ public class ExceptionRanker {
 				continue;
 			}
 			String exception = maximumException[i] + "\t" + types[i];
-			// System.out.println(exception);
+			List<Double> convictions = getConviction(negativeExceptionPositiveHeadRuleCount.get(exception),
+					negativeExceptionBodyCount.get(exception), positiveExceptionNegativeHeadRuleCount.get(exception),
+					positiveExceptionBodyCount.get(exception), headSupport);
+			double stdConviction = convictions.get(0);
+			double auxConviction = convictions.get(1);
+			double posNegConviction = convictions.get(2);
+
 			double negExPosHeadConfidence = (double) negativeExceptionPositiveHeadRuleCount.get(exception)
 					/ (double) negativeExceptionBodyCount.get(exception);
 			double posExNegHeadConfidence = (double) positiveExceptionNegativeHeadRuleCount.get(exception)
 					/ (double) positiveExceptionBodyCount.get(exception);
-			double stdConviction = (1 - headSupport) / (1 - negExPosHeadConfidence);
-			double auxConviction = headSupport / (1 - posExNegHeadConfidence);
-			double posNegConviction = (stdConviction + auxConviction) / 2;
 			System.out.print("not " + maximumException[i]);
 			if (types[i] == 0) {
 				System.out.print("(x)\t");
@@ -259,8 +291,10 @@ public class ExceptionRanker {
 			}
 			System.out.println(posNegConviction + "\t" + stdConviction + "\t" + auxConviction + "\t"
 					+ negExPosHeadConfidence + "\t" + posExNegHeadConfidence + "\t"
-					+ negativeExceptionPositiveHeadRuleCount.get(exception) + "\t" + negativeExceptionBodyCount.get(exception) + "\t"
-					+ positiveExceptionNegativeHeadRuleCount.get(exception) + "\t" + positiveExceptionBodyCount.get(exception));
+					+ negativeExceptionPositiveHeadRuleCount.get(exception) + "\t"
+					+ negativeExceptionBodyCount.get(exception) + "\t"
+					+ positiveExceptionNegativeHeadRuleCount.get(exception) + "\t"
+					+ positiveExceptionBodyCount.get(exception));
 		}
 		System.out.println();
 
@@ -285,7 +319,8 @@ public class ExceptionRanker {
 
 		System.out.println("Number of processed rules: " + negativeRule2Conviction.size());
 		Collections.sort(numberOfExceptions);
-		System.out.println("Median number of exception cadidates for all rules are: " + numberOfExceptions.get(numberOfExceptions.size() / 2));
+		System.out.println("Median number of exception cadidates for all rules are: "
+				+ numberOfExceptions.get(numberOfExceptions.size() / 2));
 
 	}
 
