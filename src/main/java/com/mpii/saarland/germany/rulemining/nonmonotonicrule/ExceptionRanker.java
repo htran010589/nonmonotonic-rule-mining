@@ -44,7 +44,7 @@ public class ExceptionRanker {
 	 * This method is to predict new facts using all exceptions.
 	 */
 	public void predict(String rule) {
-		String h = rule.split("\t")[2];
+		String h = rule.split("\t")[0];
 		Set<String> abnormalSet = form2Instances.positiveRule2AbnormalSet.get(rule);
 		if (abnormalSet == null) {
 			return;
@@ -147,12 +147,12 @@ public class ExceptionRanker {
 	 * This method is to recalculate conviction of negative rules based on old
 	 * and new facts.
 	 */
-	public void recalculateConviction(String rule) {
-		String[] parts = rule.split("\t");
-		String p = parts[0];
-		String q = parts[1];
-		String h = parts[2];
-		List<Set<String>> instances = form2Instances.findInstances(rule, newFacts);
+	public void recalculateConviction(String positiveTextRule) {
+		String[] parts = positiveTextRule.split("\t");
+		String h = parts[0];
+		String p = parts[1];
+		String q = parts[2];
+		List<Set<String>> instances = form2Instances.findInstances(positiveTextRule, newFacts);
 		Set<String> bodyExamples = new HashSet<String>();
 		Set<String> positiveHeadRuleExamples = instances.get(0);
 		bodyExamples.addAll(instances.get(0));
@@ -170,7 +170,7 @@ public class ExceptionRanker {
 		Map<String, Long> positiveExceptionNegativeHeadRuleCount = new HashMap<String, Long>();
 		int totalCandidates = 0;
 		for (int i = 0; i < 3; ++i) {
-			Set<String> exceptionCandidateSet = ExceptionMiner.getExceptionCandidateSet(rule + "\t" + i);
+			Set<String> exceptionCandidateSet = ExceptionMiner.getExceptionCandidateSet(positiveTextRule + "\t" + i);
 			totalCandidates += exceptionCandidateSet.size();
 			for (String exception : exceptionCandidateSet) {
 				negativeExceptionBodyCount.put(exception + "\t" + i, (long) bodyExamples.size());
@@ -298,7 +298,7 @@ public class ExceptionRanker {
 		}
 		System.out.println();
 
-		String bestRule = rule;
+		String bestRule = positiveTextRule;
 		bestRule = bestRule + "\t" + maximumException[0] + "\t" + types[0];
 		negativeRule2Conviction.put(bestRule, maxConv);
 	}

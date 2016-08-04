@@ -287,7 +287,7 @@ public class Experiment {
 							break;
 						}
 						String[] parts = negRule.split("\t");
-						String posRule = parts[2] + "(X, Z) :- " + parts[0] + "(X, Y), " + parts[1] + "(Y, Z)";
+						String posRule = parts[0] + "(X, Z) :- " + parts[1] + "(X, Y), " + parts[2] + "(Y, Z)";
 						String negation = "";
 						if (parts[4].equals("0")) {
 							negation = Experiment.toID.get(parts[3]) + "(X).";

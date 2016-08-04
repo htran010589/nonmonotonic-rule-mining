@@ -31,7 +31,7 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 		}
 	}
 
-	//  To be finished...
+	//  To be finished, a lot of things need to revise ...
 	@Override
 	public List<Set<String>> findInstances(String positiveRule, FactIndexer facts) {
 		String[] parts = positiveRule.split("\t");

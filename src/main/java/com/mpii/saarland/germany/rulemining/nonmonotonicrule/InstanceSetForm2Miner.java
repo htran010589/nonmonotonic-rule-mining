@@ -15,7 +15,7 @@ import com.mpii.saarland.germany.utils.TextFileReader;
  * 
  * @author Hai Dang Tran
  * 
- * This class is to handle rules mined from pattern: P(x, y) ^ Q(y, z) -> H(x, z).
+ * This class is to handle rules mined from pattern: H(x, z) <- P(x, y) ^ Q(y, z).
  */
 public class InstanceSetForm2Miner extends InstanceSetMiner {
 
@@ -36,9 +36,9 @@ public class InstanceSetForm2Miner extends InstanceSetMiner {
 	@Override
 	public List<Set<String>> findInstances(String positiveRule, FactIndexer facts) {
 		String[] parts = positiveRule.split("\t");
-		String p = parts[0];
-		String q = parts[1];
-		String h = parts[2];
+		String h = parts[0];
+		String p = parts[1];
+		String q = parts[2];
 		Set<String> normalExamples = new HashSet<>();
 		Set<String> abnormalExamples = new HashSet<>();
 		for (String yz : facts.getXySetFromP(q)) {
