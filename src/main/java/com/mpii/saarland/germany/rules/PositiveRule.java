@@ -13,11 +13,12 @@ public class PositiveRule {
 
 	private double headSupport, confidence, conviction;
 
-	private long headCount, bodyCount;
+	public long headCount, bodyCount;
 
-	public PositiveRule(String head, String body, PositiveRuleType type) {
-		this.head = head;
-		this.body = body;
+	public PositiveRule(String textRule, PositiveRuleType type) {
+		int i = textRule.indexOf("\t");
+		this.head = textRule.substring(0, i);
+		this.body = textRule.substring(i + 1);
 		this.type = type;
 	}
 
@@ -28,11 +29,17 @@ public class PositiveRule {
 
 	@Override
 	public boolean equals(Object that) {
-		if (that.getClass().equals(this.getClass())) {
+		if (this == that) {
+			return true;
+		}
+		if (that == null) {
 			return false;
 		}
-		PositiveRule thatRule = (PositiveRule) that;
-		if (this.type != thatRule.type || !this.head.equals(thatRule.head) || !this.body.equals(thatRule.body)) {
+		if (getClass() != that.getClass()) {
+			return false;
+		}
+		PositiveRule other = (PositiveRule) that;
+		if (this.type != other.type || !this.head.equals(other.head) || !this.body.equals(other.body)) {
 			return false;
 		}
 		return true;
@@ -43,11 +50,15 @@ public class PositiveRule {
 		StringBuilder result = new StringBuilder(head);
 		String[] parts = body.split("\t");
 		if (type == PositiveRuleType.FORM2) {
-			result.append("(x, y) <- ");
-			result.append(parts[0] + "(x, z) ^ ");
-			result.append(parts[1] + "(z, y)");
+			result.append("(x, z) <- ");
+			result.append(parts[0] + "(x, y) ^ ");
+			result.append(parts[1] + "(y, z)");
 		}
 		return result.toString();
+	}
+
+	public String toStringWithStatistics() {
+		return toString() + "\t" + conviction + "\t" + confidence + "\t" + headCount + "\t" + bodyCount;
 	}
 
 	public void setHeadSupport(FactIndexer facts) {
@@ -67,23 +78,21 @@ public class PositiveRule {
 	}
 
 	public void setHeadCount(InstanceSetMiner form2Instances) {
-		String positiveRule = body + "\t" + head;
 		headCount = 0;
-		if (form2Instances.getNormalSet(positiveRule) != null) {
-			headCount = form2Instances.getNormalSet(positiveRule).size();
+		if (form2Instances.getNormalSet(this) != null) {
+			headCount = form2Instances.getNormalSet(this).size();
 		}
 	}
 
 	public void setBodyCount(InstanceSetMiner form2Instances) {
-		String positiveRule = body + "\t" + head;
 		bodyCount = headCount;
-		if (form2Instances.getAbnormalSet(positiveRule) != null) {
-			bodyCount += form2Instances.getAbnormalSet(positiveRule).size();
+		if (form2Instances.getAbnormalSet(this) != null) {
+			bodyCount += form2Instances.getAbnormalSet(this).size();
 		}
 	}
 
 	public void setConfidence() {
-		confidence = headCount / bodyCount;
+		confidence = 1.0 * headCount / bodyCount;
 	}
 
 	public void setConviction() {
@@ -108,6 +117,14 @@ public class PositiveRule {
 
 	public double getConviction() {
 		return conviction;
+	}
+
+	public String getHead() {
+		return head;
+	}
+
+	public String getBody() {
+		return body;
 	}
 
 }

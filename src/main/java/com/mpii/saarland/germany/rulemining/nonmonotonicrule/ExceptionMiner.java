@@ -4,7 +4,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import com.mpii.saarland.germany.indexing.FactIndexer;
+import com.mpii.saarland.germany.rules.Exception;
+import com.mpii.saarland.germany.rules.ExceptionType;
+import com.mpii.saarland.germany.rules.PositiveRule;
 
 /**
  * 
@@ -13,21 +17,31 @@ import com.mpii.saarland.germany.indexing.FactIndexer;
  */
 public class ExceptionMiner {
 
-	private static Map<String, Set<String>> rule2ExceptionSet;
+	private static Map<PositiveRule, Set<Exception>> rule2ExceptionSet;
 
 	static {
-		rule2ExceptionSet = new HashMap<String, Set<String>>();
+		rule2ExceptionSet = new HashMap<>();
 	}
 
 	/**
 	 * 
-	 * This method is to find exception candidates given a rule, set of facts, positive and negative instances.
+	 * This method is to find exception candidates given a rule, set of facts,
+	 * positive and negative instances.
 	 * 
 	 */
-	public static void findCandidates(String rule, Set<String> positivePairs, Set<String> negativePairs,
+	public static void findCandidates(PositiveRule rule, Set<String> positivePairs, Set<String> negativePairs,
 			FactIndexer facts) {
+		Set<Exception> exceptionSet = new HashSet<>();
 		for (int i = 0; i < 3; ++i) {
-			Set<String> exceptionSet = new HashSet<String>();
+			ExceptionType type = null;
+			if (i == 0) {
+				type = ExceptionType.FIRST;
+			} else if (i == 1) {
+				type = ExceptionType.SECOND;
+			} else {
+				type = ExceptionType.BOTH;
+			}
+			Set<String> textExceptionSet = new HashSet<String>();
 			if (positivePairs != null) {
 				for (String pair : positivePairs) {
 					String[] parts = pair.split("\t");
@@ -40,7 +54,7 @@ public class ExceptionMiner {
 					if (positiveExceptionSet == null) {
 						continue;
 					}
-					exceptionSet.addAll(positiveExceptionSet);
+					textExceptionSet.addAll(positiveExceptionSet);
 				}
 			}
 			if (negativePairs != null) {
@@ -55,15 +69,17 @@ public class ExceptionMiner {
 					if (negativeExceptionSet == null) {
 						continue;
 					}
-					exceptionSet.removeAll(negativeExceptionSet);
+					textExceptionSet.removeAll(negativeExceptionSet);
 				}
 			}
-			rule2ExceptionSet.put(rule + "\t" + i, exceptionSet);
+			for (String textException : textExceptionSet) {
+				exceptionSet.add(new Exception(textException, type));
+			}
 		}
-
+		rule2ExceptionSet.put(rule, exceptionSet);
 	}
 
-	public static Set<String> getExceptionCandidateSet(String rule) {
+	public static Set<Exception> getExceptionCandidateSet(PositiveRule rule) {
 		return rule2ExceptionSet.get(rule);
 	}
 

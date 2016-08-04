@@ -1,5 +1,5 @@
 package com.mpii.saarland.germany.rules;
 
-public enum NegativeRuleType {
+public enum ExceptionType {
 	FIRST, SECOND, BOTH;
 }

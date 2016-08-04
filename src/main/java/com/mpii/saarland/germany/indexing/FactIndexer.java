@@ -15,7 +15,9 @@ import com.mpii.saarland.germany.utils.Utils;
  * 
  * @author Hai Dang Tran
  * 
- * This class is to index facts with the form: <x> <p> <y>.
+ *         This class is to index facts with the form: <x>
+ *         <p>
+ *         <y>.
  */
 public class FactIndexer {
 
@@ -46,17 +48,17 @@ public class FactIndexer {
 	private Set<String> xpySet;
 
 	private void allocate() {
-		x2PySet = new HashMap<String, Set<String>>();
-		y2PxSet = new HashMap<String, Set<String>>();
-		x2TSet = new HashMap<String, Set<String>>();
-		t2XSet = new HashMap<String, Set<String>>();
-		pt2XSet = new HashMap<String, Set<String>>();
-		p2XySet = new HashMap<String, Set<String>>();
-		p2XSet = new HashMap<String, Set<String>>();
-		p2YSet = new HashMap<String, Set<String>>();
-		xy2PSet = new HashMap<String, Set<String>>();
-		py2XSet = new HashMap<String, Set<String>>();
-		xpySet = new HashSet<String>();
+		x2PySet = new HashMap<>();
+		y2PxSet = new HashMap<>();
+		x2TSet = new HashMap<>();
+		t2XSet = new HashMap<>();
+		pt2XSet = new HashMap<>();
+		p2XySet = new HashMap<>();
+		p2XSet = new HashMap<>();
+		p2YSet = new HashMap<>();
+		xy2PSet = new HashMap<>();
+		py2XSet = new HashMap<>();
+		xpySet = new HashSet<>();
 	}
 
 	public FactIndexer() {
@@ -138,7 +140,7 @@ public class FactIndexer {
 		}
 		for (String t : tSet) {
 			Utils.addKeyString(pt2XSet, parts[1] + "\t" + t, parts[0]);
-		}		
+		}
 	}
 
 	public void indexPatterns() {

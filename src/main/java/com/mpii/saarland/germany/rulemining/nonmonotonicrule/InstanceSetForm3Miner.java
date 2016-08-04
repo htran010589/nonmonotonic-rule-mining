@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
+import com.mpii.saarland.germany.rules.PositiveRule;
 import com.mpii.saarland.germany.utils.TextFileReader;
 
 /**
@@ -24,16 +25,18 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 
 	@Override
 	public void loadPositiveRules(String fileName) {
+		/*
 		List<String> lines = TextFileReader.readLines(fileName);
 		for (String positiveRule : lines) {
 			String[] parts = positiveRule.split("\t");
 			positiveRules.add(parts[0] + "\t" + parts[1] + "\t" + parts[3] + "\t" + parts[2]);
-		}
+		}*/
 	}
 
 	//  To be finished, a lot of things need to revise ...
 	@Override
-	public List<Set<String>> findInstances(String positiveRule, FactIndexer facts) {
+	public List<Set<String>> findInstances(PositiveRule positiveRule, FactIndexer facts) {
+		/*
 		String[] parts = positiveRule.split("\t");
 		String p = parts[0];
 		String t = parts[1];
@@ -46,7 +49,7 @@ public abstract class InstanceSetForm3Miner extends InstanceSetMiner {
 		Set<String> zSet = facts.getXSetFromT(r);
 		if (zSet == null) {
 			return null;
-		}
+		}*/
 		/*
 		 * Do something
 		 */

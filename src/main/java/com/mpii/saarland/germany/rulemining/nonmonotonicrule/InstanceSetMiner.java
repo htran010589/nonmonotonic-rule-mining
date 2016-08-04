@@ -1,7 +1,7 @@
 package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
+import com.mpii.saarland.germany.rules.PositiveRule;
 
 /**
  * 
@@ -20,24 +21,24 @@ public abstract class InstanceSetMiner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetMiner.class);
 
-	protected Set<String> positiveRules;
+	protected List<PositiveRule> positiveRules;
 
-	protected Map<String, Set<String>> positiveRule2NormalSet;
+	protected Map<PositiveRule, Set<String>> positiveRule2NormalSet;
 
-	protected Map<String, Set<String>> positiveRule2AbnormalSet;
+	protected Map<PositiveRule, Set<String>> positiveRule2AbnormalSet;
 
 	protected InstanceSetMiner() {
-		positiveRules = new HashSet<String>();
-		positiveRule2NormalSet = new HashMap<String, Set<String>>();
-		positiveRule2AbnormalSet = new HashMap<String, Set<String>>();
+		positiveRules = new ArrayList<>();
+		positiveRule2NormalSet = new HashMap<>();
+		positiveRule2AbnormalSet = new HashMap<>();
 	}
 
 	public abstract void loadPositiveRules(String fileName);
 
-	public abstract List<Set<String>> findInstances(String rule, FactIndexer facts);
+	public abstract List<Set<String>> findInstances(PositiveRule rule, FactIndexer facts);
 
 	public void findInstances(FactIndexer facts) {
-		for (String positiveRule : positiveRules) {
+		for (PositiveRule positiveRule : positiveRules) {
 			List<Set<String>> instances = findInstances(positiveRule, facts);
 			positiveRule2NormalSet.put(positiveRule, instances.get(0));
 			positiveRule2AbnormalSet.put(positiveRule, instances.get(1));
@@ -46,7 +47,7 @@ public abstract class InstanceSetMiner {
 	}
 
 	public void findPositiveNegativeExamples(FactIndexer facts) {
-		for (String positiveRule : positiveRules) {
+		for (PositiveRule positiveRule : positiveRules) {
 			Set<String> normalSet = positiveRule2NormalSet.get(positiveRule);
 			Set<String> abnormalSet = positiveRule2AbnormalSet.get(positiveRule);
 			ExceptionMiner.findCandidates(positiveRule, abnormalSet, normalSet, facts);
@@ -54,15 +55,15 @@ public abstract class InstanceSetMiner {
 		LOG.info("Done with finding EWS");
 	}
 
-	public Set<String> getPositiveRules() {
+	public List<PositiveRule> getPositiveRules() {
 		return positiveRules;
 	}
 
-	public Set<String> getNormalSet(String rule) {
+	public Set<String> getNormalSet(PositiveRule rule) {
 		return positiveRule2NormalSet.get(rule);
 	}
 
-	public Set<String> getAbnormalSet(String rule) {
+	public Set<String> getAbnormalSet(PositiveRule rule) {
 		return positiveRule2AbnormalSet.get(rule);
 	}
 
