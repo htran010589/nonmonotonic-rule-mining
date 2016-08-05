@@ -1,7 +1,6 @@
 package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +13,6 @@ import com.mpii.saarland.germany.rules.Exception;
 import com.mpii.saarland.germany.rules.ExceptionType;
 import com.mpii.saarland.germany.rules.NegativeRule;
 import com.mpii.saarland.germany.rules.PositiveRule;
-import com.mpii.saarland.germany.utils.Utils;
 
 /**
  * 
@@ -43,13 +41,13 @@ public class ExceptionRanker {
 	 * 
 	 * This method is to predict new facts using all exceptions.
 	 */
-	public void predict(PositiveRule rule) {
-		String h = rule.getHead();
-		Set<String> abnormalSet = form2Instances.positiveRule2AbnormalSet.get(rule);
+	public void predict(PositiveRule positiveRule) {
+		String h = positiveRule.getHead();
+		Set<String> abnormalSet = form2Instances.positiveRule2AbnormalSet.get(positiveRule);
 		if (abnormalSet == null) {
 			return;
 		}
-		Set<Exception> exceptionCandidateSet = ExceptionMiner.getExceptionCandidateSet(rule);
+		Set<Exception> exceptionCandidateSet = ExceptionMiner.getExceptionCandidateSet(positiveRule);
 		for (String negativeExample : abnormalSet) {
 			String[] parts = negativeExample.split("\t");
 			String x = parts[0];
@@ -221,7 +219,10 @@ public class ExceptionRanker {
 				NegativeRule r2) -> new Double(r2.getPositiveNegativeConviction())
 						.compareTo(r1.getPositiveNegativeConviction());
 		choosenNegativeRules.sort(sortByPositiveNegativeConviction);
+	}
 
+	public List<NegativeRule> getChoosenNegativeRules() {
+		return choosenNegativeRules;
 	}
 
 }

@@ -16,6 +16,8 @@ import java.util.Set;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker;
+import com.mpii.saarland.germany.rules.ExceptionType;
+import com.mpii.saarland.germany.rules.NegativeRule;
 import com.mpii.saarland.germany.utils.Settings;
 import com.mpii.saarland.germany.utils.TextFileReader;
 import com.mpii.saarland.germany.utils.Utils;
@@ -210,7 +212,8 @@ public class Experiment {
 	public int numEntity, numType;
 
 	public void encode(String x, boolean isEntity) {
-		if (toID.containsKey(x)) return;
+		if (toID.containsKey(x))
+			return;
 		if (isEntity) {
 			numEntity++;
 			toID.put(x, "e" + numEntity);
@@ -281,28 +284,29 @@ public class Experiment {
 					int cnt = 0;
 					Writer wr = new PrintWriter(new File(Experiment.RULE_FILE + type + maxCnt));
 					double convSum = 0;
-					for (String negRule : er.getNegativeRules()) {
+					for (NegativeRule negRule : er.getChoosenNegativeRules()) {
 						cnt++;
 						if (cnt > maxCnt) {
 							break;
 						}
-						String[] parts = negRule.split("\t");
-						String posRule = parts[0] + "(X, Z) :- " + parts[1] + "(X, Y), " + parts[2] + "(Y, Z)";
+						String[] parts = negRule.getPositiveRule().getBody().split("\t");
+						String head = negRule.getPositiveRule().getHead();
+						String posRule = head + "(X, Z) :- " + parts[0] + "(X, Y), " + parts[1] + "(Y, Z)";
 						String negation = "";
-						if (parts[4].equals("0")) {
-							negation = Experiment.toID.get(parts[3]) + "(X).";
-						} else if (parts[4].equals("1")) {
-							negation = Experiment.toID.get(parts[3]) + "(Z).";
+						if (negRule.getException().getType() == ExceptionType.FIRST) {
+							negation = Experiment.toID.get(negRule.getException().getException()) + "(X).";
+						} else if (negRule.getException().getType() == ExceptionType.SECOND) {
+							negation = Experiment.toID.get(negRule.getException().getException()) + "(Z).";
 						} else {
-							negation = parts[3] + "(X, Z).";
+							negation = negRule.getException().getException() + "(X, Z).";
 						}
 						if (type.equals(".neg.")) {
 							wr.write(posRule + ", not " + negation + "\n");
-							double conviction = er.getNegativeRuleConviction(negRule);
+							double conviction = negRule.getStandardConviction();
 							convSum += conviction;
 						} else if (type.equals(".pos.")) {
 							wr.write(posRule + ".\n");
-							double conviction = er.getPositiveRuleConviction(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
+							double conviction = negRule.getPositiveRule().getConviction();
 							convSum += conviction;
 						} else {
 							wr.write(posRule + ", not " + negation + "\n");
@@ -408,13 +412,15 @@ public class Experiment {
 
 	public void compareWithEvals() throws Exception {
 		if (MOD.equals("IMDB")) {
-			List<String> lines = TextFileReader.readLines("/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/imdb.manual.eval.txt");
+			List<String> lines = TextFileReader.readLines(
+					"/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/imdb.manual.eval.txt");
 			Map<String, String> check = new HashMap<String, String>();
 			for (String line : lines) {
-//				System.out.println(line);
+				// System.out.println(line);
 				String[] parts = line.split("\t");
-//				System.out.println(line);
-				if (parts.length < 4) continue;
+				// System.out.println(line);
+				if (parts.length < 4)
+					continue;
 				check.put(parts[0] + "\t" + parts[1] + "\t" + parts[2], parts[3]);
 			}
 			for (int maxCnt : maxCnts) {
@@ -444,12 +450,9 @@ public class Experiment {
 			}
 			return;
 		}
-		Map<String, String> ma = getYagoEvals(
-				"/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/evaluations/std-confidence.tsv");
-		ma.putAll(getYagoEvals(
-				"/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/evaluations/pca-confidence.tsv"));
-		ma.putAll(getYagoEvals(
-				"/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/YAGO/DLV/evaluations/joint-prediction.tsv"));
+		Map<String, String> ma = getYagoEvals("data/experiment/YAGO/DLV/evaluations/std-confidence.tsv");
+		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/pca-confidence.tsv"));
+		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/joint-prediction.tsv"));
 		for (int maxCnt : maxCnts) {
 			int cnt = 0;
 			String file1 = EXT_FILE + ".pos." + maxCnt + ".needcheck";
@@ -486,7 +489,8 @@ public class Experiment {
 			}
 		}
 		Experiment.date4 = new Date();
-		System.out.println("Time for DLV (seconds): " + ((Experiment.date4.getTime() - Experiment.date3.getTime()) / 1000.0));
+		System.out.println(
+				"Time for DLV (seconds): " + ((Experiment.date4.getTime() - Experiment.date3.getTime()) / 1000.0));
 	}
 
 	public void calConflict() throws Exception {
@@ -556,7 +560,7 @@ public class Experiment {
 				System.out.println("sai roi");
 				break;
 			}
-		}		
+		}
 	}
 
 	public void conduct() {
@@ -567,14 +571,12 @@ public class Experiment {
 			evaluate();
 			calConflict();
 			findDiff();
-//			compareWithEvals();
+			// compareWithEvals();
 
-			
-//			checkSubsetDLV();
+			// checkSubsetDLV();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
 }
-

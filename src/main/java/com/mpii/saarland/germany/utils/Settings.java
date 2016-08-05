@@ -31,6 +31,4 @@ public final class Settings {
 
 	public static final String YAGO_FORM3_POSITIVE_RULE_FILE_NAME = "data/yago.form3.rules.conviction.txt";
 
-	public static final int NUMBER_OF_CONSECUTIVE_LINES = 10;
-
 }

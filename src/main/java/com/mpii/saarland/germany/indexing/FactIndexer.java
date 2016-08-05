@@ -15,9 +15,7 @@ import com.mpii.saarland.germany.utils.Utils;
  * 
  * @author Hai Dang Tran
  * 
- *         This class is to index facts with the form: <x>
- *         <p>
- *         <y>.
+ * This class is to index facts with the form: <x> <p> <y>.
  */
 public class FactIndexer {
 
