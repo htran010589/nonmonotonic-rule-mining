@@ -1,0 +1,187 @@
+\documentclass[11pt, a4paper, twoside]{Thesis}
+\usepackage{etex}
+%\usepackage{arabtex}
+%\usepackage{utf8}
+
+\usepackage{subcaption}
+%\usepackage{amsmath}
+\usepackage{tocbibind}
+%\usepackage{packages/algorithm2e}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usepackage{microtype}
+
+
+\usepackage{standalone}
+\usepackage{tabularx}
+
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\setlength{\parindent}{0.7cm}
+
+\makeatletter
+\DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
+\def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
+
+
+
+\def\eg{\emph{e.g}\onedot} \def\Eg{\emph{E.g}\onedot}
+\def\ie{\emph{i.e}\onedot} \def\Ie{\emph{I.e}\onedot}
+\def\cf{\emph{c.f}\onedot} \def\Cf{\emph{C.f}\onedot}
+\def\etc{\emph{etc}\onedot} \def\vs{\emph{vs}\onedot}
+\def\wrt{w.r.t\onedot} \def\dof{d.o.f\onedot}
+\def\etal{\emph{et al}\onedot}
+\usepackage[group-separator={,}]{siunitx}
+
+\makeatother
+
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\listofalgorithmes}{\tocfile{\listalgorithmcfname}{loa}}
+\newcommand\Chapter[2]{
+  \chapter[#1: {\itshape#2}]{#1\\[1ex]\Large#2}
+}
+
+\begin{document}
+%\setcode{utf8}
+
+% *************** Front matter ***************
+\frontmatter
+
+\title  {Towards Nonmonotonic Relational Learning from Knowledge Graphs}
+
+\authors  {\texorpdfstring
+            {{Hai Dang Tran}}
+            {}
+            }
+\addresses  {\groupname\\\deptname\\\univname}  % Do not change this here, instead these must be set in the "Thesis.cls" file, please look through it instead
+%\usdate
+\date       {Saarbr\"ucken, \today }
+\subject    {}
+\keywords   {}
+
+\maketitle
+
+%\newpage
+%\mbox{}
+%\thispagestyle{empty}
+%\newpage
+
+\setstretch{1.3}
+
+\thispagestyle{empty}
+
+\section*{Eidesstattliche Erkl\"{a}rung}
+Ich erkl\"{a}re hiermit an Eides Statt, dass ich die vorliegende Arbeit selbstst\"{a}ndig verfasst und keine
+anderen als die angegebenen Quellen und Hilfsmittel verwendet habe.
+
+\vspace{0.60cm}
+\section*{Statement in Lieu of an Oath}
+I hereby confirm that I have written this thesis on my own and that I have not used any other media or
+materials than the ones referred to in this thesis.
+\vspace{1.5cm}
+
+\section*{Einverst\"{a}ndniserkl\"{a}rung}
+Ich bin damit einverstanden, dass meine (bestandene) Arbeit in beiden Versionen in die Bibliothek der
+Informatik aufgenommen und damit ver\"{o}ffentlicht wird.
+
+\vspace{0.60cm}
+\section*{Declaration of Consent}
+I agree to make both versions of my thesis (with a passing grade) accessible to the public by having
+them added to the library of the Computer Science Department.
+\vspace{3cm}
+
+\begin{flushright}
+\noindent Saarbr\"{u}cken, \today
+\hfill
+Hai Dang Tran
+\end{flushright}
+
+\clearpage  % Declaration ended, now start a new page
+%% ----------------------------------------------------------------
+
+\newpage
+\mbox{}
+\thispagestyle{empty}
+\newpage
+
+% The Abstract Page
+\input{abstract}
+%% ----------------------------------------------------------------
+\newpage
+\mbox{}
+\thispagestyle{empty}
+\newpage
+
+\setstretch{1.3}  % Reset the line-spacing to 1.3 for body text (if it has changed)
+
+% The Acknowledgements page, for thanking everyone
+\acknowledgements{
+\addtocontents{toc}{}  % Add a gap in the Contents, for aesthetics    \vspace{1em}
+
+
+}
+\clearpage  % End of the Acknowledgements
+%% ----------------------------------------------------------------
+\newpage
+\mbox{}
+\thispagestyle{empty}
+\newpage
+
+\newpage
+\mbox{}
+\thispagestyle{empty}
+\newpage
+
+\setstretch{1}
+\begin{spacing}{0.1}
+\pagestyle{fancy}
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+%\listofalgorithmes
+\end{spacing}
+
+\clearpage
+
+\setstretch{1.3}
+% *************** Main matter ***************
+\mainmatter
+
+\input{chapters/intro}
+
+\input{chapters/relatedwork}
+
+\input{chapters/background}
+
+\input{chapters/approach}
+
+\input{chapters/evaluation}
+
+\input{chapters/conclusion}
+
+
+% *************** Bibliography ***************
+\bibliographystyle{plain}
+{\small\bibliography{bibliography/aidaMultilingual_plus,bibliography/edrak}}
+\clearpage
+
+% *************** Appendixes ***************
+\addtocontents{toc}{\vspace{2em}}
+\appendix
+%\appendixpage*
+
+
+% *************** Back matter ***************
+%\backmatter
+%\input{back.tex}
+
+\end{document}
