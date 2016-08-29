@@ -6,18 +6,35 @@ The area of rule mining on knowledge graphs has attracted interests from many re
 
 This direction focuses on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on extracted hidden features. Besides, feature extraction is automatically executed in these methods.
 
-RESCAL is one of principal algorithms in this direction where relations of any two hidden features are taken into consideration ~\cite{ref2, ref3, ref4}. As a result, it is called bilinear model.
+RESCAL is one of principal algorithms in this direction where relations of any two hidden features are taken into consideration~\cite{ref2, ref3}. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
+
+While many tensor factorization methods use subject, object, predicate as three dimensions to model knowledge graph as a cubic, some matrix decomposition algorithms try to transform this cubic into two dimensional data. For instance, subject and object dimensions are merged into one representing for pair of entities in~\cite{ref6, ref7}.
+
+Some distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close. The closeness can be checked based on some distance measures. This approach can be expanded to structure embedding model~\cite{ref8}.
 
 \section{Logic-based Approach}
 
-\subsection{ILP-based System}
+The logic-based direction aims to find observable patterns in order to infer new links on the knowlege graph~\cite{ref1}. Since the patterns can be directly seen and not hidden in the data, these algorithms in this approach are more interpretable than those of the previous one. For instance, one pattern from the graph can be represented in a form:\\
 
-Rule mining is a core problem in ILP-based system, however, there are two issues:
+\centerline{\textit{livesIn(Z, Y) $\leftarrow$ isMarriedTo(X, Z), livesIn(X, Y).}}
 
-\begin{itemize}
-	\item ILP system is not scalable for big data.
-	\item ILP system always requires positive and negative examples while in our problem, only positive observations are given.
-\end{itemize}
+This form is equivalent to a triangle of three predicate edges in the knowledge graph. Since this pattern is frequent and observable, it can be mined in order to predict new links. More specifically, if we know some facts such as: \textit{isMarriedTo(Peter, Marry), livesIn(Marry, London)}; then the fact \textit{livesIn(Peter, London)} has high chance to be true.
+
+In the rest of this section, the following main systems in this approach are discussed in details.
+
+\subsection{Inductive Logic Programming Systems}
+
+Inductive Logic Programming~\cite{ref9} (ILP) is a combination field of Machine Learning and Logic Programming and it is used for generating hypothesis based on background knowledge, specific examples. These examples can be classified into positive and negative groups. The hypothesis is true for every positive example and not true for any negative one.
+
+Rule mining is a core problem in ILP, however, applying ILP algorithms to semantic web data is problematic for the following reasons. Firstly, ILP tools are not scalable and efficient for large knowlege graph such as YAGO, Freebase, Wikidata~\cite{ref10}. 
+
+Secondly, ILP methods use closed world assumption (CWA), that is, it is assumed that knowlege base is complete and missing facts are false. These methods require both positive and negative examples like traditional machine learning algorithms. This assumption and requirement are not suitable for our problem since there are only in-completed positive facts in real world data~\cite{ref10}.
+
+Thirdly, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since mining exceptions is important purpose of our work, naively using ILP tools will not produce what we want. This is also the reason why Abductive Logic Programming~\cite{ref11} should be taken into account.
+
+(Co nen dua ALP vao day khong?)
+
+To be filled (WARMR, QuickFoil, ...)
 
 \subsection{AMIE+ System}
 
