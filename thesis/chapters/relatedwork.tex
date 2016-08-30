@@ -32,14 +32,22 @@ Secondly, ILP methods use closed world assumption (CWA), that is, it is assumed 
 
 Thirdly, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since mining exceptions is important purpose of our work, naively using ILP tools will not produce what we want. This is also the reason why Abductive Logic Programming~\cite{ref11} should be taken into account.
 
-(Co nen dua ALP vao day khong?)
+(should I describe ALP here?)
 
 To be filled (WARMR, QuickFoil, ...)
 
 \subsection{AMIE+ System}
 
-AMIE and AMIE+ are created to tackle the above-mentioned problems, but they only take care about positive rules.
+The scalability and CWA assumption issues of ILP are tackled in AMIE~\cite{ref10} system. This tool receives a large knowledge graph as an input and generates top positive Horn rules with high quality.
+
+AMIE+ is a new version of AMIE in which run time performance is enhanced by pruning and query manipulations. Experimental work in~\cite{ref10} shows that this platform can process millions of triples in RDF graph and its mined rules surpass those of other methods in terms of efficiency.
+
+However, like other ILP platforms, AMIE+ does not take care nonmonotonic rules or exceptions since its output is a list of Horn rules. Our work can solve this problem since it aims to generate rules with exceptions from a list of AMIE+ mined positive rules and a big knowledge graph.
 
 \subsection{Nonmonotonic Rule Mining System}
 
-This work is an extension from a non mototonic rule mining system (ISWC paper). The previous work focuses on flattened data while the current one treat the knowlege graph in the nature format.
+This research works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects.
+
+After positive rules are mined using Association Rule Mining tools, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of partial materialization.
+
+This thesis treats the knowledge graph in the nature format instead of flattened one.
