@@ -4,9 +4,9 @@ The area of rule mining on knowledge graphs has attracted interests from many re
 
 \section{Statistics-based Approach}
 
-This direction focuses on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on extracted hidden features. Besides, feature extraction is automatically executed in these methods.
+This direction focuses on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
 
-RESCAL is one of principal algorithms in this direction where relations of any two hidden features are taken into consideration~\cite{ref2, ref3}. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
+RESCAL is one of principal algorithms in this direction where relations of all hidden feature pairs are taken into consideration~\cite{ref2, ref3}. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
 
 While many tensor factorization methods use subject, object, predicate as three dimensions to model knowledge graph as a cubic, some matrix decomposition algorithms try to transform this cubic into two dimensional data. For instance, subject and object dimensions are merged into one representing for pair of entities in~\cite{ref6, ref7}.
 
@@ -20,13 +20,13 @@ The logic-based direction aims to find observable patterns in order to infer new
 
 This form is equivalent to a triangle of three predicate edges in the knowledge graph. Since this pattern is frequent and observable, it can be mined in order to predict new links. More specifically, if we know some facts such as: \textit{isMarriedTo(Peter, Marry), livesIn(Marry, London)}; then the fact \textit{livesIn(Peter, London)} has high chance to be true.
 
-In the rest of this section, the following main systems in this approach are discussed in details.
+In the rest of this section, the following main logic-based systems are discussed in details.
 
 \subsection{Inductive Logic Programming Systems}
 
 Inductive Logic Programming~\cite{ref9} (ILP) is a combination field of Machine Learning and Logic Programming and it is used for generating hypothesis based on background knowledge, specific examples. These examples can be classified into positive and negative groups. The hypothesis is true for every positive example and not true for any negative one.
 
-Rule mining is a core problem in ILP, however, applying ILP algorithms to semantic web data is problematic for the following reasons. Firstly, ILP tools are not scalable and efficient for large knowlege graph such as YAGO, Freebase, Wikidata~\cite{ref10}. 
+Rule mining is a core problem in ILP, however, applying ILP algorithms to semantic web data is problematic for the following reasons. Firstly, ILP tools are not scalable and efficient for large knowlege graph such as YAGO, Freebase, Wikidata~\cite{ref10}. In some experiments conducted in~\cite{ref10}, it takes several days to process YAGO2 data using cutting edge ILP tools.
 
 Secondly, ILP methods use closed world assumption (CWA), that is, it is assumed that knowlege base is complete and missing facts are false. These methods require both positive and negative examples like traditional machine learning algorithms. This assumption and requirement are not suitable for our problem since there are only in-completed positive facts in real world data~\cite{ref10}.
 
@@ -46,8 +46,8 @@ However, like other ILP platforms, AMIE+ does not take care nonmonotonic rules o
 
 \subsection{Nonmonotonic Rule Mining System}
 
-This research works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects.
+This research~\cite{ref12} works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects.
 
-After positive rules are mined using Association Rule Mining tools, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of partial materialization.
+After positive rules are mined using Association Rule Mining tools~\cite{ref13}, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of partial materialization.
 
-From the same concept of partial materialization, we extend this work to the master thesis using different predictive measures. The difference between the thesis and [11] is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
+From the same concept of partial materialization, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
