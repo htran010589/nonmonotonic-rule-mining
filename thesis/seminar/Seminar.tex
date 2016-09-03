@@ -12,6 +12,8 @@
 
 \documentclass{beamer}
 
+\usepackage{graphicx}
+
 % There are many different themes available for Beamer. A comprehensive
 % list with examples is given here:
 % http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
@@ -21,7 +23,7 @@
 %\usetheme{Antibes}
 %\usetheme{Bergen}
 %\usetheme{Berkeley}
-\usetheme{Berlin}
+%\usetheme{Berlin}
 %\usetheme{Boadilla}
 %\usetheme{boxes}
 %\usetheme{CambridgeUS}
@@ -41,9 +43,16 @@
 %\usetheme{PaloAlto}
 %\usetheme{Pittsburgh}
 %\usetheme{Rochester}
-%\usetheme{Singapore}
+\usetheme{Singapore}
 %\usetheme{Szeged}
 %\usetheme{Warsaw}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
 
 \title{Towards Nonmonotonic Relational Learning from Knowledge Graphs}
 
@@ -103,28 +112,25 @@
 
 % Section and subsections will appear in the presentation overview
 % and table of contents.
-\section{First xxx yyy Section}
+\section{System Overview}
 
-\subsection{First Subsection}
+\begin{frame}{System Overview}
 
-\begin{frame}{First Slide Title}{Optional Subtitle}
-  \begin{itemize}
-  \item {
-    My first point.
-  }
-  \item {
-    My second point.
-  }
-  \end{itemize}
+\begin{figure}[h]
+	\centering
+	\includegraphics[page=1,width=.75\textwidth]{overview.pdf}
+	\caption{System Overview}
+\end{figure}
+
 \end{frame}
 
-\subsection{Second Subsection}
+\section{System Description}
 
-\subsection{Third Subsection}
+\subsection{Indexing Data}
 
 % You can reveal the parts of a slide one at a time
 % with the \pause command:
-\begin{frame}{Second Slide Title}
+\begin{frame}{System Description}
   \begin{itemize}
   \item {
     First item.
@@ -149,9 +155,7 @@
   \end{itemize}
 \end{frame}
 
-\section{Second Main Section}
-
-\subsection{Another Subsection}
+\subsection{Finding Instance Sets}
 
 \begin{frame}{Blocks}
 \begin{block}{Block Title}
@@ -164,6 +168,12 @@ There are separate environments for theorems, examples, definitions and proofs.
 Here is an example of an example block.
 \end{example}
 \end{frame}
+
+\subsection{Finding Exceptions}
+
+\subsection{Measure Plugin}
+
+\subsection{Ranking Exceptions}
 
 % Placing a * after \section means it will not show in the
 % outline or table of contents.
