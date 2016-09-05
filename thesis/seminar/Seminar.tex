@@ -86,7 +86,7 @@
 % is a graphic format that can be processed by latex or pdflatex,
 % resp., then you can add a logo as follows:
 
-% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \pgfdeclareimage[height=1cm]{university-logo}{mpi-logo.png}
 % \logo{\pgfuseimage{university-logo}}
 
 % Delete this, if you do not want the table of contents to pop up at
@@ -119,7 +119,7 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[page=1,width=.75\textwidth]{overview.pdf}
-	\caption{System Overview}
+	\caption{Components in the System}
 \end{figure}
 
 \end{frame}
@@ -128,110 +128,143 @@
 
 \subsection{Indexing Data}
 
-% You can reveal the parts of a slide one at a time
-% with the \pause command:
-\begin{frame}{System Description}
-  \begin{itemize}
-  \item {
-    First item.
-    \pause % The slide will pause after showing the first item
-  }
-  \item {   
-    Second item.
-  }
-  % You can also specify when the content should appear
-  % by using <n->:
-  \item<3-> {
-    Third item.
-  }
-  \item<4-> {
-    Fourth item.
-  }
-  % or you can use the \uncover command to reveal general
-  % content (not just \items):
-  \item<5-> {
-    Fifth item. \uncover<6->{Extra text in the fifth item.}
-  }
-  \end{itemize}
+\begin{frame}{System Description}{Indexing Data}
+
+Given a knowledge graph $G$ as a list of \textit{$<$x p y$>$} triples.
+
+\begin{itemize}
+	\item {
+    	We want to find a list of \textit{$<$p y$>$} given \textit{x}.
+  	}
+  	\item {   
+    	Or a list of \textit{p} given \textit{$<$x, y$>$}.
+	}
+	\item {
+		...
+		\pause
+	}
+\end{itemize}
+
+This is to support searching over a dataset.
+\begin{itemize}
+	\item Like indexing from term to document in IR systems.
+  	\item In this problem, a triple is a document.
+  	\item Combinatorial combination of \textit{x, p, y} can be a term.
+\end{itemize}
+
 \end{frame}
 
 \subsection{Finding Instance Sets}
 
-\begin{frame}{Blocks}
-\begin{block}{Block Title}
-You can also highlight sections of your presentation in a block, with it's own title
-\end{block}
-\begin{theorem}
-There are separate environments for theorems, examples, definitions and proofs.
-\end{theorem}
-\begin{example}
-Here is an example of an example block.
-\end{example}
+\begin{frame}{System Description}{Finding Instance Sets}
+
+Assume that a given Horn rule $r$ is in the form: \textit{H(x, z) $\leftarrow$ P(x, y) $\wedge$ Q(y, z)}. How to find (ab)normal sets $NS(r)$, $ABS(r)$?
+\begin{itemize}
+	\item Enumerate variable $y$.
+	\item Find list of $y$ from $Px$ based on indexing.
+	\item Find list of $z$ from $Qy$ based on indexing.
+	\item Check \textit{$<$x H z$>$} in the graph or not.
+	\item Classify \textit{$<$x z$>$} into $NS(r)$ and $ABS(r)$.
+\end{itemize}
+
 \end{frame}
 
 \subsection{Finding Exceptions}
 
+\begin{frame}{System Description}{Finding Exceptions}
+
+Three exception types:
+\begin{itemize}
+	\item $E_1(r), E_2(r)$ as unary predicates for $x$, $z$, resp.
+	\item {
+		$E_3(r)$ as binary predicate for $(x, z)$.
+		\pause
+	}
+\end{itemize}
+
+How to find $E_3(r)$?
+\begin{itemize}
+	\item Let $E_3^+(r) = \{P | \exists (x, z) \in ABS(r): P(x, z) \in G\}$.
+	\item Let $E_3^-(r) = \{P | \exists (x, z) \in NS(r): P(x, z) \in G\}$.
+	\item Then $E_3(r) = E_3^+(r) - E_3^-(r)$.
+\end{itemize}
+
+To find $E_3^+$, we use data indexing again.
+
+\end{frame}
+
 \subsection{Measure Plugin}
+
+\begin{frame}{System Description}{Measure Plugin}
+We need to test different measures:
+\begin{itemize}
+	\item Confidence measure is not good for prediction.
+	\item Current measure is conviction, $conv(r) = (1 - supp(r)) / (1 - conf(r))$.
+	\item Other measures can be plugged in the system.
+\end{itemize}
+\end{frame}
 
 \subsection{Ranking Exceptions}
 
-% Placing a * after \section means it will not show in the
-% outline or table of contents.
-\section*{Summary}
+\begin{frame}{System Description}{Ranking Exceptions}
 
-\begin{frame}{Summary}
-  \begin{itemize}
-  \item
-    The \alert{first main message} of your talk in one or two lines.
-  \item
-    The \alert{second main message} of your talk in one or two lines.
-  \item
-    Perhaps a \alert{third message}, but not more than that.
-  \end{itemize}
-  
-  \begin{itemize}
-  \item
-    Outlook
-    \begin{itemize}
-    \item
-      Something you haven't solved.
-    \item
-      Something else you haven't solved.
-    \end{itemize}
-  \end{itemize}
+Ordered Partial Materialization (OPM):
+\begin{itemize}
+	\item Sort all positive rules according to decreasing order of conviction.
+	\item For each rule $r$, we use original facts and predicted ones (updated KB) from previous rules to infer $NS(r), ABS(r)$.
+	\item Find the list of possible exceptions for $r$.
+	\item Rank exceptions based on conviction over updated KB.
+	\item Choose all exceptions of $r$ to infer new facts.
+\end{itemize}
+
 \end{frame}
 
+\section{Future Work}
 
+\begin{frame}{Future Work}
 
-% All of the following is optional and typically not needed. 
-\appendix
-\section<presentation>*{\appendixname}
-\subsection<presentation>*{For Further Reading}
+Several works need to be done:
 
-\begin{frame}[allowframebreaks]
-  \frametitle<presentation>{For Further Reading}
-    
-  \begin{thebibliography}{10}
-    
-  \beamertemplatebookbibitems
-  % Start with overview books.
+\begin{itemize}
+	\item Extend experiment to YAGO.
+	\item Enable more forms for given positive rules.
+	\item Test with other predictive measures.
+\end{itemize}
 
-  \bibitem{Author1990}
-    A.~Author.
-    \newblock {\em Handbook of Everything}.
-    \newblock Some Press, 1990.
- 
-    
-  \beamertemplatearticlebibitems
-  % Followed by interesting articles. Keep the list short. 
-
-  \bibitem{Someone2000}
-    S.~Someone.
-    \newblock On this and that.
-    \newblock {\em Journal of This and That}, 2(1):50--100,
-    2000.
-  \end{thebibliography}
 \end{frame}
+
+%\section*{Summary}
+%
+%\begin{frame}{Summary}
+%
+%\appendix
+%\section<presentation>*{\appendixname}
+%\subsection<presentation>*{For Further Reading}
+%
+%\begin{frame}[allowframebreaks]
+%  \frametitle<presentation>{For Further Reading}
+%    
+%  \begin{thebibliography}{10}
+%    
+%  \beamertemplatebookbibitems
+%  % Start with overview books.
+%
+%  \bibitem{Author1990}
+%    A.~Author.
+%    \newblock {\em Handbook of Everything}.
+%    \newblock Some Press, 1990.
+% 
+%    
+%  \beamertemplatearticlebibitems
+%  % Followed by interesting articles. Keep the list short. 
+%
+%  \bibitem{Someone2000}
+%    S.~Someone.
+%    \newblock On this and that.
+%    \newblock {\em Journal of This and That}, 2(1):50--100,
+%    2000.
+%  \end{thebibliography}
+%\end{frame}
 
 \end{document}
 
