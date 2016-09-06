@@ -196,12 +196,24 @@ To find $E_3^+$, we use data indexing again.
 \subsection{Measure Plugin}
 
 \begin{frame}{System Description}{Measure Plugin}
+
 We need to test different measures:
 \begin{itemize}
-	\item Confidence measure is not good for prediction.
+	\item Confidence measure is not good for prediction~\cite{ref1}.
 	\item Current measure is conviction, $conv(r) = (1 - supp(r)) / (1 - conf(r))$.
-	\item Other measures can be plugged in the system.
+	\item {
+		Other measures can be plugged in the system~\cite{ref2}.
+		\pause
+	}
 \end{itemize}
+
+We use score function for ranking:
+\begin{itemize}
+	\item $score(r) = (conv(r) + conv(r^{aux})) / 2$.
+	\item Sort exceptions in decreasing order of score function.
+	\item If there is a tie, sort by decreasing order of $conv(r)$.
+\end{itemize}
+
 \end{frame}
 
 \subsection{Ranking Exceptions}
@@ -211,9 +223,9 @@ We need to test different measures:
 Ordered Partial Materialization (OPM):
 \begin{itemize}
 	\item Sort all positive rules according to decreasing order of conviction.
-	\item For each rule $r$, we use original facts and predicted ones (updated KB) from previous rules to infer $NS(r), ABS(r)$.
+	\item For each rule $r$, we use original facts and predicted ones (updated KG) from previous rules to infer $NS(r), ABS(r)$.
 	\item Find the list of possible exceptions for $r$.
-	\item Rank exceptions based on conviction over updated KB.
+	\item Rank exceptions based on the score function over updated KG.
 	\item Choose all exceptions of $r$ to infer new facts.
 \end{itemize}
 
@@ -233,39 +245,29 @@ Several works need to be done:
 
 \end{frame}
 
-%\section*{Summary}
-%
-%\begin{frame}{Summary}
-%
-%\appendix
-%\section<presentation>*{\appendixname}
-%\subsection<presentation>*{For Further Reading}
-%
-%\begin{frame}[allowframebreaks]
-%  \frametitle<presentation>{For Further Reading}
-%    
-%  \begin{thebibliography}{10}
-%    
-%  \beamertemplatebookbibitems
-%  % Start with overview books.
-%
-%  \bibitem{Author1990}
-%    A.~Author.
-%    \newblock {\em Handbook of Everything}.
-%    \newblock Some Press, 1990.
-% 
-%    
-%  \beamertemplatearticlebibitems
-%  % Followed by interesting articles. Keep the list short. 
-%
-%  \bibitem{Someone2000}
-%    S.~Someone.
-%    \newblock On this and that.
-%    \newblock {\em Journal of This and That}, 2(1):50--100,
-%    2000.
-%  \end{thebibliography}
-%\end{frame}
+\section*{Reference}
+
+\begin{frame}{Reference}
+  \frametitle<presentation>{For Further Reading}
+    
+  \begin{thebibliography}{10}
+
+  \beamertemplatearticlebibitems
+  % Followed by interesting articles. Keep the list short. 
+
+  \bibitem{ref1}
+    Azevedo.
+    \newblock Comparing Rule Measures for Predictive Association Rules.
+    \newblock {\em Proceedings of ECML}, 510--517,
+    2007.
+
+  \bibitem{ref2}
+    Todorovski.
+    \newblock Predictive Performance of Weighted Relative Accuracy.
+    \newblock {\em 4th European Conference, PKDD}, 255--264,
+    2000.
+
+  \end{thebibliography}
+\end{frame}
 
 \end{document}
-
-
