@@ -78,7 +78,7 @@
 % - Not really informative to the audience, more for people (including
 %   yourself) who are reading the slides online
 
-\subject{Theoretical Computer Science}
+\subject{Information System}
 % This is only inserted into the PDF information catalog. Can be left
 % out. 
 
@@ -128,88 +128,99 @@
 
 \subsection{Indexing Data}
 
-\begin{frame}{System Description}{Indexing Data}
+\begin{frame}{Indexing Data}
 
-Given a knowledge graph $G$ as a list of \textit{$<$x p y$>$} triples.
+Goal: support searching over a dataset.
 
+Intuition:
 \begin{itemize}
-	\item {
-    	We want to find a list of \textit{$<$p y$>$} given \textit{x}.
-  	}
-  	\item {   
-    	Or a list of \textit{p} given \textit{$<$x, y$>$}.
-	}
-	\item {
-		...
-		\pause
-	}
-\end{itemize}
-
-This is to support searching over a dataset.
-\begin{itemize}
-	\item Like indexing from term to document in IR systems.
+	\item Inverted indexing from term to document in IR systems.
   	\item In this problem, a triple is a document.
-  	\item Combinatorial combination of \textit{x, p, y} can be a term.
+  	\item Find corresponding predicates given subject, object.
 \end{itemize}
 
 \end{frame}
 
 \subsection{Finding Instance Sets}
 
-\begin{frame}{System Description}{Finding Instance Sets}
+\begin{frame}{Finding Instance Sets}
 
-Assume that a given Horn rule $r$ is in the form: \textit{H(x, z) $\leftarrow$ P(x, y) $\wedge$ Q(y, z)}. How to find (ab)normal sets $NS(r)$, $ABS(r)$?
+\begin{figure}[h]
+	\centering
+	\includegraphics[page=1,width=.5\textwidth]{example.pdf}
+	\caption{A KG Example with rule \textit{livesIn(X, Z) $\leftarrow$ isMarriedTo(Y, X), livesIn(Y, Z)}, Source: ILP Paper.}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Finding Instance Sets}
+
+Horn rule $r$: \textit{H(X, Z) $\leftarrow$ P(X, Y) $\wedge$ Q(Y, Z)}.
 \begin{itemize}
-	\item Enumerate variable $y$.
-	\item Find list of $y$ from $Px$ based on indexing.
-	\item Find list of $z$ from $Qy$ based on indexing.
-	\item Check \textit{$<$x H z$>$} in the graph or not.
-	\item Classify \textit{$<$x z$>$} into $NS(r)$ and $ABS(r)$.
+	\item Traverse all substitutions for $Y$.
+	\item Find list of $Y$ from $PX$ based on indexing.
+	\item Find list of $Z$ from $QY$ based on indexing.
+	\item Check \textit{$\langle$X H Z$\rangle$} in the graph or not.
+	\item Classify \textit{$\langle$X Z$\rangle$} into $NS(r)$ and $ABS(r)$.
 \end{itemize}
 
 \end{frame}
 
 \subsection{Finding Exceptions}
 
-\begin{frame}{System Description}{Finding Exceptions}
+\begin{frame}{Finding Exceptions}
 
 Three exception types:
 \begin{itemize}
-	\item $E_1(r), E_2(r)$ as unary predicates for $x$, $z$, resp.
+	\item \textit{EWS(r, G, X), EWS(r, G, Y)} as unary predicates for $X$, $Z$.
 	\item {
-		$E_3(r)$ as binary predicate for $(x, z)$.
+		\textit{EWS(r, G, $\langle$X Z$\rangle$)} as binary predicate for \textit{$\langle$X Z$\rangle$}.
 		\pause
 	}
 \end{itemize}
 
-How to find $E_3(r)$?
+How to find \textit{EWS(r, G, $\langle$X Z$\rangle$)}?
 \begin{itemize}
-	\item Let $E_3^+(r) = \{P | \exists (x, z) \in ABS(r): P(x, z) \in G\}$.
-	\item Let $E_3^-(r) = \{P | \exists (x, z) \in NS(r): P(x, z) \in G\}$.
-	\item Then $E_3(r) = E_3^+(r) - E_3^-(r)$.
+	\item Let $E^+ = \{P | \exists (X, Z) \in ABS(r): P(X, Z) \in G\}$.
+	\item Let $E^- = \{P | \exists (X, Z) \in NS(r): P(X, Z) \in G\}$.
+	\item Then \textit{EWS(r, G, $\langle$X Z$\rangle$)} $= E^+ \setminus E^-$.
 \end{itemize}
 
-To find $E_3^+$, we use data indexing again.
+To find $E^+$, we use data indexing again.
+
+\end{frame}
+
+\begin{frame}{Finding Exceptions}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[page=1,width=.5\textwidth]{example.pdf}
+	\caption{A KG Example, Source: ILP Paper.}
+\end{figure}
+
+\textit{livesIn(X, Z) $\leftarrow$ isMarriedTo(Y, X), livesIn(Y, Z)}, exception candidates: \textit{Researcher, Artist}.
 
 \end{frame}
 
 \subsection{Measure Plugin}
 
-\begin{frame}{System Description}{Measure Plugin}
+\begin{frame}{Measure Plugin}
 
-We need to test different measures:
+Goal: test different measures.
+
+Reasons:
 \begin{itemize}
 	\item Confidence measure is not good for prediction~\cite{ref1}.
-	\item Current measure is conviction, $conv(r) = (1 - supp(r)) / (1 - conf(r))$.
+	\item Current measure is conviction, $conv(r) = \frac{1 - supp(r)}{1 - conf(r)}$.
 	\item {
 		Other measures can be plugged in the system~\cite{ref2}.
 		\pause
 	}
 \end{itemize}
 
-We use score function for ranking:
+Score function for ranking:
 \begin{itemize}
-	\item $score(r) = (conv(r) + conv(r^{aux})) / 2$.
+	\item $score(r) = \frac{conv(r) + conv(r^{aux})}{2}$.
 	\item Sort exceptions in decreasing order of score function.
 	\item If there is a tie, sort by decreasing order of $conv(r)$.
 \end{itemize}
@@ -218,51 +229,59 @@ We use score function for ranking:
 
 \subsection{Ranking Exceptions}
 
-\begin{frame}{System Description}{Ranking Exceptions}
+\begin{frame}{Ranking Exceptions}
 
 Ordered Partial Materialization (OPM):
 \begin{itemize}
 	\item Sort all positive rules according to decreasing order of conviction.
 	\item For each rule $r$, we use original facts and predicted ones (updated KG) from previous rules to infer $NS(r), ABS(r)$.
-	\item Find the list of possible exceptions for $r$.
 	\item Rank exceptions based on the score function over updated KG.
 	\item Choose all exceptions of $r$ to infer new facts.
 \end{itemize}
 
 \end{frame}
 
-\section{Future Work}
+\section{Current Result and Future Work}
 
-\begin{frame}{Future Work}
+\begin{frame}{Current Result and Future Work}
+
+Some mined rules:
+\begin{itemize}
+	\item {
+		\textit{writtenBy(X , Z) $\leftarrow$ hasPredecessor(X , Y), writtenBy(Y , Z), not isAmericanFilm(X)}.
+	}
+	\item {
+		\textit{actedIn(X , Z) $\leftarrow$ isMarriedTo(X , Y), directed(Y, Z), not isSilentFilmActor(X)}.
+		\pause
+	}
+\end{itemize}
 
 Several works need to be done:
-
 \begin{itemize}
-	\item Extend experiment to YAGO.
+	\item Experiments with other datasets, e.g, YAGO and Freebase.
 	\item Enable more forms for given positive rules.
 	\item Test with other predictive measures.
 \end{itemize}
 
 \end{frame}
 
-\section*{Reference}
+\section*{References}
 
 \begin{frame}{Reference}
   \frametitle<presentation>{For Further Reading}
-    
   \begin{thebibliography}{10}
 
   \beamertemplatearticlebibitems
   % Followed by interesting articles. Keep the list short. 
 
   \bibitem{ref1}
-    Azevedo.
+    Azevedo et al.
     \newblock Comparing Rule Measures for Predictive Association Rules.
     \newblock {\em Proceedings of ECML}, 510--517,
     2007.
 
   \bibitem{ref2}
-    Todorovski.
+    Todorovski et al.
     \newblock Predictive Performance of Weighted Relative Accuracy.
     \newblock {\em 4th European Conference, PKDD}, 255--264,
     2000.
