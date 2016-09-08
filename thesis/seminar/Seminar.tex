@@ -148,8 +148,10 @@ Intuition:
 \begin{figure}[h]
 	\centering
 	\includegraphics[page=1,width=.5\textwidth]{example.pdf}
-	\caption{A KG Example with rule \textit{livesIn(X, Z) $\leftarrow$ isMarriedTo(Y, X), livesIn(Y, Z)}, Source: ILP Paper.}
+	\caption{Instance Set Example with Rule \textit{r}, Source: ILP Paper.}
 \end{figure}
+
+\centerline{\textit{r: livesIn(X, Z) $\leftarrow$ isMarriedTo(Y, X), livesIn(Y, Z)}}
 
 \end{frame}
 
@@ -195,10 +197,11 @@ To find $E^+$, we use data indexing again.
 \begin{figure}[h]
 	\centering
 	\includegraphics[page=1,width=.5\textwidth]{example.pdf}
-	\caption{A KG Example, Source: ILP Paper.}
+	\caption{Exception Candidate Example with Rule \textit{r}, Source: ILP Paper.}
 \end{figure}
 
-\textit{livesIn(X, Z) $\leftarrow$ isMarriedTo(Y, X), livesIn(Y, Z)}, exception candidates: \textit{Researcher, Artist}.
+\centerline{\textit{r: livesIn(X, Z) $\leftarrow$ isMarriedTo(Y, X), livesIn(Y, Z)}}
+\centerline{Exception candidates: \textit{Researcher, Artist}}.
 
 \end{frame}
 
