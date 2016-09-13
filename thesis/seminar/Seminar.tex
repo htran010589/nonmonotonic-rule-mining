@@ -118,7 +118,7 @@
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[page=1,width=.75\textwidth]{overview.pdf}
+	\includegraphics[page=1,width=.95\textwidth]{overview.pdf}
 	\caption{Components in the System}
 \end{figure}
 
@@ -157,12 +157,12 @@ Intuition:
 
 \begin{frame}{Finding Instance Sets}
 
-Horn rule $r$: \textit{H(X, Z) $\leftarrow$ P(X, Y) $\wedge$ Q(Y, Z)}.
+Horn rule $r$: \textit{\textbf{h(X, Z) $\leftarrow$ p(X, Y) $\wedge$ q(Y, Z)}}.
 \begin{itemize}
 	\item Traverse all substitutions for $Y$.
-	\item Find list of $Y$ from $PX$ based on indexing.
-	\item Find list of $Z$ from $QY$ based on indexing.
-	\item Check \textit{$\langle$X H Z$\rangle$} in the graph or not.
+	\item Find list of $Y$ from $pX$ based on indexing.
+	\item Find list of $Z$ from $qY$ based on indexing.
+	\item Check \textit{$\langle$X h Z$\rangle$} in the graph or not.
 	\item Classify \textit{$\langle$X Z$\rangle$} into $NS(r)$ and $ABS(r)$.
 \end{itemize}
 
@@ -174,7 +174,7 @@ Horn rule $r$: \textit{H(X, Z) $\leftarrow$ P(X, Y) $\wedge$ Q(Y, Z)}.
 
 Three exception types:
 \begin{itemize}
-	\item \textit{EWS(r, G, X), EWS(r, G, Y)} as unary predicates for $X$, $Z$.
+	\item \textit{EWS(r, G, X), EWS(r, G, Z)} as unary predicates for $X$, $Z$.
 	\item {
 		\textit{EWS(r, G, $\langle$X Z$\rangle$)} as binary predicate for \textit{$\langle$X Z$\rangle$}.
 		\pause
@@ -201,7 +201,7 @@ To find $E^+$, we use data indexing again.
 \end{figure}
 
 \centerline{\textit{r: livesIn(X, Z) $\leftarrow$ isMarriedTo(Y, X), livesIn(Y, Z)}}
-\centerline{Exception candidates: \textit{Researcher, Artist}}.
+\centerline{Exception candidates: \textbf{Researcher, Artist}}.
 
 \end{frame}
 
@@ -234,7 +234,7 @@ Score function for ranking:
 
 \begin{frame}{Ranking Exceptions}
 
-Ordered Partial Materialization (OPM):
+Ordered Partial Materialization (\textbf{OPM}):
 \begin{itemize}
 	\item Sort all positive rules according to decreasing order of conviction.
 	\item For each rule $r$, we use original facts and predicted ones (updated KG) from previous rules to infer $NS(r), ABS(r)$.
