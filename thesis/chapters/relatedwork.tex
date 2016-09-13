@@ -1,53 +1,58 @@
 \chapter{Related Work}
 
-The area of rule mining on knowledge graphs has attracted interests from many researchers recently. This problem can be classified into two main directions: statistics-based and logic-based approaches.
+The area of rule mining on knowledge graphs has recently attracted interest from many researchers. The approaches that aim at tackling this problem can be classified into two groups: statistics-based and logic-based directions. In this chapter we review the relevant works from both of these groups.
 
-\section{Statistics-based Approach}
-
-This direction focuses on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
+The statistics-based approaches focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
 
 RESCAL is one of principal algorithms in this direction where relations of all hidden feature pairs are taken into consideration~\cite{ref2, ref3}. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
 
-While many tensor factorization methods use subject, object, predicate as three dimensions to model knowledge graph as a cubic, some matrix decomposition algorithms try to transform this cubic into two dimensional data. For instance, subject and object dimensions are merged into one representing for pair of entities in~\cite{ref6, ref7}.
+While many tensor factorization methods use subject, predicate, object as three dimensions to model knowledge graph as a cube, some matrix decomposition algorithms try to transform this cube into two dimensional data. For instance, in~\cite{ref6, ref7} subject and object dimensions are merged into one representing a pair of entities.
 
-Some distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close. The closeness can be checked based on some distance measures. This approach can be expanded to structure embedding model~\cite{ref8}.
+Distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close. The closeness can be checked based on some predefined distance measures. This approach can be expanded to structure embedding model~\cite{ref8}.
 
-\section{Logic-based Approach}
+\section{Logic-based Approaches}
 
-The logic-based direction aims to find observable patterns in order to infer new links on the knowlege graph~\cite{ref1}. Since the patterns can be directly seen and not hidden in the data, these algorithms in this approach are more interpretable than those of the previous one. For instance, one pattern from the graph can be represented in a form:\\
+The logic-based direction aims at finding observable patterns in order to infer new links in the knowledge graph~\cite{ref1}. Since the patterns can be directly seen and not hidden in the data, these algorithms are more interpretable than the ones based on statistical approaches. For instance, a pattern extracted from the graph can be represented in a form:\\
 
 \centerline{\textit{livesIn(Z, Y) $\leftarrow$ isMarriedTo(X, Z), livesIn(X, Y).}}
 
 This form is equivalent to a triangle of three predicate edges in the knowledge graph. Since this pattern is frequent and observable, it can be mined in order to predict new links. More specifically, if we know some facts such as: \textit{isMarriedTo(Peter, Marry), livesIn(Marry, London)}; then the fact \textit{livesIn(Peter, London)} has high chance to be true.
 
-In the rest of this section, the following main logic-based systems are discussed in details.
+In the rest of this section, the following main logic-based systems are discussed in details and illustrated with typical examples.
 
 \subsection{Inductive Logic Programming Systems}
 
-Inductive Logic Programming~\cite{ref9} (ILP) is a combination field of Machine Learning and Logic Programming and it is used for generating hypothesis based on background knowledge, specific examples. These examples can be classified into positive and negative groups. The hypothesis is true for every positive example and not true for any negative one.
+Inductive Logic Programming~\cite{ref9} (ILP) is a combination field of Machine Learning and Logic Programming and it is used for generating hypothesis based on background knowledge and specific examples. These examples can be classified into positive and negative groups. The hypothesis is true for every positive example and not true for any negative one.
 
-Rule mining is a core problem in ILP, however, applying ILP algorithms to semantic web data is problematic for the following reasons. Firstly, ILP tools are not scalable and efficient for large knowlege graph such as YAGO, Freebase, Wikidata~\cite{ref10}. In some experiments conducted in~\cite{ref10}, it takes several days to process YAGO2 data using cutting edge ILP tools.
+Rule mining is a core problem in ILP, however, applying ILP algorithms to semantic web data is problematic for the following reasons. Firstly, ILP tools are not scalable and efficient for large knowlege graph such as YAGO, Freebase, Wikidata~\cite{ref10}. In some experiments conducted in~\cite{ref10}, it takes several days to process YAGO2 data using cutting edge ILP tools such as ALEPH~\cite{ref14, ref10}, QuickFoil~\cite{ref15, ref10}.
 
 Secondly, ILP methods use closed world assumption (CWA), that is, it is assumed that knowlege base is complete and missing facts are false. These methods require both positive and negative examples like traditional machine learning algorithms. This assumption and requirement are not suitable for our problem since there are only in-completed positive facts in real world data~\cite{ref10}.
 
-Thirdly, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since mining exceptions is important purpose of our work, naively using ILP tools will not produce what we want. This is also the reason why Abductive Logic Programming~\cite{ref11} should be taken into account.
+Thirdly, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since mining exceptions is important purpose of our work, naively using ILP tools will not produce what we want. This is also the reason why Abductive Logic Programming~\cite{ref11} should be taken into account in~\ref{related-work-nonmonotonic-rule-mining-systems}.
 
-(should I describe ALP here?)
+\textbf{ALEPH.} This name stands for A Learning Engine for Proposing Hypotheses which is one of typical systems in ILP. This tool is developed and extended from P-Progol~\footnote{\url{http://www.cs.ox.ac.uk/activities/machinelearning/Aleph/aleph}}. Like many other ILP systems, ALEPH receipts the input of background knowledges, positive and negative examples. After that, it generates a theory with set of rules as an output. More specifically, the tool processes head predicates alternatively. Experiments in~\cite{ref10} show that run time for each head relation varies widely from several seconds to more than a day. This indicates that ALEPH is not scalable for large datasets.
 
-To be filled... (WARMR, QuickFoil, DL-Learner and other ILP tools)
+FOIL. To be filled...
 
-\subsection{AMIE+ System}
+\subsection{Relational Learning Systems}
 
-The scalability and CWA assumption issues of ILP are tackled in AMIE~\cite{ref10} system. This tool receives a large knowledge graph as an input and generates top positive Horn rules with high quality.
+WARMR. To be filled...
+
+\textbf{AMIE+.} The scalability and CWA assumption issues of ILP are tackled in AMIE~\cite{ref10} system. This tool receives a large knowledge graph as an input and generates top positive Horn rules with high quality.
 
 AMIE+ is a new version of AMIE in which run time performance is enhanced by pruning and query manipulations. Experimental work in~\cite{ref10} shows that this platform can process millions of triples in RDF graph and its mined rules surpass those of other methods in terms of efficiency.
 
 However, like other ILP platforms, AMIE+ does not take care nonmonotonic rules or exceptions since its output is a list of Horn rules. Our work can solve this problem since it aims to generate rules with exceptions from a list of AMIE+ mined positive rules and a big knowledge graph.
 
-\subsection{Nonmonotonic Rule Mining System}
+\subsection{Nonmonotonic Rule Mining Systems}
+\label{related-work-nonmonotonic-rule-mining-systems}
+
+ALP. To be filled...
 
 This research~\cite{ref12} works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects.
 
 After positive rules are mined using Association Rule Mining tools~\cite{ref13}, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of partial materialization.
 
 From the same concept of partial materialization, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
+
+Answer Set Programming. to be filled...
