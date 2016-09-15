@@ -28,15 +28,15 @@ Rule mining is a core problem in ILP, however, applying ILP algorithms to semant
 
 Secondly, ILP methods use closed world assumption (CWA), that is, it is assumed that knowlege base is complete and missing facts are false. These methods require both positive and negative examples like traditional machine learning algorithms. This assumption and requirement are not suitable for our problem since there are only in-completed positive facts in real world data~\cite{ref10}.
 
-Thirdly, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since mining exceptions is important purpose of our work, naively using ILP tools will not produce what we want. This is also the reason why Abductive Logic Programming~\cite{ref11} should be taken into account in~\ref{related-work-nonmonotonic-rule-mining-systems}.
+Thirdly, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since mining exceptions is important purpose of our work, naively using ILP tools will not produce what we want. This is also the reason why Abductive Logic Programming~\cite{ref11} should be taken into account in~\ref{related-work-nonmonotonic-rule-mining-systems}.	
 
 \textbf{ALEPH.} This name stands for A Learning Engine for Proposing Hypotheses which is one of typical systems in ILP. This tool is developed and extended from P-Progol~\footnote{\url{http://www.cs.ox.ac.uk/activities/machinelearning/Aleph/aleph}}. Like many other ILP systems, ALEPH receipts the input of background knowledges, positive and negative examples. After that, it generates a theory with set of rules as an output. More specifically, the tool processes head predicates alternatively. Experiments in~\cite{ref10} show that run time for each head relation varies widely from several seconds to more than a day. This indicates that ALEPH is not scalable for large datasets.
 
-FOIL. To be filled...
+\textbf{QuickFOIL.} One of the weaknesses of ILP systems is scalability. To tackle this, QuickFOIL is created to find rule hypothesis efficiently from fact data. The system iteratively finds a Horn rule with the best predefined measure score and deletes facts that can be inferred from this rule. Intuitively, the collection of found rules in each step can be used to summarize original knowledge base. Besides, QuickFOIL uses data refinement and pruning techniques to process large-scale input with millions of triples. This tool is also traditional ILP system since it requires negative examples and uses CWA assumption.
 
 \subsection{Relational Learning Systems}
 
-WARMR. To be filled...
+\textbf{WARMR.} \cite{ref16, ref17} describe WARMR system which is hybrid between traditional ILP and rule learning approaches. This algorithm performs level-wise searching and pruning to mine patterns~\cite{ref10}. To check the runtime performance of WARMR, AMIE+ authors~\cite{ref10} test it with YAGO2 dataset. The tool processes more than a day with YAGO2 and more than 15 hours with part of the dataset. It is also indicated in~\cite{ref10} that WARMR is developed with ProLog, and thus, is not fast to process big data. To overcome this problem, the following AMIE+ system~\cite{ref10} is introduced.
 
 \textbf{AMIE+.} The scalability and CWA assumption issues of ILP are tackled in AMIE~\cite{ref10} system. This tool receives a large knowledge graph as an input and generates top positive Horn rules with high quality.
 
