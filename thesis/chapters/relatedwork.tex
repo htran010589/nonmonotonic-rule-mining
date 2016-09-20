@@ -1,10 +1,51 @@
 \chapter{Related Work}
 
-The area of relational learning on knowledge graphs has recently attracted interest from many researchers. The approaches that aim at tackling this problem can be mainly classified into two groups: statistics-based and logic-based directions. In this chapter we review semantic web as knowledge representation and the relevant works from these groups.
+The area of relational learning on semantic web has recently attracted interest from many researchers. The approaches that aim at tackling this problem can be mainly classified into two groups: statistics-based and logic-based directions. In this chapter we review semantic web and the relevant works from these groups.
 
-\section{Knowledge Representation}
+\section{Semantic Web}
 
-ToDo: I want to talk about sematic web here.
+The Semantic Web enables computers to interpret the meaning of the data all over the Internet. Alternatively, it can be defined as "a web of data that can be processed directly and indirectly by machines" in~\cite{ref26}.
+
+The World Wide Web Consortium (W3C) defines semantic web and the Resource Description Framework (RDF) as a platform for Linked Data~\cite{ref26}. The W3C proposes other technologies such as SPARQL, OWL for data manipulation. The architecture of the W3C can be presented as a stack in Figure~\ref{fig1}~\footnote{\url{https://www.w3.org/DesignIssues/diagrams/sweb-stack/2006a.png}}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.65\textwidth]{semantic-web.png}
+\caption{The Semantic Web technologies}
+\label{fig1}
+\end{figure}
+
+The RDF can be used to describe knowledge graph where facts are presented in a format: \textit{$<$subject$>$ $<$predicate$>$ $<$object$>$}. This is the fundamental format of many knowledge bases such as YAGO, FreeBase, ... There are several typical knowledge graphs listed in Table~\ref{table1}~\cite{ref27} which have different scales.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Name & Instances & Facts & Types & Relations\\
+\hline\hline
+DBpedia (English) & 4,806,150 & 176,043,129 & 735 & 2,813\\
+\hline
+YAGO & 4,595,906 & 25,946,870 & 488,469 & 77\\
+\hline
+Freebase & 49,947,845 & 3,041,722,635 & 26,507 & 37,781\\
+\hline
+Wikidata & 15,602,060 & 65,993,797 & 23,157 & 1,673\\
+\hline
+NELL & 2,006,896 & 432,845 & 285 & 425\\
+\hline
+OpenCyc & 118,499 & 2,413,894 & 45,153 & 18,526\\
+\hline
+Google's Knowledge Graph & 570,000,000 & 18,000,000,000 & 1,500 & 35,000\\
+\hline
+Google's Knowledge Vault & 45,000,000 & 271,000,000 & 1,100 & 4,469\\
+\hline
+Yahoo! Knowledge Graph & 3,443,743 & 1,391,054,990 & 250 & 800\\
+\hline
+\end{tabular}
+\end{center}
+\caption{List of typical knowledge graphs}
+\label{table1}
+\end{table}
 
 \section{Statistics-based Approaches}
 
