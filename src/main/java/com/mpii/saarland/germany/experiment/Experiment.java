@@ -26,7 +26,7 @@ public class Experiment {
 
 	public static final String DOMAIN = "IMDB";
 
-	public static final int[] MAXIMUM_COUNTS = { 5, 10, 15 };
+	public static final int[] MAXIMUM_COUNTS = { 5, 10 };
 
 	public static final String[] TYPES = { ".neg.", ".pos.", ".neg.x2." };
 
