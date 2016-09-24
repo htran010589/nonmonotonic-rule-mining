@@ -6,7 +6,7 @@ The area of relational learning on semantic web has recently attracted interest 
 
 The Semantic Web enables computers to interpret the meaning of the data all over the Internet. Alternatively, it can be defined as "a web of data that can be processed directly and indirectly by machines" in~\cite{ref26}.
 
-The World Wide Web Consortium (W3C) defines semantic web and the Resource Description Framework (RDF) as a platform for Linked Data~\cite{ref26}. The W3C proposes other technologies such as SPARQL, OWL for data manipulation. The architecture of the W3C can be presented as a stack in Figure~\ref{fig1}~\footnote{\url{https://www.w3.org/DesignIssues/diagrams/sweb-stack/2006a.png}}.
+The World Wide Web Consortium (W3C) defines semantic web and the Resource Description Framework (RDF) as a platform for Linked Data~\cite{ref26}. The W3C proposes other technologies such as SPARQL, OWL for data manipulation. Architecture of the W3C can be presented as a stack in Figure~\ref{fig1}~\footnote{\url{https://www.w3.org/DesignIssues/diagrams/sweb-stack/2006a.png}}.
 
 \begin{figure}
 \centering
@@ -15,7 +15,7 @@ The World Wide Web Consortium (W3C) defines semantic web and the Resource Descri
 \label{fig1}
 \end{figure}
 
-The RDF can be used to describe knowledge graph where facts are presented in a format: \textit{$<$subject$>$ $<$predicate$>$ $<$object$>$}. This is the fundamental format of many knowledge bases such as YAGO, FreeBase, ... There are several typical knowledge graphs listed in Table~\ref{table1}~\cite{ref27} which have different scales.
+The RDF can be used to describe knowledge graph where facts are presented in a format: \textit{$<$subject$>$ $<$predicate$>$ $<$object$>$}. This is the fundamental format of many knowledge bases such as YAGO, FreeBase, ... There are several typical knowledge graphs listed in Table~\ref{table1}~\cite{ref27} which have different scales in the number of predicates, entities and facts.
 
 \begin{table}
 \begin{center}
@@ -49,7 +49,7 @@ Yahoo! Knowledge Graph & 3,443,743 & 1,391,054,990 & 250 & 800\\
 
 \section{Statistics-based Approaches}
 
-These approaches focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
+The statistics-based directions focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
 
 RESCAL is one of principal algorithms in this direction where relations of all hidden feature pairs are taken into consideration~\cite{ref2, ref3}. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
 
@@ -85,9 +85,7 @@ Thirdly, most ILP algorithms generate positive Horn rules without exceptions~\ci
 
 \textbf{WARMR.} \cite{ref16, ref17} describe WARMR system which is hybrid between traditional ILP and rule learning approaches. This algorithm performs level-wise searching and pruning to mine patterns~\cite{ref10}. To check the runtime performance of WARMR, AMIE+ authors~\cite{ref10} test it with YAGO2 dataset. The tool processes more than a day with YAGO2 and more than 15 hours with part of the dataset. It is also indicated in~\cite{ref10} that WARMR is developed with ProLog, and thus, is not fast to process big data. To overcome this problem, the following AMIE+ system~\cite{ref10} is introduced.
 
-\textbf{AMIE+.} The scalability and CWA assumption issues of ILP are tackled in AMIE~\cite{ref10} system. This tool receives a large knowledge graph as an input and generates top positive Horn rules with high quality.
-
-AMIE+ is a new version of AMIE in which run time performance is enhanced by pruning and query manipulations. Experimental work in~\cite{ref10} shows that this platform can process millions of triples in RDF graph and its mined rules surpass those of other methods in terms of efficiency.
+\textbf{AMIE+.} The scalability and CWA assumption issues of ILP are tackled in AMIE~\cite{ref10} system. This tool receives a large knowledge graph as an input and generates top positive Horn rules with high quality. AMIE+ is a new version of AMIE in which run time performance is enhanced by pruning and query manipulations. Experimental work in~\cite{ref10} shows that this platform can process millions of triples in RDF graph and its mined rules surpass those of other methods in terms of efficiency.
 
 However, like other ILP platforms, AMIE+ does not take care nonmonotonic rules or exceptions since its output is a list of Horn rules. Our work can solve this problem since it aims to generate rules with exceptions from a list of AMIE+ mined positive rules and a big knowledge graph.
 
@@ -96,9 +94,7 @@ However, like other ILP platforms, AMIE+ does not take care nonmonotonic rules o
 
 \textbf{Hybrid ALP System.} While traditional ILP systems do not take exceptions or negative atoms into account, the converse is true for Abductive Logic Programming (ALP)~\cite{ref11}. Thus, a system in the intersection between these fields is created in~\cite{ref11} to generate logic hypothesis. However, CWA is used and all unseen triples are treated as false facts in this research. This setting cannot be applied to our current work.
 
-\textbf{Nonmonotonic Rule Mining with OWA.} Research in ~\cite{ref12} bases on OWA instead of CWA in some mentioned systems. This tool works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects.
-
-After positive rules are mined using Association Rule Mining tools~\cite{ref13}, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of partial materialization.
+\textbf{Nonmonotonic Rule Mining with OWA.} Research in ~\cite{ref12} bases on OWA instead of CWA in some mentioned systems. This tool works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects. After positive rules are mined using Association Rule Mining tools~\cite{ref13}, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of partial materialization.
 
 From the same concept of partial materialization, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
 

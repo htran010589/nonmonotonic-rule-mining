@@ -24,55 +24,71 @@ import com.mpii.saarland.germany.utils.Utils;
 
 public class Experiment {
 
-	public static final String MOD = "IMDB";
+	public static final String DOMAIN = "IMDB";
 
-	public static final int[] maxCnts = { 5, 10, 15, 20 };
+	public static final int[] MAXIMUM_COUNTS = { 5, 10, 15 };
 
-	public static final String[] types = { ".neg.", ".pos.", ".neg.x2." };
+	public static final String[] TYPES = { ".neg.", ".pos.", ".neg.x2." };
 
-	public static String IDEAL_DATA;
+	public static String idealData;
 
-	public static String TYPE_DATA;
+	public static String typeData;
 
-	public static String ENCODE_FILE;
+	public static String encodeFile;
 
-	public static String TRAIN_DATA;
+	public static String patternFileField;
 
-	public static String TRAIN_DATA_DLV;
+	public static String trainData;
 
-	public static String RULE_FILE;
+	public static String trainDataDlv;
 
-	public static String EXT_FILE;
+	public static String choosenRuleFile;
 
-	public static String DLV_BIN_FILE;
+	public static String extentionFile;
+
+	public static String dlvBinFile;
 
 	public static Date date1, date2, date3, date4;
 
 	static {
-		if (MOD.equals("IMDB")) {
-			IDEAL_DATA = "data/imdb.facts.tsv";
-			TYPE_DATA = null;
-			ENCODE_FILE = "data/experiment/IMDB/imdb.mapping.data.txt";
-			TRAIN_DATA = "data/experiment/IMDB/imdb.learning.data.txt";
-			TRAIN_DATA_DLV = "data/experiment/IMDB/DLV/imdb.train.kg";
-			RULE_FILE = "data/experiment/IMDB/DLV/imdb.rule";
-			DLV_BIN_FILE = "data/experiment/IMDB/DLV/dlv.bin";
-			EXT_FILE = "data/experiment/IMDB/DLV/imdb.ext.kg";
+		if (DOMAIN.equals("IMDB")) {
+			// cai nay la danh cho IMDB
+//			idealData = "data/imdb.facts.tsv";
+//			typeData = null;
+//			encodeFile = "data/experiment/IMDB/imdb.mapping.data.txt";
+//			patternFile = Settings.IMDB_FORM2_PATTERN_FILE_NAME;
+//			trainData = "data/experiment/IMDB/imdb.learning.data.txt";
+//			trainDataDlv = "data/experiment/IMDB/DLV/imdb.train.kg";
+//			choosenRuleFile = "data/experiment/IMDB/DLV/imdb.rule";
+//			dlvBinFile = "data/experiment/IMDB/DLV/dlv.bin";
+//			extentionFile = "data/experiment/IMDB/DLV/imdb.ext.kg";
+
+			// cai nay danh cho freebase - chinh lai mot chut
+//			idealData = "data/imdb.facts.tsv";
+//			typeData = null;
+			encodeFile = "data/experiment/FreeBase/fb.mapping.data.txt";
+			patternFileField = "data/experiment/FreeBase/fb-train-pattern.txt";
+			trainData = "data/experiment/FreeBase/fb.learning.data.txt";
+			trainDataDlv = "data/experiment/FreeBase/DLV/fb.train.kg";
+			choosenRuleFile = "data/experiment/FreeBase/DLV/fb.rule";
+			dlvBinFile = "data/experiment/FreeBase/DLV/dlv.bin";
+			extentionFile = "data/experiment/FreeBase/DLV/fb.ext.kg";
 		} else {
-			IDEAL_DATA = "data/experiment/YAGO/yago2s.ideal.data.txt";
-			TYPE_DATA = "data/experiment/YAGO/yago2.type.txt";
-			ENCODE_FILE = "data/experiment/YAGO/DLV/yago2s.mapping.data.txt";
-			TRAIN_DATA = "data/experiment/YAGO/yago2.training.data.txt";
-			TRAIN_DATA_DLV = "data/experiment/YAGO/DLV/yago2.training.kg";
-			RULE_FILE = "data/experiment/YAGO/DLV/yago.rule";
-			DLV_BIN_FILE = "data/experiment/YAGO/DLV/dlv.bin";
-			EXT_FILE = "data/experiment/YAGO/DLV/yago.ext.kg";
+			idealData = "data/experiment/YAGO/yago2s.ideal.data.txt";
+			typeData = "data/experiment/YAGO/yago2.type.txt";
+			encodeFile = "data/experiment/YAGO/DLV/yago2s.mapping.data.txt";
+			patternFileField = Settings.AMIE_YAGO_FORM2_PATTERN_FILE_NAME;
+			trainData = "data/experiment/YAGO/yago2.training.data.txt";
+			trainDataDlv = "data/experiment/YAGO/DLV/yago2.training.kg";
+			choosenRuleFile = "data/experiment/YAGO/DLV/yago.rule";
+			dlvBinFile = "data/experiment/YAGO/DLV/dlv.bin";
+			extentionFile = "data/experiment/YAGO/DLV/yago.ext.kg";
 		}
 	}
 
 	public FactIndexer facts, learningFacts;
 
-	public static Map<String, String> toID, fromID;
+	public static Map<String, String> entity2Id, id2Entity;
 
 	public void sample2() {
 		try {
@@ -119,9 +135,13 @@ public class Experiment {
 
 	void readSample2() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(TRAIN_DATA));
+			BufferedReader br = new BufferedReader(new FileReader(trainData));
 			String line;
 			while ((line = br.readLine()) != null) {
+				if (line.startsWith("<")) {
+					line = line.substring(1, line.length() - 1);
+					line = line.replaceAll(">\t<", "\t");
+				}
 				String[] parts = line.split("\t");
 				learningFacts.indexFact(parts);
 				learningFacts.indexPattern(parts);
@@ -139,18 +159,18 @@ public class Experiment {
 	}
 
 	public void evaluate() {
-		if (MOD.equals("IMDB")) {
-			facts = new FactIndexer(IDEAL_DATA);
+		if (DOMAIN.equals("IMDB")) {
+			facts = new FactIndexer(idealData);
 		} else {
-			facts = new FactIndexer(IDEAL_DATA);
+			facts = new FactIndexer(idealData);
 		}
 		for (String str : facts.getPSet()) {
 			System.out.println(str);
 		}
 		System.out.println("Number of predicates in ideal graph: " + facts.getPSet().size());
 		for (int i = 0; i < 2; ++i) {
-			for (int maxCnt : maxCnts) {
-				String extFile = EXT_FILE + types[i] + maxCnt;
+			for (int maxCnt : MAXIMUM_COUNTS) {
+				String extFile = extentionFile + TYPES[i] + maxCnt;
 				evaluate(extFile);
 			}
 		}
@@ -181,8 +201,8 @@ public class Experiment {
 				// System.out.println(parts[0] + "\t" + parts[1] + "\t" +
 				// parts[2]);
 				String p = parts[0];
-				String x = fromID.get(parts[1]);
-				String y = fromID.get(parts[2]);
+				String x = id2Entity.get(parts[1]);
+				String y = id2Entity.get(parts[2]);
 				String xpy = x + "\t" + p + "\t" + y;
 				if (learningFacts.checkXpy(xpy)) {
 					cnt0++;
@@ -209,53 +229,89 @@ public class Experiment {
 		}
 	}
 
-	public int numEntity, numType;
+	public int numEntity, numType, numPredicate;
 
-	public void encode(String x, boolean isEntity) {
-		if (toID.containsKey(x))
+	public void encode(String x, int entityType) {
+		if (entity2Id.containsKey(x))
 			return;
-		if (isEntity) {
+		if (entityType == 0) {
 			numEntity++;
-			toID.put(x, "e" + numEntity);
-		} else {
+			entity2Id.put(x, "e" + numEntity);
+		} else if (entityType == 1) {
 			numType++;
-			toID.put(x, "t" + numType);
+			entity2Id.put(x, "t" + numType);
+		} else {
+			numPredicate++;
+			entity2Id.put(x, "p" + numPredicate);
 		}
 	}
 
 	// Cai nay xong roi, it goi thoi
 	public void encode() {
-		toID = new HashMap<String, String>();
-		numEntity = numType = 0;
-		facts = new FactIndexer(IDEAL_DATA);
+		entity2Id = new HashMap<String, String>();
+		numEntity = numType = numPredicate = 0;
+		// cai nay la danh cho imdb
+//		facts = new FactIndexer(idealData);
+
+		// cai nay la danh cho freebase
+		facts = new FactIndexer(trainData);
 		// sample2();
 		for (String xpy : facts.getXpySet()) {
 			String[] parts = xpy.split("\t");
 			if (parts[1].equals("subClassOf")) {
-				encode(parts[0], false);
-				encode(parts[2], false);
+				encode(parts[0], 1);
+				encode(parts[2], 1);
 			}
 		}
 		for (String x : facts.getXSet()) {
 			Set<String> tSet = facts.getTSetFromX(x);
-			encode(x, true);
+			encode(x, 0);
 			if (tSet == null)
 				continue;
 			for (String t : tSet) {
 				// System.out.println(x + "\t" + t);
-				encode(t, false);
+				encode(t, 1);
 			}
 		}
 		for (String xpy : facts.getXpySet()) {
 			String[] parts = xpy.split("\t");
-			encode(parts[0], true);
-			encode(parts[2], true);
+			encode(parts[0], 0);
+			encode(parts[2], 0);
 		}
 
 		try {
-			Writer wr = new PrintWriter(new File("data/experiment/IMDB/imdb.mapping.data.txt"));
-			for (String e : toID.keySet()) {
-				String id = toID.get(e);
+			Writer wr = new PrintWriter(new File(encodeFile));
+			for (String e : entity2Id.keySet()) {
+				String id = entity2Id.get(e);
+				wr.write(e + "\t" + id + "\n");
+			}
+			wr.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void encodeFreeBase() {
+		entity2Id = new HashMap<String, String>();
+		numEntity = numType = numPredicate = 0;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(trainData));
+			String line;
+			while ((line = br.readLine()) != null) {
+				if (line.startsWith("<")) {
+					line = line.substring(1, line.length() - 1);
+					line = line.replaceAll(">\t<", "\t");
+				}
+				String[] parts = line.split("\t");
+				encode(parts[0], 0);
+				encode(parts[1], 2);
+				encode(parts[2], 0);
+			}
+			br.close();
+
+			Writer wr = new PrintWriter(new File(encodeFile));
+			for (String e : entity2Id.keySet()) {
+				String id = entity2Id.get(e);
 				wr.write(e + "\t" + id + "\n");
 			}
 			wr.close();
@@ -266,23 +322,23 @@ public class Experiment {
 
 	public void genExceptions() {
 		String patternFile = null;
-		if (MOD.equals("IMDB")) {
+		if (DOMAIN.equals("IMDB")) {
 			learningFacts = new FactIndexer();
 			readSample2();
-			patternFile = Settings.IMDB_FORM2_PATTERN_FILE_NAME;
+			patternFile = patternFileField;
 		} else {
-			learningFacts = new FactIndexer(TRAIN_DATA);
-			patternFile = Settings.AMIE_YAGO_FORM2_PATTERN_FILE_NAME;
+			learningFacts = new FactIndexer(trainData);
+			patternFile = patternFileField;
 		}
 		date1 = new Date();
 		ExceptionRanker er = new ExceptionRanker(patternFile, learningFacts);
 		er.rankRulesWithExceptions();
 
 		try {
-			for (String type : Experiment.types) {
-				for (int maxCnt : Experiment.maxCnts) {
+			for (String type : Experiment.TYPES) {
+				for (int maxCnt : Experiment.MAXIMUM_COUNTS) {
 					int cnt = 0;
-					Writer wr = new PrintWriter(new File(Experiment.RULE_FILE + type + maxCnt));
+					Writer wr = new PrintWriter(new File(Experiment.choosenRuleFile + type + maxCnt));
 					double convSum = 0;
 					for (NegativeRule negRule : er.getChoosenNegativeRules()) {
 						cnt++;
@@ -291,14 +347,14 @@ public class Experiment {
 						}
 						String[] parts = negRule.getPositiveRule().getBody().split("\t");
 						String head = negRule.getPositiveRule().getHead();
-						String posRule = head + "(X, Z) :- " + parts[0] + "(X, Y), " + parts[1] + "(Y, Z)";
+						String posRule = entity2Id.get(head) + "(X, Z) :- " + entity2Id.get(parts[0]) + "(X, Y), " + entity2Id.get(parts[1]) + "(Y, Z)";
 						String negation = "";
 						if (negRule.getException().getType() == ExceptionType.FIRST) {
-							negation = Experiment.toID.get(negRule.getException().getException()) + "(X).";
+							negation = Experiment.entity2Id.get(negRule.getException().getException()) + "(X).";
 						} else if (negRule.getException().getType() == ExceptionType.SECOND) {
-							negation = Experiment.toID.get(negRule.getException().getException()) + "(Z).";
+							negation = Experiment.entity2Id.get(negRule.getException().getException()) + "(Z).";
 						} else {
-							negation = negRule.getException().getException() + "(X, Z).";
+							negation = entity2Id.get(negRule.getException().getException()) + "(X, Z).";
 						}
 						if (type.equals(".neg.")) {
 							wr.write(posRule + ", not " + negation + "\n");
@@ -314,7 +370,7 @@ public class Experiment {
 						}
 					}
 					wr.close();
-					System.out.println("Done with " + Experiment.RULE_FILE + type + maxCnt + " file");
+					System.out.println("Done with " + Experiment.choosenRuleFile + type + maxCnt + " file");
 					System.out.println("avg conv = " + (convSum / maxCnt));
 				}
 			}
@@ -326,57 +382,57 @@ public class Experiment {
 	}
 
 	public void loadEncode() throws Exception {
-		toID = new HashMap<>();
-		fromID = new HashMap<>();
-		BufferedReader br = new BufferedReader(new FileReader(ENCODE_FILE));
+		entity2Id = new HashMap<>();
+		id2Entity = new HashMap<>();
+		BufferedReader br = new BufferedReader(new FileReader(encodeFile));
 		String line;
 		while ((line = br.readLine()) != null) {
 			String[] parts = line.split("\t");
-			toID.put(parts[0], parts[1]);
-			fromID.put(parts[1], parts[0]);
+			entity2Id.put(parts[0], parts[1]);
+			id2Entity.put(parts[1], parts[0]);
 		}
 		br.close();
 	}
 
 	public void convert2DlvKg() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(Experiment.TRAIN_DATA));
-			Writer wr = new PrintWriter(new File(Experiment.TRAIN_DATA_DLV));
+			BufferedReader br = new BufferedReader(new FileReader(Experiment.trainData));
+			Writer wr = new PrintWriter(new File(Experiment.trainDataDlv));
 			String line;
 			while ((line = br.readLine()) != null) {
 				// System.out.println(line);
-				String[] parts = null;
-				if (MOD.equals("IMDB")) {
-					parts = line.split("\t");
-				} else {
+				if (line.startsWith("<")) {
 					line = line.substring(1, line.length() - 1);
-					parts = line.split(">\t<");
+					line = line.replaceAll(">\t<", "\t");
 				}
-				if (toID.get(parts[0]) == null) {
+				String[] parts = null;
+				parts = line.split("\t");
+				if (entity2Id.get(parts[0]) == null) {
 					continue;
 				}
-				if (toID.get(parts[2]) == null) {
+				if (entity2Id.get(parts[2]) == null) {
 					continue;
 				}
 				if (!parts[1].equals("type")) {
-					wr.write(parts[1] + "(" + toID.get(parts[0]) + ", " + toID.get(parts[2]) + ").\n");
+					wr.write(entity2Id.get(parts[1]) + "(" + entity2Id.get(parts[0]) + ", " + entity2Id.get(parts[2]) + ").\n");
 				} else {
-					wr.write(toID.get(parts[2]) + "(" + toID.get(parts[0]) + ").\n");
+					wr.write(entity2Id.get(parts[2]) + "(" + entity2Id.get(parts[0]) + ").\n");
 				}
 			}
 			br.close();
-			if (!MOD.equals("IMDB")) {
-				br = new BufferedReader(new FileReader(TYPE_DATA));
+
+			if (!DOMAIN.equals("IMDB")) {
+				br = new BufferedReader(new FileReader(typeData));
 				while ((line = br.readLine()) != null) {
 					line = line.substring(1, line.length() - 1);
 					String[] parts = line.split(">\t<");
-					if (toID.get(parts[0]) == null) {
+					if (entity2Id.get(parts[0]) == null) {
 						continue;
 					}
-					if (toID.get(parts[2]) == null) {
+					if (entity2Id.get(parts[2]) == null) {
 						continue;
 					}
-					wr.write(toID.get(parts[2]) + "(" + toID.get(parts[0]) + ").\n");
+					wr.write(entity2Id.get(parts[2]) + "(" + entity2Id.get(parts[0]) + ").\n");
 				}
 				br.close();
 			}
@@ -411,7 +467,7 @@ public class Experiment {
 	}
 
 	public void compareWithEvals() throws Exception {
-		if (MOD.equals("IMDB")) {
+		if (DOMAIN.equals("IMDB")) {
 			List<String> lines = TextFileReader.readLines(
 					"/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/imdb.manual.eval.txt");
 			Map<String, String> check = new HashMap<String, String>();
@@ -423,8 +479,8 @@ public class Experiment {
 					continue;
 				check.put(parts[0] + "\t" + parts[1] + "\t" + parts[2], parts[3]);
 			}
-			for (int maxCnt : maxCnts) {
-				String file1 = EXT_FILE + ".diff." + maxCnt + ".needcheck";
+			for (int maxCnt : MAXIMUM_COUNTS) {
+				String file1 = extentionFile + ".diff." + maxCnt + ".needcheck";
 				BufferedReader br = new BufferedReader(new FileReader(file1));
 				String line;
 				int good = 0;
@@ -453,9 +509,9 @@ public class Experiment {
 		Map<String, String> ma = getYagoEvals("data/experiment/YAGO/DLV/evaluations/std-confidence.tsv");
 		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/pca-confidence.tsv"));
 		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/joint-prediction.tsv"));
-		for (int maxCnt : maxCnts) {
+		for (int maxCnt : MAXIMUM_COUNTS) {
 			int cnt = 0;
-			String file1 = EXT_FILE + ".pos." + maxCnt + ".needcheck";
+			String file1 = extentionFile + ".pos." + maxCnt + ".needcheck";
 			BufferedReader br = new BufferedReader(new FileReader(file1));
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -469,11 +525,11 @@ public class Experiment {
 	}
 
 	public void runDlv() throws Exception {
-		for (String type : types) {
-			for (int maxCnt : maxCnts) {
-				String ruleFile = RULE_FILE + type + maxCnt;
-				String extFile = EXT_FILE + type + maxCnt;
-				String command = DLV_BIN_FILE + " -nofacts " + TRAIN_DATA_DLV + " " + ruleFile;
+		for (String type : TYPES) {
+			for (int maxCnt : MAXIMUM_COUNTS) {
+				String ruleFile = choosenRuleFile + type + maxCnt;
+				String extFile = extentionFile + type + maxCnt;
+				String command = dlvBinFile + " -nofacts " + trainDataDlv + " " + ruleFile;
 				Writer wr = new PrintWriter(new File(extFile));
 				Process p = Runtime.getRuntime().exec(command);
 				BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -494,9 +550,9 @@ public class Experiment {
 	}
 
 	public void calConflict() throws Exception {
-		for (int maxCnt : maxCnts) {
+		for (int maxCnt : MAXIMUM_COUNTS) {
 			int ret = 0;
-			String extFile = EXT_FILE + types[2] + maxCnt;
+			String extFile = extentionFile + TYPES[2] + maxCnt;
 			BufferedReader br = new BufferedReader(new FileReader(extFile));
 			br.readLine();
 			br.readLine();
@@ -531,12 +587,12 @@ public class Experiment {
 	}
 
 	public void findDiff() throws Exception {
-		for (int maxCnt : maxCnts) {
-			String file1 = EXT_FILE + ".neg." + maxCnt + ".needcheck";
-			String file2 = EXT_FILE + ".pos." + maxCnt + ".needcheck";
+		for (int maxCnt : MAXIMUM_COUNTS) {
+			String file1 = extentionFile + ".neg." + maxCnt + ".needcheck";
+			String file2 = extentionFile + ".pos." + maxCnt + ".needcheck";
 			List<String> lx = TextFileReader.readLines(file1);
 			Set<String> sx = new HashSet<String>(lx);
-			Writer wr = new PrintWriter(new File(EXT_FILE + ".diff." + maxCnt + ".needcheck"));
+			Writer wr = new PrintWriter(new File(extentionFile + ".diff." + maxCnt + ".needcheck"));
 			List<String> ly = TextFileReader.readLines(file2);
 			for (String y : ly) {
 				if (sx.contains(y))
@@ -548,9 +604,9 @@ public class Experiment {
 	}
 
 	void checkSubsetDLV() throws Exception {
-		for (int maxCnt : maxCnts) {
-			String file1 = EXT_FILE + ".neg." + maxCnt + ".needcheck";
-			String file2 = EXT_FILE + ".pos." + maxCnt + ".needcheck";
+		for (int maxCnt : MAXIMUM_COUNTS) {
+			String file1 = extentionFile + ".neg." + maxCnt + ".needcheck";
+			String file2 = extentionFile + ".pos." + maxCnt + ".needcheck";
 			List<String> lx = TextFileReader.readLines(file1);
 			List<String> ly = TextFileReader.readLines(file2);
 			Set<String> sy = new HashSet<String>(ly);
@@ -565,14 +621,16 @@ public class Experiment {
 
 	public void conduct() {
 		try {
+//			encodeFreeBase();
+//			convert2DlvKg();
+//			encode();
 			loadEncode();
 			genExceptions();
 			runDlv();
-			evaluate();
-			calConflict();
-			findDiff();
+//			evaluate();
+//			calConflict();
+//			findDiff();
 			// compareWithEvals();
-
 			// checkSubsetDLV();
 		} catch (Exception ex) {
 			ex.printStackTrace();
