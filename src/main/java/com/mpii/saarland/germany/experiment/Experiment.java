@@ -549,6 +549,31 @@ public class Experiment {
 				"Time for DLV (seconds): " + ((Experiment.date4.getTime() - Experiment.date3.getTime()) / 1000.0));
 	}
 
+	public void decodeDlvOutput() throws Exception {
+//		for (int maxCnt : MAXIMUM_COUNTS) {
+		int maxCnt = 10;
+			int ret = 0;
+			String extFile = extentionFile + TYPES[1] + maxCnt;
+			BufferedReader br = new BufferedReader(new FileReader(extFile));
+			br.readLine();
+			br.readLine();
+			String line = br.readLine();
+			String[] facts1 = line.split(", ");
+			Set<String> sx = new HashSet<String>();
+			Set<String> sy = new HashSet<String>();
+			for (String fact : facts1) {
+				if (fact.startsWith("{")) {
+					fact = fact.substring(1);
+				}
+				if (fact.endsWith("}")) {
+					fact = fact.substring(0, fact.length() - 1);
+				}
+				String[] entities = fact.split("\\(|\\)|,");
+				System.out.println("<" + id2Entity.get(entities[1]) + ">\t<" + id2Entity.get(entities[0]) + ">\t<" + id2Entity.get(entities[2]));
+			}
+//		}
+	}
+
 	public void calConflict() throws Exception {
 		for (int maxCnt : MAXIMUM_COUNTS) {
 			int ret = 0;
@@ -625,8 +650,9 @@ public class Experiment {
 //			convert2DlvKg();
 //			encode();
 			loadEncode();
-			genExceptions();
-			runDlv();
+			decodeDlvOutput();
+//			genExceptions();
+//			runDlv();
 //			evaluate();
 //			calConflict();
 //			findDiff();
@@ -635,6 +661,12 @@ public class Experiment {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		String t = "a(a,b)";
+		String[] parts = t.split("\\(|\\)|,");
+		System.out.println(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
 	}
 
 }
