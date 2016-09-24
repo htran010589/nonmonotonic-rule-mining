@@ -569,7 +569,7 @@ public class Experiment {
 					fact = fact.substring(0, fact.length() - 1);
 				}
 				String[] entities = fact.split("\\(|\\)|,");
-				System.out.println("<" + id2Entity.get(entities[1]) + ">\t<" + id2Entity.get(entities[0]) + ">\t<" + id2Entity.get(entities[2]));
+				System.out.println("<" + id2Entity.get(entities[1]) + ">\t<" + id2Entity.get(entities[0]) + ">\t<" + id2Entity.get(entities[2]) + ">");
 			}
 //		}
 	}
