@@ -41,7 +41,7 @@ public class ExceptionRanker {
 	 * 
 	 * This method is to predict new facts using all exceptions.
 	 */
-	public void predict(PositiveRule positiveRule) {
+	public void predict(PositiveRule positiveRule, long frequency) {
 		String h = positiveRule.getHead();
 		Set<String> abnormalSet = form2Instances.positiveRule2AbnormalSet.get(positiveRule);
 		if (abnormalSet == null) {
@@ -86,8 +86,8 @@ public class ExceptionRanker {
 				continue;
 			}
 			parts = new String[] { x, h, z };
-			newFacts.indexFact(parts);
-			newFacts.indexPattern(parts);
+			newFacts.indexFact(parts, frequency);
+			newFacts.indexPattern(parts, frequency);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class ExceptionRanker {
 	 * This method is to recalculate conviction of negative rules based on old
 	 * and new facts.
 	 */
-	public void recalculateConviction(PositiveRule positiveRule) {
+	public void recalculateConviction(PositiveRule positiveRule, FactIndexer newFacts) {
 		List<Set<String>> instances = form2Instances.findInstances(positiveRule, newFacts);
 		Set<String> bodyExamples = new HashSet<String>();
 		Set<String> positiveHeadRuleExamples = instances.get(0);
@@ -197,7 +197,7 @@ public class ExceptionRanker {
 		}
 	}
 
-	public void rankRulesWithExceptions() {
+	public void rankRulesWithExceptions(boolean opm) {
 		for (PositiveRule rule : form2Instances.positiveRules) {
 			if (form2Instances.getNormalSet(rule) == null) {
 				continue;
@@ -208,11 +208,24 @@ public class ExceptionRanker {
 			rule.setConfidence();
 			rule.setConviction();
 		}
-		form2Instances.positiveRules.sort(
-				(PositiveRule r1, PositiveRule r2) -> new Double(r2.getConviction()).compareTo(r1.getConviction()));
-		for (PositiveRule rule : form2Instances.positiveRules) {
-			recalculateConviction(rule);
-			predict(rule);
+		if (opm) {
+			// Ordered partial materialization is conducted.
+			form2Instances.positiveRules.sort(
+					(PositiveRule r1, PositiveRule r2) -> new Double(r2.getConviction()).compareTo(r1.getConviction()));
+			for (PositiveRule rule : form2Instances.positiveRules) {
+				recalculateConviction(rule, newFacts);
+				predict(rule, 1L);
+			}
+		} else {
+			// Partial materialization is conducted.
+			for (PositiveRule rule : form2Instances.positiveRules) {
+				predict(rule, 1L);
+			}
+			for (PositiveRule rule : form2Instances.positiveRules) {
+				predict(rule, -1L);
+				recalculateConviction(rule, newFacts);
+				predict(rule, 1L);
+			}
 		}
 
 		Comparator<NegativeRule> sortByPositiveNegativeConviction = (NegativeRule r1,

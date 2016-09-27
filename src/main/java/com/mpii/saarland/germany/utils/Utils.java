@@ -16,21 +16,27 @@ import java.util.TreeMap;
  */
 public class Utils {
 
-	public static void addKeyString(Map<String, Set<String>> key2values, String key, String value) {
+	public static void updateKeyString(Map<String, Set<String>> key2values, String key, String value, boolean add) {
 		Set<String> values = key2values.get(key);
 		if (values == null) {
 			values = new HashSet<>();
 		}
-		values.add(value);
+		if (add) {
+			// Add value to values.
+			values.add(value);
+		} else {
+			// Remove value from values.
+			values.remove(value);
+		}
 		key2values.put(key, values);
 	}
 
-	public static void addKeyLong(Map<String, Long> key2Total, String key, long value) {
+	public static void addKeyLong(Map<String, Long> key2Total, String key, long frequency) {
 		long total = 0;
 		if (key2Total.containsKey(key)) {
 			total = key2Total.get(key);
 		}
-		total += value;
+		total += frequency;
 		key2Total.put(key, total);
 	}
 
@@ -68,13 +74,14 @@ public class Utils {
 	}
 
 	public static Map<String, Set<String>> cloneMap(Map<String, Set<String>> key2Values) {
-		Map<String, Set<String>> result = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> result = new HashMap<>();
 		for (String key : key2Values.keySet()) {
 			Set<String> values = key2Values.get(key);
 			for (String value : values) {
-				addKeyString(result, key, value);
+				updateKeyString(result, key, value, true);
 			}
 		}
 		return result;
 	}
+
 }

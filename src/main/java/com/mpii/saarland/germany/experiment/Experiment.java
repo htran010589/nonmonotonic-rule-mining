@@ -143,8 +143,8 @@ public class Experiment {
 					line = line.replaceAll(">\t<", "\t");
 				}
 				String[] parts = line.split("\t");
-				learningFacts.indexFact(parts);
-				learningFacts.indexPattern(parts);
+				learningFacts.indexFact(parts, 1L);
+				learningFacts.indexPattern(parts, 1L);
 				// System.out.println(parts[1] + "(" + facts.getId(parts[0]) +
 				// ", " + facts.getId(parts[2]) + ").");
 			}
@@ -332,8 +332,9 @@ public class Experiment {
 		}
 		date1 = new Date();
 		ExceptionRanker er = new ExceptionRanker(patternFile, learningFacts);
-		er.rankRulesWithExceptions();
+		er.rankRulesWithExceptions(false);
 
+		/*
 		try {
 			for (String type : Experiment.TYPES) {
 				for (int maxCnt : Experiment.MAXIMUM_COUNTS) {
@@ -377,6 +378,7 @@ public class Experiment {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		*/
 		Experiment.date3 = new Date();
 		System.out.println(date3.getTime());
 	}
@@ -575,9 +577,19 @@ public class Experiment {
 	}
 
 	public void calConflict() throws Exception {
-		for (int maxCnt : MAXIMUM_COUNTS) {
+		List<String> lines = TextFileReader.readLines("/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/FreeBase/DLV/fb.train.kg");
+		Set<String> oriFacts = new HashSet<>();
+		for (String line : lines) {
+			line = line.substring(0, line.length() - 1).replaceAll("\\s+", "");
+//			System.out.println(line);
+			oriFacts.add(line);
+		}
+
+		Writer wr = new PrintWriter(new File("data/experiment/FreeBase/DLV/fb.ext.kg.all.decode.10"));
+//		for (int maxCnt : MAXIMUM_COUNTS) {
 			int ret = 0;
-			String extFile = extentionFile + TYPES[2] + maxCnt;
+//			String extFile = extentionFile + TYPES[2] + maxCnt;
+			String extFile = "data/experiment/FreeBase/DLV/fb.ext.kg.all.10";
 			BufferedReader br = new BufferedReader(new FileReader(extFile));
 			br.readLine();
 			br.readLine();
@@ -592,14 +604,22 @@ public class Experiment {
 				if (fact.endsWith("}")) {
 					fact = fact.substring(0, fact.length() - 1);
 				}
+				if (oriFacts.contains(fact)) {
+					System.out.println("***" + fact);
+					continue;
+				}
 				if (!fact.startsWith("not_")) {
 					sx.add(fact);
 				} else {
 					sy.add(fact.substring("not_".length()));
 				}
 			}
-			for (String y : sy) {
-				if (sx.contains(y)) {
+			for (String x : sx) {
+				if (sy.contains(x)) {
+//					System.out.println(x);
+//					String[] entities = x.split("\\(|\\)|,");
+//					wr.write("<" + id2Entity.get(entities[1]) + ">\t<" + id2Entity.get(entities[0]) + ">\t<" + id2Entity.get(entities[2]) + ">\n");
+//					wr.write("<" + id2Entity.get(entities[1]) + ">\tNOT_<" + id2Entity.get(entities[0]) + ">\t<" + id2Entity.get(entities[2]) + ">\n");
 					ret++;
 				}
 			}
@@ -608,7 +628,8 @@ public class Experiment {
 			System.out.println("Total number of facts without 'not_' prefix: " + sx.size());
 			System.out.println("Total number of facts with 'not_' prefix: " + sy.size());
 			System.out.println("-----");
-		}
+//		}
+		wr.close();
 	}
 
 	public void findDiff() throws Exception {
@@ -649,9 +670,9 @@ public class Experiment {
 //			encodeFreeBase();
 //			convert2DlvKg();
 //			encode();
-			loadEncode();
-			decodeDlvOutput();
-//			genExceptions();
+//			loadEncode();
+//			decodeDlvOutput();
+			genExceptions();
 //			runDlv();
 //			evaluate();
 //			calConflict();
@@ -664,9 +685,7 @@ public class Experiment {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String t = "a(a,b)";
-		String[] parts = t.split("\\(|\\)|,");
-		System.out.println(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
+		new Experiment().conduct();
 	}
 
 }

@@ -43,7 +43,15 @@ public class FactIndexer {
 
 	private Map<String, Set<String>> py2XSet;
 
-	private Set<String> xpySet;
+	private Map<String, Long> xt2Frequency;
+
+	private Map<String, Long> ptx2Frequency;
+
+	private Map<String, Long> px2Frequency;
+
+	private Map<String, Long> py2Frequency;
+
+	private Map<String, Long> xpy2Frequency;
 
 	private void allocate() {
 		x2PySet = new HashMap<>();
@@ -56,7 +64,11 @@ public class FactIndexer {
 		p2YSet = new HashMap<>();
 		xy2PSet = new HashMap<>();
 		py2XSet = new HashMap<>();
-		xpySet = new HashSet<>();
+		xt2Frequency = new HashMap<>();
+		ptx2Frequency = new HashMap<>();
+		px2Frequency = new HashMap<>();
+		py2Frequency = new HashMap<>();
+		xpy2Frequency = new HashMap<>();
 	}
 
 	public FactIndexer() {
@@ -86,25 +98,64 @@ public class FactIndexer {
 		newFacts.p2YSet = Utils.cloneMap(p2YSet);
 		newFacts.xy2PSet = Utils.cloneMap(xy2PSet);
 		newFacts.py2XSet = Utils.cloneMap(py2XSet);
-		newFacts.xpySet = new HashSet<String>();
-		newFacts.xpySet.addAll(xpySet);
+		newFacts.xt2Frequency = new HashMap<>();
+		newFacts.xt2Frequency.putAll(xt2Frequency);
+		newFacts.ptx2Frequency = new HashMap<>();
+		newFacts.ptx2Frequency.putAll(ptx2Frequency);
+		newFacts.px2Frequency = new HashMap<>();
+		newFacts.px2Frequency.putAll(px2Frequency);
+		newFacts.py2Frequency = new HashMap<>();
+		newFacts.py2Frequency.putAll(py2Frequency);
+		newFacts.xpy2Frequency = new HashMap<>();
+		newFacts.xpy2Frequency.putAll(xpy2Frequency);
 		LOG.info("Done with cloning instance");
 		return newFacts;
 	}
 
-	public void indexFact(String[] parts) {
+	public void indexFact(String[] parts, long frequency) {
+		boolean add;
 		if (!parts[1].equals("type")) {
-			Utils.addKeyString(x2PySet, parts[0], parts[1] + "\t" + parts[2]);
-			Utils.addKeyString(y2PxSet, parts[2], parts[1] + "\t" + parts[0]);
-			Utils.addKeyString(p2XySet, parts[1], parts[0] + "\t" + parts[2]);
-			Utils.addKeyString(p2XSet, parts[1], parts[0]);
-			Utils.addKeyString(p2YSet, parts[1], parts[2]);
-			Utils.addKeyString(xy2PSet, parts[0] + "\t" + parts[2], parts[1]);
-			Utils.addKeyString(py2XSet, parts[1] + "\t" + parts[2], parts[0]);
-			xpySet.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
+			String xpy = parts[0] + "\t" + parts[1] + "\t" + parts[2];
+			Utils.addKeyLong(xpy2Frequency, xpy, frequency);
+			add = true;
+			if (xpy2Frequency.get(xpy) == 0) {
+				// Remove the triple.
+				xpy2Frequency.remove(xpy);
+				add = false;
+			}
+			Utils.updateKeyString(x2PySet, parts[0], parts[1] + "\t" + parts[2], add);
+			Utils.updateKeyString(y2PxSet, parts[2], parts[1] + "\t" + parts[0], add);
+			Utils.updateKeyString(p2XySet, parts[1], parts[0] + "\t" + parts[2], add);
+			Utils.updateKeyString(xy2PSet, parts[0] + "\t" + parts[2], parts[1], add);
+			Utils.updateKeyString(py2XSet, parts[1] + "\t" + parts[2], parts[0], add);
+
+			String px = parts[1] + "\t" + parts[0];
+			add = true;
+			Utils.addKeyLong(px2Frequency, px, frequency);
+			if (px2Frequency.get(px) == 0) {
+				px2Frequency.remove(px);
+				add = false;
+			}
+			Utils.updateKeyString(p2XSet, parts[1], parts[0], add);
+
+			String py = parts[1] + "\t" + parts[2];
+			add = true;
+			Utils.addKeyLong(py2Frequency, py, frequency);
+			if (py2Frequency.get(py) == 0) {
+				py2Frequency.remove(py);
+				add = false;
+			}
+			Utils.updateKeyString(p2YSet, parts[1], parts[2], add);
 		} else {
-			Utils.addKeyString(x2TSet, parts[0], parts[2]);
-			Utils.addKeyString(t2XSet, parts[2], parts[0]);
+			String xt = parts[0] + "\t" + parts[2];
+			add = true;
+			Utils.addKeyLong(xt2Frequency, xt, frequency);
+			if (xt2Frequency.get(xt) == 0) {
+				xt2Frequency.remove(xt);
+				add = false;
+			}
+			Utils.updateKeyString(x2TSet, parts[0], parts[2], add);
+			Utils.updateKeyString(t2XSet, parts[2], parts[0], add);
 		}
 	}
 
@@ -117,7 +168,7 @@ public class FactIndexer {
 			while ((line = factReader.readLine()) != null) {
 				line = line.substring(1, line.length() - 1);
 				String[] parts = line.split(">\t<");
-				indexFact(parts);
+				indexFact(parts, 1L);
 			}
 		} catch (IOException ex) {
 			LOG.error(ex.getMessage());
@@ -131,20 +182,27 @@ public class FactIndexer {
 		LOG.info("Done with loading facts");
 	}
 
-	public void indexPattern(String[] parts) {
+	public void indexPattern(String[] parts, long frequency) {
 		Set<String> tSet = x2TSet.get(parts[2]);
 		if (tSet == null) {
 			return;
 		}
 		for (String t : tSet) {
-			Utils.addKeyString(pt2XSet, parts[1] + "\t" + t, parts[0]);
+			String ptx = parts[1] + "\t" + t + "\t" + parts[0];
+			boolean add = true;
+			Utils.addKeyLong(ptx2Frequency, ptx, frequency);
+			if (ptx2Frequency.get(ptx) == 0) {
+				ptx2Frequency.remove(ptx);
+				add = false;
+			}
+			Utils.updateKeyString(pt2XSet, parts[1] + "\t" + t, parts[0], add);
 		}
 	}
 
 	public void indexPatterns() {
-		for (String fact : xpySet) {
+		for (String fact : xpy2Frequency.keySet()) {
 			String[] parts = fact.split("\t");
-			indexPattern(parts);
+			indexPattern(parts, 1L);
 		}
 		LOG.info("Done with loading patterns pt2X");
 	}
@@ -167,7 +225,7 @@ public class FactIndexer {
 	}
 
 	public Set<String> getXpySet() {
-		return xpySet;
+		return xpy2Frequency.keySet();
 	}
 
 	public Set<String> getTSet() {
@@ -215,7 +273,7 @@ public class FactIndexer {
 	}
 
 	public boolean checkXpy(String xpy) {
-		if (xpySet.contains(xpy)) {
+		if (xpy2Frequency.containsKey(xpy)) {
 			return true;
 		}
 		return false;
