@@ -53,26 +53,26 @@ public class Experiment {
 	static {
 		if (DOMAIN.equals("IMDB")) {
 			// cai nay la danh cho IMDB
-//			idealData = "data/imdb.facts.tsv";
-//			typeData = null;
-//			encodeFile = "data/experiment/IMDB/imdb.mapping.data.txt";
-//			patternFile = Settings.IMDB_FORM2_PATTERN_FILE_NAME;
-//			trainData = "data/experiment/IMDB/imdb.learning.data.txt";
-//			trainDataDlv = "data/experiment/IMDB/DLV/imdb.train.kg";
-//			choosenRuleFile = "data/experiment/IMDB/DLV/imdb.rule";
-//			dlvBinFile = "data/experiment/IMDB/DLV/dlv.bin";
-//			extentionFile = "data/experiment/IMDB/DLV/imdb.ext.kg";
+			idealData = "data/imdb.facts.tsv";
+			typeData = null;
+			encodeFile = "data/experiment/IMDB/imdb.mapping.data.txt";
+			patternFileField = Settings.IMDB_FORM2_PATTERN_FILE_NAME;
+			trainData = "data/experiment/IMDB/imdb.learning.data.txt";
+			trainDataDlv = "data/experiment/IMDB/DLV/imdb.train.kg";
+			choosenRuleFile = "data/experiment/IMDB/DLV/imdb.rule";
+			dlvBinFile = "data/experiment/IMDB/DLV/dlv.bin";
+			extentionFile = "data/experiment/IMDB/DLV/imdb.ext.kg";
 
 			// cai nay danh cho freebase - chinh lai mot chut
 //			idealData = "data/imdb.facts.tsv";
 //			typeData = null;
-			encodeFile = "data/experiment/FreeBase/fb.mapping.data.txt";
-			patternFileField = "data/experiment/FreeBase/fb-train-pattern.txt";
-			trainData = "data/experiment/FreeBase/fb.learning.data.txt";
-			trainDataDlv = "data/experiment/FreeBase/DLV/fb.train.kg";
-			choosenRuleFile = "data/experiment/FreeBase/DLV/fb.rule";
-			dlvBinFile = "data/experiment/FreeBase/DLV/dlv.bin";
-			extentionFile = "data/experiment/FreeBase/DLV/fb.ext.kg";
+//			encodeFile = "data/experiment/FreeBase/fb.mapping.data.txt";
+//			patternFileField = "data/experiment/FreeBase/fb-train-pattern.txt";
+//			trainData = "data/experiment/FreeBase/fb.learning.data.txt";
+//			trainDataDlv = "data/experiment/FreeBase/DLV/fb.train.kg";
+//			choosenRuleFile = "data/experiment/FreeBase/DLV/fb.rule";
+//			dlvBinFile = "data/experiment/FreeBase/DLV/dlv.bin";
+//			extentionFile = "data/experiment/FreeBase/DLV/fb.ext.kg";
 		} else {
 			idealData = "data/experiment/YAGO/yago2s.ideal.data.txt";
 			typeData = "data/experiment/YAGO/yago2.type.txt";
@@ -555,7 +555,7 @@ public class Experiment {
 //		for (int maxCnt : MAXIMUM_COUNTS) {
 		int maxCnt = 10;
 			int ret = 0;
-			String extFile = extentionFile + TYPES[1] + maxCnt;
+			String extFile = extentionFile + TYPES[2] + maxCnt;
 			BufferedReader br = new BufferedReader(new FileReader(extFile));
 			br.readLine();
 			br.readLine();
@@ -577,7 +577,7 @@ public class Experiment {
 	}
 
 	public void calConflict() throws Exception {
-		List<String> lines = TextFileReader.readLines("/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/FreeBase/DLV/fb.train.kg");
+		List<String> lines = TextFileReader.readLines(trainDataDlv);
 		Set<String> oriFacts = new HashSet<>();
 		for (String line : lines) {
 			line = line.substring(0, line.length() - 1).replaceAll("\\s+", "");
@@ -585,11 +585,11 @@ public class Experiment {
 			oriFacts.add(line);
 		}
 
-		Writer wr = new PrintWriter(new File("data/experiment/FreeBase/DLV/fb.ext.kg.all.decode.10"));
+		Writer wr = new PrintWriter(new File("data/experiment/IMDB/DLV/imdb.ext.kg.neg.x2.10.decode"));
 //		for (int maxCnt : MAXIMUM_COUNTS) {
 			int ret = 0;
 //			String extFile = extentionFile + TYPES[2] + maxCnt;
-			String extFile = "data/experiment/FreeBase/DLV/fb.ext.kg.all.10";
+			String extFile = "data/experiment/IMDB/DLV/imdb.ext.kg.neg.x2.10";
 			BufferedReader br = new BufferedReader(new FileReader(extFile));
 			br.readLine();
 			br.readLine();
@@ -617,9 +617,9 @@ public class Experiment {
 			for (String x : sx) {
 				if (sy.contains(x)) {
 //					System.out.println(x);
-//					String[] entities = x.split("\\(|\\)|,");
-//					wr.write("<" + id2Entity.get(entities[1]) + ">\t<" + id2Entity.get(entities[0]) + ">\t<" + id2Entity.get(entities[2]) + ">\n");
-//					wr.write("<" + id2Entity.get(entities[1]) + ">\tNOT_<" + id2Entity.get(entities[0]) + ">\t<" + id2Entity.get(entities[2]) + ">\n");
+					String[] entities = x.split("\\(|\\)|,");
+					wr.write("<" + id2Entity.get(entities[1]) + ">\t<" + entities[0] + ">\t<" + id2Entity.get(entities[2]) + ">\n");
+					wr.write("<" + id2Entity.get(entities[1]) + ">\tNOT_<" + entities[0] + ">\t<" + id2Entity.get(entities[2]) + ">\n");
 					ret++;
 				}
 			}
@@ -670,12 +670,12 @@ public class Experiment {
 //			encodeFreeBase();
 //			convert2DlvKg();
 //			encode();
-//			loadEncode();
+			loadEncode();
 //			decodeDlvOutput();
-			genExceptions();
+//			genExceptions();
 //			runDlv();
 //			evaluate();
-//			calConflict();
+			calConflict();
 //			findDiff();
 			// compareWithEvals();
 			// checkSubsetDLV();
