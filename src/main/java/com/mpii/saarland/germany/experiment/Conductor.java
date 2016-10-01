@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker;
+import com.mpii.saarland.germany.rulemining.nonmonotonicrule.RankingType;
 import com.mpii.saarland.germany.rules.ExceptionType;
 import com.mpii.saarland.germany.rules.NegativeRule;
 import com.mpii.saarland.germany.utils.Settings;
@@ -170,11 +171,11 @@ public class Conductor {
 		}
 	}
 
-	static void generateExceptions(boolean opm) {
+	static void generateExceptions(RankingType type) {
 		learningFacts = Sampler.indexLearningData();
 		time1 = new Date();
 		ExceptionRanker ranker = new ExceptionRanker(patternFileName, learningFacts);
-		ranker.rankRulesWithExceptions(opm);
+		ranker.rankRulesWithExceptions(type);
 
 		// This is to convert rule set to DLV format.
 		try {
@@ -278,9 +279,9 @@ public class Conductor {
 		}
 	}
 
-	public static void execute(boolean opm) {
+	public static void execute(RankingType type) {
 		Encoder.loadEncode();
-		generateExceptions(opm);
+		generateExceptions(type);
 		runDlv();
 		evaluate();
 	}

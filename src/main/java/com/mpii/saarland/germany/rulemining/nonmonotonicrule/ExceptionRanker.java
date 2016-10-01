@@ -197,7 +197,7 @@ public class ExceptionRanker {
 		}
 	}
 
-	public void rankRulesWithExceptions(boolean opm) {
+	public void rankRulesWithExceptions(RankingType type) {
 		for (PositiveRule rule : form2Instances.positiveRules) {
 			if (form2Instances.getNormalSet(rule) == null) {
 				continue;
@@ -208,7 +208,7 @@ public class ExceptionRanker {
 			rule.setConfidence();
 			rule.setConviction();
 		}
-		if (opm) {
+		if (type == RankingType.OPM) {
 			// Ordered partial materialization is conducted.
 			form2Instances.positiveRules.sort(
 					(PositiveRule r1, PositiveRule r2) -> new Double(r2.getConviction()).compareTo(r1.getConviction()));
@@ -216,7 +216,7 @@ public class ExceptionRanker {
 				recalculateConviction(rule, newFacts);
 				predict(rule, 1L);
 			}
-		} else {
+		} else if (type == RankingType.PM) {
 			// Partial materialization is conducted.
 			for (PositiveRule rule : form2Instances.positiveRules) {
 				predict(rule, 1L);
@@ -226,6 +226,11 @@ public class ExceptionRanker {
 				recalculateConviction(rule, newFacts);
 				predict(rule, 1L);
 			}
+		} else {
+			// Naive ranking is conducted.
+			for (PositiveRule rule : form2Instances.positiveRules) {
+				recalculateConviction(rule, facts);
+			}			
 		}
 
 		Comparator<NegativeRule> sortByPositiveNegativeConviction = (NegativeRule r1,
@@ -236,6 +241,14 @@ public class ExceptionRanker {
 
 	public List<NegativeRule> getChoosenNegativeRules() {
 		return choosenNegativeRules;
+	}
+
+	public static void main(String[] args) {
+		String patternFileName = args[0];
+		FactIndexer facts = new FactIndexer(args[1]);
+		int type = Integer.parseInt(args[2]);
+		ExceptionRanker ranker = new ExceptionRanker(patternFileName, facts);
+		ranker.rankRulesWithExceptions(RankingType.values()[type]);
 	}
 
 }
