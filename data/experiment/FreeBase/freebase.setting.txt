@@ -1,0 +1,9 @@
+
+data/experiment/FreeBase/fb.mapping.data.txt
+data/experiment/FreeBase/fb-train-pattern.txt
+data/experiment/FreeBase/fb.learning.data.txt
+data/experiment/FreeBase/DLV/fb.train.kg
+data/experiment/FreeBase/DLV/fb.rule
+data/experiment/FreeBase/DLV/dlv.bin
+data/experiment/FreeBase/DLV/fb.ext.kg
+2
