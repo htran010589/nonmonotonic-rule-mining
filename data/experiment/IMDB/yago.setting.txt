@@ -1,0 +1,8 @@
+data/experiment/YAGO/yago2s.ideal.data.txt
+data/experiment/YAGO/DLV/yago2s.mapping.data.txt
+data/amie.yago.form2.patterns.txt
+data/experiment/YAGO/yago2.training.data.txt
+data/experiment/YAGO/DLV/yago2.training.kg
+data/experiment/YAGO/DLV/yago.rule
+data/experiment/YAGO/DLV/dlv.bin
+data/experiment/YAGO/DLV/yago.ext.kg
