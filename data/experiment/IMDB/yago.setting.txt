@@ -6,3 +6,4 @@ data/experiment/YAGO/DLV/yago2.training.kg
 data/experiment/YAGO/DLV/yago.rule
 data/experiment/YAGO/DLV/dlv.bin
 data/experiment/YAGO/DLV/yago.ext.kg
+2

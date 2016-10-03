@@ -23,8 +23,6 @@ import com.mpii.saarland.germany.utils.TextFileReader;
 
 public class Conductor {
 
-	static final String DOMAIN = "IMDB";
-
 	static final int[] TOP_RULE_COUNTS = { 5, 10, 15 };
 
 	static final String[] RULE_TYPES = { ".neg.", ".pos.", ".neg.x2." };
@@ -48,37 +46,6 @@ public class Conductor {
 	static Date time1, time2, time3, time4;
 
 	static FactIndexer idealFacts, learningFacts;
-
-	static {
-		if (DOMAIN.equals("IMDB")) {
-			idealDataFileName = "data/imdb.facts.tsv";
-			encodeFileName = "data/experiment/IMDB/imdb.mapping.data.txt";
-			patternFileName = Settings.IMDB_FORM2_PATTERN_FILE_NAME;
-			trainingDataFileName = "data/experiment/IMDB/imdb.learning.data.txt";
-			trainingDataDlvFileName = "data/experiment/IMDB/DLV/imdb.train.kg";
-			choosenRuleFileName = "data/experiment/IMDB/DLV/imdb.opm.rule";
-			dlvBinaryFileName = "data/experiment/IMDB/DLV/dlv.bin";
-			extensionPrefixFileName = "data/experiment/IMDB/DLV/imdb.opm.ext.kg";
-		} else if (DOMAIN.equals("YAGO")) {
-			idealDataFileName = "data/experiment/YAGO/yago2s.ideal.data.txt";
-			encodeFileName = "data/experiment/YAGO/DLV/yago2s.mapping.data.txt";
-			patternFileName = Settings.AMIE_YAGO_FORM2_PATTERN_FILE_NAME;
-			trainingDataFileName = "data/experiment/YAGO/yago2.training.data.txt";
-			trainingDataDlvFileName = "data/experiment/YAGO/DLV/yago2.training.kg";
-			choosenRuleFileName = "data/experiment/YAGO/DLV/yago.rule";
-			dlvBinaryFileName = "data/experiment/YAGO/DLV/dlv.bin";
-			extensionPrefixFileName = "data/experiment/YAGO/DLV/yago.ext.kg";
-		} else {
-			idealDataFileName = null;
-			encodeFileName = "data/experiment/FreeBase/fb.mapping.data.txt";
-			patternFileName = "data/experiment/FreeBase/fb-train-pattern.txt";
-			trainingDataFileName = "data/experiment/FreeBase/fb.learning.data.txt";
-			trainingDataDlvFileName = "data/experiment/FreeBase/DLV/fb.train.kg";
-			choosenRuleFileName = "data/experiment/FreeBase/DLV/fb.rule";
-			dlvBinaryFileName = "data/experiment/FreeBase/DLV/dlv.bin";
-			extensionPrefixFileName = "data/experiment/FreeBase/DLV/fb.ext.kg";
-		}
-	}
 
 	static void evaluate() {
 		idealFacts = new FactIndexer(idealDataFileName);
@@ -284,6 +251,20 @@ public class Conductor {
 		generateExceptions(type);
 		runDlv();
 		evaluate();
+	}
+
+	public static void main(String[] args) {
+		List<String> lines = TextFileReader.readLines(args[0]);
+		idealDataFileName = lines.get(0);
+		encodeFileName = lines.get(1);
+		patternFileName = lines.get(2);
+		trainingDataFileName = lines.get(3);
+		trainingDataDlvFileName = lines.get(4);
+		choosenRuleFileName = lines.get(5);
+		dlvBinaryFileName = lines.get(6);
+		extensionPrefixFileName = lines.get(7);
+		int type = Integer.parseInt(lines.get(8));
+		execute(RankingType.values()[type]);
 	}
 
 }

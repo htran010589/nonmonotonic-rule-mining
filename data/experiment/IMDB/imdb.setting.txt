@@ -6,3 +6,4 @@ data/experiment/IMDB/DLV/imdb.train.kg
 data/experiment/IMDB/DLV/imdb.opm.rule
 data/experiment/IMDB/DLV/dlv.bin
 data/experiment/IMDB/DLV/imdb.opm.ext.kg
+2
