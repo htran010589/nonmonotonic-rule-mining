@@ -1,0 +1,8 @@
+data/imdb.facts.tsv
+data/experiment/IMDB/imdb.mapping.data.txt
+data/imdb.form2.patterns.txt
+data/experiment/IMDB/imdb.learning.data.txt
+data/experiment/IMDB/DLV/imdb.train.kg
+data/experiment/IMDB/DLV/imdb.opm.rule
+data/experiment/IMDB/DLV/dlv.bin
+data/experiment/IMDB/DLV/imdb.opm.ext.kg
