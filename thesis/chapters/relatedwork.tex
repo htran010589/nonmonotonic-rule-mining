@@ -1,6 +1,6 @@
 \chapter{Related Work}
 
-The area of relational learning on semantic web has recently attracted interest from many researchers. The approaches that aim at tackling this problem can be mainly classified into two groups: statistics-based and logic-based directions. In this chapter we review semantic web and the relevant works from these groups.
+The area of relational learning on semantic web has recently attracted interest from many researchers. The approaches that aim at tackling this problem can be mainly classified into two groups: statistics-based and logic-based. In this chapter we review semantic web and the relevant works from these groups.
 
 \section{Semantic Web}
 
@@ -15,7 +15,8 @@ The World Wide Web Consortium (W3C) defines semantic web and the Resource Descri
 \label{fig1}
 \end{figure}
 
-The RDF can be used to describe knowledge graph where facts are presented in a format: \textit{$<$subject$>$ $<$predicate$>$ $<$object$>$}. This is the fundamental format of many knowledge bases such as YAGO, FreeBase, ... There are several typical knowledge graphs listed in Table~\ref{table1}~\cite{ref27} which have different scales in the number of predicates, entities and facts.
+The RDF can be used to describe knowledge graph where facts are presented in a format: \textit{$<$subject$>$ $<$predicate$>$ $<$object$>$}. This is the fundamental format of many knowledge bases such as YAGO~\cite{ref28}, FreeBase~\footnote{\url{https://developers.google.com/freebase/}}, Wikidata\footnote{\url{https://www.wikidata.org}}, etc. There are several typical knowledge 
+graphs listed in Table~\ref{table1}~\cite{ref27} which have different scales in the number of predicates, entities and facts.
 
 \begin{table}
 \begin{center}
@@ -49,29 +50,29 @@ Yahoo! Knowledge Graph & 3,443,743 & 1,391,054,990 & 250 & 800\\
 
 \section{Statistics-based Approaches}
 
-The statistics-based directions focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea of this approach is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
+The statistics-based approaches focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
 
 RESCAL is one of principal algorithms in this direction where relations of all hidden feature pairs are taken into consideration~\cite{ref2, ref3}. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
 
-While many tensor factorization methods use subject, predicate, object as three dimensions to model knowledge graph as a cube, some matrix decomposition algorithms try to transform this cube into two dimensional data. For instance, in~\cite{ref6, ref7} subject and object dimensions are merged into one representing a pair of entities.
+While many tensor factorization methods use subject, predicate and object as three dimensions to model a knowledge graph as a cube, some matrix decomposition algorithms try to transform this cube into two dimensional data. For instance, in~\cite{ref6, ref7} subject and object dimensions are merged into one representing a pair of entities.
 
-Distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close. The closeness can be checked based on some predefined distance measures. This approach can be expanded to structure embedding model~\cite{ref8}.
+Distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close to each other. The closeness can be checked based on some predefined distance measures. This approach can be expanded to structure embedding model~\cite{ref8}.
 
 \section{Logic-based Approaches}
 
-The logic-based direction aims at finding observable patterns in order to infer new links in the knowledge graph~\cite{ref1}. Since the patterns can be directly seen and not hidden in the data, these algorithms are more interpretable than the ones based on statistical approaches. For instance, a pattern extracted from the graph can be represented in a form:\\
+The logic-based approaches aim at finding observable patterns in order to infer new links in the knowledge graph~\cite{ref1}. Since the patterns can be directly seen in the data, these algorithms are more interpretable than the ones based on statistical approaches. For instance, a pattern extracted from the graph can be represented in the form:\\
 
 \centerline{\textit{livesIn(Z, Y) $\leftarrow$ isMarriedTo(X, Z), livesIn(X, Y).}}
 
-This form is equivalent to a triangle of three predicate edges in the knowledge graph. Since this pattern is frequent and observable, it can be mined in order to predict new links. More specifically, if we know some facts such as: \textit{isMarriedTo(Peter, Marry), livesIn(Marry, London)}; then the fact \textit{livesIn(Peter, London)} has high chance to be true.
+This form is equivalent to a triangle of three predicate edges in the knowledge graph. Since this pattern is frequent and observable, it can be mined in order to predict new links. More specifically, if we know some facts such as: \textit{isMarriedTo(Peter, Marry), livesIn(Marry, London)}; then the fact \textit{livesIn(Peter, London)} is likely to be true.
 
-In the rest of this section, the following main logic-based systems are discussed in details and illustrated with typical examples.
+In the rest of this section, several main logic-based systems are discussed in details and illustrated with typical examples.
 
 \subsection{Inductive Logic Programming Systems}
 
-Inductive Logic Programming~\cite{ref9} (ILP) is a combination field of Machine Learning and Logic Programming and it is used for generating hypothesis based on background knowledge and specific examples. These examples can be classified into positive and negative groups. The hypothesis is true for every positive example and not true for any negative one.
+Inductive Logic Programming~\cite{ref9} (ILP) is a combination of Machine Learning and Logic Programming fields and it is used for generating hypothesis based on background knowledge and specific examples. These examples can be classified into positive and negative ones. The goal is to find a hypothesis that covers all positive examples and none of the negative ones.
 
-Rule mining is a core problem in ILP, however, applying ILP algorithms to semantic web data is problematic for the following reasons. Firstly, ILP tools are not scalable and efficient for large knowlege graph such as YAGO, Freebase, Wikidata~\cite{ref10}. In some experiments conducted in~\cite{ref10}, it takes several days to process YAGO2 data using cutting edge ILP tools such as ALEPH~\cite{ref14, ref10}, QuickFoil~\cite{ref15, ref10}.
+Rule mining is a core problem in ILP, however, applying ILP algorithms to semantic web data is problematic for the following reasons. First, ILP tools are not scalable and efficient for large knowlege graphs such as YAGO, Freebase, Wikidata~\cite{ref10}. In some experiments conducted in~\cite{ref10}, it takes several days to process YAGO2 data using cutting edge ILP tools such as ALEPH~\cite{ref14, ref10}, QuickFoil~\cite{ref15, ref10}.
 
 Secondly, ILP methods use closed world assumption (CWA), that is, it is assumed that knowlege base is complete and missing facts are false. These methods require both positive and negative examples like traditional machine learning algorithms. This assumption and requirement are not suitable for our problem since there are only in-completed positive facts in real world data~\cite{ref10}.
 
