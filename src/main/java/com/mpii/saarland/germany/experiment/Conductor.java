@@ -249,10 +249,10 @@ public class Conductor {
 		if (!(new File(encodeFileName).exists())) {
 			Encoder.encode();
 		}
+		Encoder.loadEncode();
 		if (!(new File(trainingDataDlvFileName).exists())) {
 			Encoder.convert2DlvKnowledgeGraph();
 		}
-		Encoder.loadEncode();
 		generateExceptions(type);
 		runDlv();
 		evaluate();
