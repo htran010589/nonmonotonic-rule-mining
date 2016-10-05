@@ -34,10 +34,10 @@ public class Encoder {
 		}
 	}
 
-	static void encode(String fileName, String encodeFileName) {
+	static void encode() {
 		entity2Id = new HashMap<String, String>();
 		entityCount = typeCount = predicateCount = 0;
-		List<String> lines = TextFileReader.readLines(fileName);
+		List<String> lines = TextFileReader.readLines(Conductor.idealDataFileName);
 		for (String line : lines) {
 			line = line.substring(1, line.length() - 1);
 			String[] parts = line.split(">\t<");
@@ -66,7 +66,7 @@ public class Encoder {
 		}
 
 		try {
-			Writer encodeFileWriter = new BufferedWriter(new FileWriter(encodeFileName));
+			Writer encodeFileWriter = new BufferedWriter(new FileWriter(Conductor.encodeFileName));
 			for (String entity : entity2Id.keySet()) {
 				String id = entity2Id.get(entity);
 				encodeFileWriter.write(entity + "\t" + id + "\n");

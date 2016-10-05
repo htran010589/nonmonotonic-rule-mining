@@ -18,12 +18,11 @@ import com.mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker;
 import com.mpii.saarland.germany.rulemining.nonmonotonicrule.RankingType;
 import com.mpii.saarland.germany.rules.ExceptionType;
 import com.mpii.saarland.germany.rules.NegativeRule;
-import com.mpii.saarland.germany.utils.Settings;
 import com.mpii.saarland.germany.utils.TextFileReader;
 
 public class Conductor {
 
-	static final int[] TOP_RULE_COUNTS = { 5 };
+	static final int[] TOP_RULE_COUNTS = { 5, 10, 15 };
 
 	static final String[] RULE_TYPES = { ".neg.", ".pos.", ".neg.x2." };
 
@@ -247,6 +246,9 @@ public class Conductor {
 	}
 
 	public static void execute(RankingType type) {
+		if (!(new File(encodeFileName).exists())) {
+			Encoder.encode();
+		}
 		Encoder.loadEncode();
 		generateExceptions(type);
 		runDlv();
@@ -286,7 +288,7 @@ public class Conductor {
 		patternFileName = workingPath + "/patterns.txt";
 		trainingDataFileName = workingPath + "/training.data.txt";
 		trainingDataDlvFileName = dlvPath + "/training.data.kg";
-		choosenRuleFileName = workingPath + "/choosen.rules." + typeName + ".txt";
+		choosenRuleFileName = dlvPath + "/choosen.rules." + typeName + ".txt";
 		dlvBinaryFileName = workingPath + "/dlv.bin";
 		extensionPrefixFileName = dlvPath + "/extension." + typeName + ".kg";
 		execute(RankingType.values()[type]);
