@@ -23,7 +23,7 @@ import com.mpii.saarland.germany.utils.TextFileReader;
 
 public class Conductor {
 
-	static final int[] TOP_RULE_COUNTS = { 5, 10, 15 };
+	static final int[] TOP_RULE_COUNTS = { 5 };
 
 	static final String[] RULE_TYPES = { ".neg.", ".pos.", ".neg.x2." };
 
@@ -254,16 +254,41 @@ public class Conductor {
 	}
 
 	public static void main(String[] args) {
-		List<String> lines = TextFileReader.readLines(args[0]);
-		idealDataFileName = lines.get(0);
-		encodeFileName = lines.get(1);
-		patternFileName = lines.get(2);
-		trainingDataFileName = lines.get(3);
-		trainingDataDlvFileName = lines.get(4);
-		choosenRuleFileName = lines.get(5);
-		dlvBinaryFileName = lines.get(6);
-		extensionPrefixFileName = lines.get(7);
-		int type = Integer.parseInt(lines.get(8));
+		if (args.length != 2) {
+			System.out.println("Wrong number of parameters.");
+			return;
+		}
+		File workingFolder = new File(args[0]);
+		if (!workingFolder.exists()) {
+			System.out.println("Working folder does not exist.");
+			return;
+		}
+		int type = 2;
+		try {
+			type = Integer.parseInt(args[1]);
+		} catch (NumberFormatException ex) {
+			System.out.println("Parameter 2 should be from 0 to 2.");
+			return;
+		}
+		if (type < 0 || type > 2) {
+			System.out.println("Parameter 2 should be from 0 to 2.");
+			return;			
+		}
+		String workingPath = workingFolder.getAbsolutePath();
+		File dlvFolder = new File(workingPath + "/DLV");
+		if (!dlvFolder.exists()) {
+			dlvFolder.mkdir();
+		}
+		String dlvPath = dlvFolder.getAbsolutePath();
+		String typeName = RankingType.values()[type].toString().toLowerCase();
+		idealDataFileName = workingPath + "/ideal.data.txt";
+		encodeFileName = workingPath + "/encode.txt";
+		patternFileName = workingPath + "/patterns.txt";
+		trainingDataFileName = workingPath + "/training.data.txt";
+		trainingDataDlvFileName = dlvPath + "/training.data.kg";
+		choosenRuleFileName = workingPath + "/choosen.rules." + typeName + ".txt";
+		dlvBinaryFileName = workingPath + "/dlv.bin";
+		extensionPrefixFileName = dlvPath + "/extension." + typeName + ".kg";
 		execute(RankingType.values()[type]);
 	}
 

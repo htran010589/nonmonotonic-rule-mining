@@ -230,7 +230,7 @@ public class ExceptionRanker {
 			// Naive ranking is conducted.
 			for (PositiveRule rule : form2Instances.positiveRules) {
 				recalculateConviction(rule, facts);
-			}			
+			}
 		}
 
 		Comparator<NegativeRule> sortByPositiveNegativeConviction = (NegativeRule r1,

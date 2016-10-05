@@ -35,61 +35,59 @@ public class ManualChecker {
 	}
 
 	public void compareWithEvals() throws Exception {
-		if (Conductor.DOMAIN.equals("IMDB")) {
-			List<String> lines = TextFileReader.readLines(
-					"/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/imdb.manual.eval.txt");
-			Map<String, String> check = new HashMap<String, String>();
-			for (String line : lines) {
-				// System.out.println(line);
-				String[] parts = line.split("\t");
-				// System.out.println(line);
-				if (parts.length < 4)
-					continue;
-				check.put(parts[0] + "\t" + parts[1] + "\t" + parts[2], parts[3]);
-			}
-			for (int maxCnt : Conductor.TOP_RULE_COUNTS) {
-				String file1 = Conductor.extensionPrefixFileName + ".diff." + maxCnt + ".needcheck";
-				BufferedReader br = new BufferedReader(new FileReader(file1));
-				String line;
-				int good = 0;
-				int bad = 0;
-				int unknown = 0;
-				while ((line = br.readLine()) != null) {
-					if (check.get(line) == null) {
-						unknown++;
-					}
-					if (check.get(line).equals("1")) {
-						good++;
-					} else {
-						bad++;
-					}
-				}
-				br.close();
-				System.out.println("With file: " + file1);
-				System.out.println("Number of good facts is " + good);
-				System.out.println("Number of bad facts is " + bad);
-				System.out.println("Number of unknown facts is " + unknown);
-				System.out.println("Rate = " + (good * 1.0) / (good + bad));
-				System.out.println("+++++");
-			}
-			return;
+		List<String> lines = TextFileReader.readLines(
+				"/home/htran/Research_Work/Code/nonmonotonic-rule-mining/data/experiment/IMDB/imdb.manual.eval.txt");
+		Map<String, String> check = new HashMap<String, String>();
+		for (String line : lines) {
+			// System.out.println(line);
+			String[] parts = line.split("\t");
+			// System.out.println(line);
+			if (parts.length < 4)
+				continue;
+			check.put(parts[0] + "\t" + parts[1] + "\t" + parts[2], parts[3]);
 		}
-		Map<String, String> ma = getYagoEvals("data/experiment/YAGO/DLV/evaluations/std-confidence.tsv");
-		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/pca-confidence.tsv"));
-		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/joint-prediction.tsv"));
 		for (int maxCnt : Conductor.TOP_RULE_COUNTS) {
-			int cnt = 0;
-			String file1 = Conductor.extensionPrefixFileName + ".pos." + maxCnt + ".needcheck";
+			String file1 = Conductor.extensionPrefixFileName + ".diff." + maxCnt + ".needcheck";
 			BufferedReader br = new BufferedReader(new FileReader(file1));
 			String line;
+			int good = 0;
+			int bad = 0;
+			int unknown = 0;
 			while ((line = br.readLine()) != null) {
-				if (ma.containsKey(line)) {
-					cnt++;
+				if (check.get(line) == null) {
+					unknown++;
+				}
+				if (check.get(line).equals("1")) {
+					good++;
+				} else {
+					bad++;
 				}
 			}
 			br.close();
-			System.out.println("With file: " + file1 + ", number of facts contained in AMIE evalution is " + cnt);
+			System.out.println("With file: " + file1);
+			System.out.println("Number of good facts is " + good);
+			System.out.println("Number of bad facts is " + bad);
+			System.out.println("Number of unknown facts is " + unknown);
+			System.out.println("Rate = " + (good * 1.0) / (good + bad));
+			System.out.println("+++++");
 		}
+
+//		Map<String, String> ma = getYagoEvals("data/experiment/YAGO/DLV/evaluations/std-confidence.tsv");
+//		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/pca-confidence.tsv"));
+//		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/joint-prediction.tsv"));
+//		for (int maxCnt : Conductor.TOP_RULE_COUNTS) {
+//			int cnt = 0;
+//			String file1 = Conductor.extensionPrefixFileName + ".pos." + maxCnt + ".needcheck";
+//			BufferedReader br = new BufferedReader(new FileReader(file1));
+//			String line;
+//			while ((line = br.readLine()) != null) {
+//				if (ma.containsKey(line)) {
+//					cnt++;
+//				}
+//			}
+//			br.close();
+//			System.out.println("With file: " + file1 + ", number of facts contained in AMIE evalution is " + cnt);
+//		}
 	}
 
 }
