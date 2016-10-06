@@ -9,11 +9,10 @@ Note that the pattern file contains positive rule on each line. The positive rul
 The knowlege graph file is in RDF format (format 2), that is, <X> <p> <Y> on each line. This file also contains unary fact with the form <X> <type> <Y>.
 
 2. How to run experiment?
-Step 1: create a working folder, for example: data/experiment/IMDB
-Step 2: copy ideal.data.txt (ideal knowledge graph file), patterns.txt (pattern file), training.data.txt (training graph file), dlv.bin to this folder
-Step 3: move to nonmonotonic-rule-mining folder and chmod a+x run-experiment.sh
-Step 4: ./run-experiment.sh [path to working folder] [ranking option]
+Step 1: create a working folder, copy ideal.data.txt (ideal knowledge graph file), patterns.txt (pattern file), training.data.txt (training graph file), dlv.bin to this folder
+Step 2: move to nonmonotonic-rule-mining folder and chmod a+x run-experiment.sh
+Step 3: ./run-experiment.sh [path to working folder] [ranking option]
 
-Note that ideal and training knowledge graph file are in format 2 while pattern file is in format 1. You can download dlv.bin file from http://www.dlvsystem.com/, make sure to rename the binary file to dlv.bin in the working folder.
+Note that ideal and training knowledge graph file are in format 2 while pattern file is in format 1. You can download dlv.bin file from http://www.dlvsystem.com/, make sure to rename the binary file to dlv.bin in the working folder. As regards the ranking option, it can be 0, 1, 2 which stand for naive, pm and opm ranking, resp.
 
-As regards the ranking option, it can be 0, 1, 2 which stand for naive, pm and opm ranking, resp.
+For example, please update the repository and run the following command: ./run-experiment.sh data/experiment/IMDB/ 2, that means IMDB experiment is conducted with opm ranking.
