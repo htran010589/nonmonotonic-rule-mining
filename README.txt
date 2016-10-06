@@ -15,3 +15,5 @@ Step 3: move to nonmonotonic-rule-mining folder and chmod a+x run-experiment.sh
 Step 4: ./run-experiment.sh [path to working folder] [ranking option]
 
 Note that ideal and training knowledge graph file are in format 2 while pattern file is in format 1. You can download dlv.bin file from http://www.dlvsystem.com/, make sure to rename the binary file to dlv.bin in the working folder.
+
+As regards the ranking option, it can be 0, 1, 2 which stand for naive, pm and opm ranking, resp.
