@@ -26,37 +26,40 @@ This tool is developed and currently tested in Linux, we may extend it to Window
 
 Installation
 ------------
+
+```
 Download Apache Maven from https://maven.apache.org and install.
 Create an experiment folder, copy ideal.data.txt (ideal knowledge graph file), patterns.txt (pattern file), training.data.txt (training graph file) to this folder. Note that ideal and training knowledge graph file are in format 1 while pattern file is in format 2.
 Download DLV from http://www.dlvsystem.com, choose a version for Linux, rename it to dlv.bin and copy to the experiment folder.
 Download the repository of the system from https://github.com/htran010589/nonmonotonic-rule-mining/archive/master.zip, then uncompress it.
+```
 
 Usage
 ------------
 
 ### Rule Mining
 
-{ cd nonmonotonic-rule-mining }
-{ chmod a+x run-rule-mining.sh }
-{ ./run-rule-mining.sh [path to pattern file] [path to knowledge graph file] [ranking option] }
+$ cd nonmonotonic-rule-mining
+$ chmod a+x run-rule-mining.sh
+$ ./run-rule-mining.sh [path to pattern file] [path to knowledge graph file] [ranking option]
 
 #### Example with IMDB Rule Mining
 
 Please download the repository and run the following command for executing IMDB rule mining with opm ranking:
 
-{ ./run-experiment.sh data/experiment/IMDB/patterns.txt data/experiment/IMDB/training.data.txt 2 }
+$ ./run-experiment.sh data/experiment/IMDB/patterns.txt data/experiment/IMDB/training.data.txt 2
 
 ### Experiment
 
-{ cd nonmonotonic-rule-mining folder }
-{ chmod a+x run-rule-mining.sh }
-{ ./run-experiment.sh [path to working folder] [ranking option] }
+$ cd nonmonotonic-rule-mining folder
+$ chmod a+x run-rule-mining.sh
+$ ./run-experiment.sh [path to working folder] [ranking option]
 
 #### Example with IMDB Experiment
 
 Please download the repository and run the following command for executing IMDB experiment with opm ranking:
 
-{ ./run-experiment.sh data/experiment/IMDB/ 2 }
+$ ./run-experiment.sh data/experiment/IMDB/ 2
 
 References
 ----------
