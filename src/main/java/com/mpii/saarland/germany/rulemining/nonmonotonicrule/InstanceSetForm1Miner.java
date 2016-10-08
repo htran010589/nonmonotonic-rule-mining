@@ -19,11 +19,11 @@ import com.mpii.saarland.germany.utils.TextFileReader;
  * 
  * This class is to handle rules mined from pattern: H(x, z) <- P(x, y) ^ Q(y, z).
  */
-public class InstanceSetForm2Miner extends InstanceSetMiner {
+public class InstanceSetForm1Miner extends InstanceSetMiner {
 
-	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetForm2Miner.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InstanceSetForm1Miner.class);
 
-	public InstanceSetForm2Miner() {
+	public InstanceSetForm1Miner() {
 	}
 
 	@Override

@@ -38,6 +38,24 @@ Download the repository of the system from https://github.com/htran010589/nonmon
 Usage
 ------------
 
+### Pattern Mining
+
+```
+cd nonmonotonic-rule-mining
+chmod a+x run-pattern-mining.sh
+./run-pattern-mining.sh [path to knowledge graph file]
+```
+
+Note that current system only supports patterns or positive rules with format 2.
+
+#### Example with IMDB Pattern Mining
+
+Please download the repository and run the following command for executing IMDB pattern mining:
+
+```
+./run-pattern-mining.sh data/experiment/IMDB/ideal.data.txt
+```
+
 ### Rule Mining
 
 ```

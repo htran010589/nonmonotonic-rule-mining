@@ -30,7 +30,7 @@ public class ExceptionRanker {
 	public ExceptionRanker(String patternFileName, FactIndexer facts) {
 		this.facts = facts;
 		newFacts = facts.cloneFact();
-		form2Instances = new InstanceSetForm2Miner();
+		form2Instances = new InstanceSetForm1Miner();
 		form2Instances.loadPositiveRules(patternFileName);
 		form2Instances.findInstances(facts);
 		form2Instances.findPositiveNegativeExamples(facts);
