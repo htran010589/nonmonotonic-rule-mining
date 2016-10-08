@@ -1,5 +1,10 @@
 package com.mpii.saarland.germany.rules;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ */
 public class NegativeRule {
 
 	private PositiveRule positiveRule;

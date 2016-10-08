@@ -8,6 +8,11 @@ import java.util.Map;
 
 import com.mpii.saarland.germany.utils.TextFileReader;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ */
 public class ManualChecker {
 
 	public Map<String, String> getYagoEvals(String fileName) {

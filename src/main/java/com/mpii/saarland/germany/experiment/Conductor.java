@@ -20,6 +20,11 @@ import com.mpii.saarland.germany.rules.ExceptionType;
 import com.mpii.saarland.germany.rules.NegativeRule;
 import com.mpii.saarland.germany.utils.TextFileReader;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ */
 public class Conductor {
 
 	static final int[] TOP_RULE_COUNTS = { 5, 10, 15 };

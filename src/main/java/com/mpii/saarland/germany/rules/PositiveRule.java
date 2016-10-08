@@ -3,6 +3,11 @@ package com.mpii.saarland.germany.rules;
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.rulemining.nonmonotonicrule.InstanceSetMiner;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ */
 public class PositiveRule {
 
 	private String head;
@@ -50,9 +55,9 @@ public class PositiveRule {
 		StringBuilder result = new StringBuilder(head);
 		String[] parts = body.split("\t");
 		if (type == PositiveRuleType.FORM2) {
-			result.append("(x, z) <- ");
-			result.append(parts[0] + "(x, y) ^ ");
-			result.append(parts[1] + "(y, z)");
+			result.append("(X, Z) <- ");
+			result.append(parts[0] + "(X, Y) ^ ");
+			result.append(parts[1] + "(Y, Z)");
 		}
 		return result.toString();
 	}

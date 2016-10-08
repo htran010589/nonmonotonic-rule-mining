@@ -12,6 +12,11 @@ import java.util.Map;
 
 import com.mpii.saarland.germany.utils.TextFileReader;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ */
 public class Encoder {
 
 	static Map<String, String> entity2Id, id2Entity;

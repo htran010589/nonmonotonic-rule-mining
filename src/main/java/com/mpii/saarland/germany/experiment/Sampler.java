@@ -12,6 +12,11 @@ import java.util.Map;
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.utils.Utils;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ */
 public class Sampler {
 
 	static void createLearningData() {

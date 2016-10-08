@@ -17,7 +17,7 @@ import com.mpii.saarland.germany.utils.TextFileReader;
  * 
  * @author Hai Dang Tran
  * 
- * This class is to handle rules mined from pattern: H(x, z) <- P(x, y) ^ Q(y, z).
+ * This class is to handle rules mined from pattern: h(X, Z) <- p(X, Y) ^ q(Y, Z).
  */
 public class InstanceSetForm1Miner extends InstanceSetMiner {
 

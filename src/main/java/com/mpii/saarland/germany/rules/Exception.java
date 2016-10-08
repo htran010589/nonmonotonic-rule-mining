@@ -1,5 +1,10 @@
 package com.mpii.saarland.germany.rules;
 
+/**
+ * 
+ * @author Hai Dang Tran
+ * 
+ */
 public class Exception {
 
 	private String exception;
@@ -16,11 +21,11 @@ public class Exception {
 		StringBuilder result = new StringBuilder();
 		result.append(exception);
 		if (type == ExceptionType.FIRST) {
-			result.append("(x)");
+			result.append("(X)");
 		} else if (type == ExceptionType.SECOND) {
-			result.append("(z)");
+			result.append("(Z)");
 		} else {
-			result.append("(x, z)");
+			result.append("(X, Z)");
 		}
 		return result.toString();
 	}
