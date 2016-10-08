@@ -16,6 +16,7 @@ public class Sampler {
 
 	static void createLearningData() {
 		try {
+			Conductor.idealFacts = new FactIndexer(Conductor.idealDataFileName);
 			Writer learningDataWriter = new BufferedWriter(new FileWriter(Conductor.trainingDataFileName));
 			Map<String, Long> predicateCount = new HashMap<String, Long>();
 			Map<String, Long> deletedPredicateCount = new HashMap<String, Long>();
@@ -37,7 +38,7 @@ public class Sampler {
 				if ((1.0 * (deletedPredicateCount.get(parts[1]) - 1) / predicateCount.get(parts[1])) < 0.8)
 					delete = false;
 				if (!delete) {
-					learningDataWriter.write(xpy + "\n");
+					learningDataWriter.write("<" + parts[0] + ">\t<" + parts[1] + ">\t<" + parts[2] + ">\n");
 				} else {
 					Utils.addKeyLong(entityDegree, parts[0], -1);
 					Utils.addKeyLong(entityDegree, parts[2], -1);
@@ -48,7 +49,7 @@ public class Sampler {
 				if (Conductor.idealFacts.getTSetFromX(x) == null)
 					continue;
 				for (String t : Conductor.idealFacts.getTSetFromX(x)) {
-					learningDataWriter.write(x + "\ttype\t" + t + "\n");
+					learningDataWriter.write("<" + x + ">\t<type>\t<" + t + ">\n");
 				}
 			}
 			learningDataWriter.close();

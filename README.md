@@ -9,7 +9,7 @@ This system is used to mine nonmonotonic rules from a knowledge graph and a list
 
 ### Knowledge Graph File
 
-The knowlege graph file is in RDF format, that is, <X> <p> <Y> on each line (format 1). This file also contains unary fact with the form <X> <type> <Y>. You can see this format in data/experiment/IMDB/ideal.data.txt or data/experiment/IMDB/training.data.txt of the repository.
+The knowlege graph file is in RDF format (format 1). This file also contains unary fact with predicate being "type". You can see this format in data/experiment/IMDB/ideal.data.txt or data/experiment/IMDB/training.data.txt of the repository.
 
 ### Pattern File
 
