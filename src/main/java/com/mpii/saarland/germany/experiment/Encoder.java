@@ -133,7 +133,8 @@ public class Encoder {
 					continue;
 				}
 				if (!parts[1].equals("type")) {
-					trainingDataDlvWriter.write(entity2Id.get(parts[1]) + "(" + entity2Id.get(parts[0]) + ", " + entity2Id.get(parts[2]) + ").\n");
+					trainingDataDlvWriter.write(entity2Id.get(parts[1]) + "(" + entity2Id.get(parts[0]) + ", "
+							+ entity2Id.get(parts[2]) + ").\n");
 				} else {
 					trainingDataDlvWriter.write(entity2Id.get(parts[2]) + "(" + entity2Id.get(parts[0]) + ").\n");
 				}

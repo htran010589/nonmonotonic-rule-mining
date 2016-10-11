@@ -5,7 +5,7 @@ Nonmonotonic Rule Mining System
 Tool Description
 ------------
 
-This system is used to mine nonmonotonic rules from a knowledge graph and a list of positive Horn rules. For example, based on given facts and a positive rule livesIn(X, Z) <- isMarriedTo(X, Y) ^ livesIn(Y, Z), the tool may find out that the rule is not true if X is a researcher. As a result, livesIn(X, Z) <- isMarriedTo(X, Y) ^ livesIn(Y, Z) ^ not Researcher(X) can be mined in the final result.
+This system is used to mine nonmonotonic rules from a knowledge graph and a list of positive Horn rules. For example, based on given facts and a positive rule livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z); the tool may find out that the rule is not true if X is a researcher. As a result, livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z), not Researcher(X) can be mined in the final result.
 
 ### Knowledge Graph File
 
@@ -13,7 +13,7 @@ The knowlege graph file is in RDF format (format 1). This file also contains una
 
 ### Pattern File
 
-The pattern file contains positive rule on each line. The positive rule is in a format: h\tabp\tabq (format 2), that means h(X, Z) <- p(X, Y) ^ q(Y, Z). This is the only form that the system currently supports. You can see this format in data/experiment/IMDB/patterns.txt of the repository.
+The pattern file contains positive rule on each line. The positive rule is in a format: h\tabp\tabq (format 2), that means h(X, Z) :- p(X, Y), q(Y, Z). This is the only form that the system currently supports. You can see this format in data/experiment/IMDB/patterns.txt of the repository.
 
 ### Ranking Option
 

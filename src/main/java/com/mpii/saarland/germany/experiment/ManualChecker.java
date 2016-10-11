@@ -77,22 +77,25 @@ public class ManualChecker {
 			System.out.println("+++++");
 		}
 
-//		Map<String, String> ma = getYagoEvals("data/experiment/YAGO/DLV/evaluations/std-confidence.tsv");
-//		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/pca-confidence.tsv"));
-//		ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/joint-prediction.tsv"));
-//		for (int maxCnt : Conductor.TOP_RULE_COUNTS) {
-//			int cnt = 0;
-//			String file1 = Conductor.extensionPrefixFileName + ".pos." + maxCnt + ".needcheck";
-//			BufferedReader br = new BufferedReader(new FileReader(file1));
-//			String line;
-//			while ((line = br.readLine()) != null) {
-//				if (ma.containsKey(line)) {
-//					cnt++;
-//				}
-//			}
-//			br.close();
-//			System.out.println("With file: " + file1 + ", number of facts contained in AMIE evalution is " + cnt);
-//		}
+		// Map<String, String> ma =
+		// getYagoEvals("data/experiment/YAGO/DLV/evaluations/std-confidence.tsv");
+		// ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/pca-confidence.tsv"));
+		// ma.putAll(getYagoEvals("data/experiment/YAGO/DLV/evaluations/joint-prediction.tsv"));
+		// for (int maxCnt : Conductor.TOP_RULE_COUNTS) {
+		// int cnt = 0;
+		// String file1 = Conductor.extensionPrefixFileName + ".pos." + maxCnt +
+		// ".needcheck";
+		// BufferedReader br = new BufferedReader(new FileReader(file1));
+		// String line;
+		// while ((line = br.readLine()) != null) {
+		// if (ma.containsKey(line)) {
+		// cnt++;
+		// }
+		// }
+		// br.close();
+		// System.out.println("With file: " + file1 + ", number of facts
+		// contained in AMIE evalution is " + cnt);
+		// }
 	}
 
 }
