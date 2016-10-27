@@ -108,11 +108,11 @@ public class Conductor {
 					if (idealFacts.checkXpy(xpy)) {
 						goodFactCount++;
 						goodFactWriter.write(xpy + "\n");
-						Utils.addKeyLong(goodFactPerPredicateCount, parts[0], 1L);
+						Utils.addKeyLong(goodFactPerPredicateCount, p, 1L);
 					} else {
 						needCheckFactWriter.write(xpy + "\n");
 						needCheckFactCount++;
-						Utils.addKeyLong(needCheckFactPerPredicateCount, parts[0], 1L);
+						Utils.addKeyLong(needCheckFactPerPredicateCount, p, 1L);
 					}
 				} else {
 					String p = Encoder.id2Entity.get(parts[0].substring("not_".length()));
@@ -145,7 +145,7 @@ public class Conductor {
 			System.out.println("Negative new facts: " + negativeNewFacts.size());
 			System.out.println("Number of conflicts: " + conflictCount);
 			System.out.println("Done with file: " + fileName);
-			System.out.println("-----");
+			System.out.println();
 			Set<String> predicates = new TreeSet<>();
 			predicates.addAll(goodFactPerPredicateCount.keySet());
 			predicates.addAll(needCheckFactPerPredicateCount.keySet());
