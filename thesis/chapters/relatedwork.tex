@@ -101,18 +101,54 @@ However, like other ILP platforms, these tools does not take care of nonmonotoni
 \subsection{Nonmonotonic Rule Mining Systems}
 \label{related-work-nonmonotonic-rule-mining-systems}
 
-\textbf{Hybrid ALP System.} While traditional ILP systems do not take exceptions or negative atoms into account, the converse is true for Abductive Logic Programming (ALP)~\cite{ref11}. Thus, a system in the intersection between these fields is created in~\cite{ref11} to generate logic hypothesis. However, CWA is used and all unseen triples are treated as false facts in this research. This setting cannot be applied to our current work.
+While traditional ILP systems do not take into account exceptions or negative atoms, the converse is true for Nonmonotonic Rule Mining systems. As regards a relation between ILP and Abductive Logic Programming (ALP~\cite{ref31}), some research works~\cite{ref11, ref32, ref33} are conducted to find rules with exceptions. However, CWA is used and all unseen triples are treated as false facts in these publications. This setting cannot be applied to our current work.
 
-\textbf{Nonmonotonic Rule Mining with OWA.} Research in ~\cite{ref12} bases on OWA instead of CWA in some mentioned systems. This tool works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects. After positive rules are mined using Association Rule Mining tools~\cite{ref13}, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of partial materialization.
+There are some nonmonotonic rule learning methods taking the uncompleted data into consideration in ~\cite{ref34}. This work pays attention to complicated association between different semantic parts. This is different from the current work where we focus on how good is new predicted data.
 
-From the same concept of partial materialization, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
+\textbf{Nonmonotonic Rule Mining with OWA and flattened data.} Research in ~\cite{ref12} bases on OWA instead of CWA in some mentioned systems. This tool works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects. More specifically, a binary fact such as\textit{bornIn(s1, US)} can be transformed to unary form \textit{bornInUS(s1)}. Thanks to this, a knowledge graph can be converted to a binary transaction table as in Table~\ref{table2} where 1 or 0 mean the corresponding fact appear in the original graph or not. As a result, the authors in~\cite{ref12} may apply Item Set Mining algorithms to find patterns. These patterns can be used to mine positive rules using Association Rule Mining tools~\cite{ref13}.
 
-\section{Other Approaches}
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ & bornInUS & livesInUS & immigratesToUS & livesInUK\\
+\hline\hline
+s1 & 1 & 1 & 0 & 0\\
+\hline
+s2 & 1 & 0 & 1 & 1\\
+\hline
+s3 & 1 & 1 & 0 & 1\\
+\hline
+s4 & 0 & 0 & 1 & 0\\
+\hline
+s5 & 1 & 0 & 0 & 1\\
+\hline
+s6 & 0 & 0 & 1 & 1\\
+\hline
+s7 & 0 & 0 & 1 & 1\\
+\hline
+s8 & 1 & 0 & 0 & 0\\
+\hline
+s9 & 1 & 1 & 1 & 1\\
+\hline
+s10 & 0 & 1 & 0 & 1\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Transaction table as flattened knowledge graph data.}
+\label{table2}
+\end{table}
 
-Both of above-mentioned approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the knowledge base, e.g, web pages linking to objects or big collection of documents.
+In the next step, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of Partial Materialization (PM). In details, PM is the technique that some new predicted facts of other rules are used to measure the quality of a particular one. With the Ordered Partial Materialization (OPM), the idea is similar. The only difference is that the order of rules matters and new generated facts of previous rules instead of all other ones are counted for statistics.
 
-Wikipedia pages can be used to identify relations between entities in~\cite{ref18}. In a larger scale,~\cite{ref19} proposes learning lexical predicate patterns, and searches all over the Internet to find subject-object pairs corresponding to the patterns. These new pairs can be filled to the original graph. As a result, a big text corpora is used in ~\cite{ref19} to learn relations.
+From the same concept of Partial Materialization and above setting, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
 
-With the intuition that entities appearing in the same table should have the same relations, authors in~\cite{ref20} try to refine knowledge graph based on Wikipedia tables. Similar research works are conducted using page lists~\cite{ref21} or HTML tables~\cite{ref22}.
-
-Instead of documents, interlinks are used to add relation edges to knowledge graph~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted to YAGO if they also appear in the latter knowledge graph. This way can be extended to mapping method with probabilities in~\cite{ref25}.
+%\section{Other Approaches}
+%
+%Both of above-mentioned approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the knowledge base, e.g, web pages linking to objects or big collection of documents.
+%
+%Wikipedia pages can be used to identify relations between entities in~\cite{ref18}. In a larger scale,~\cite{ref19} proposes learning lexical predicate patterns, and searches all over the Internet to find subject-object pairs corresponding to the patterns. These new pairs can be filled to the original graph. As a result, a big text corpora is used in ~\cite{ref19} to learn relations.
+%
+%With the intuition that entities appearing in the same table should have the same relations, authors in~\cite{ref20} try to refine knowledge graph based on Wikipedia tables. Similar research works are conducted using page lists~\cite{ref21} or HTML tables~\cite{ref22}.
+%
+%Instead of documents, interlinks are used to add relation edges to knowledge graph~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted to YAGO if they also appear in the latter knowledge graph. This way can be extended to mapping method with probabilities in~\cite{ref25}.
