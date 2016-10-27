@@ -9,9 +9,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker;
@@ -19,6 +22,7 @@ import com.mpii.saarland.germany.rulemining.nonmonotonicrule.RankingType;
 import com.mpii.saarland.germany.rules.ExceptionType;
 import com.mpii.saarland.germany.rules.NegativeRule;
 import com.mpii.saarland.germany.utils.TextFileReader;
+import com.mpii.saarland.germany.utils.Utils;
 
 /**
  * 
@@ -27,7 +31,7 @@ import com.mpii.saarland.germany.utils.TextFileReader;
  */
 public class Conductor {
 
-	static final int[] TOP_RULE_COUNTS = { 5, 10, 15 };
+	static final int[] TOP_RULE_COUNTS = { 10 };
 
 	static final String[] RULE_TYPES = { ".pos.", ".neg.", ".neg.x2." };
 
@@ -80,6 +84,9 @@ public class Conductor {
 			System.out.println("Start evaluating file: " + fileName);
 			String line = TextFileReader.readLines(fileName).get(2);
 			String[] facts = line.split(", ");
+			Map<String, Long> goodFactPerPredicateCount = new HashMap<>();
+			Map<String, Long> needCheckFactPerPredicateCount = new HashMap<>();
+			Map<String, Long> conflictPerPredicateCount = new HashMap<>();
 			for (String fact : facts) {
 				if (fact.startsWith("{")) {
 					fact = fact.substring(1);
@@ -101,9 +108,11 @@ public class Conductor {
 					if (idealFacts.checkXpy(xpy)) {
 						goodFactCount++;
 						goodFactWriter.write(xpy + "\n");
+						Utils.addKeyLong(goodFactPerPredicateCount, parts[0], 1L);
 					} else {
 						needCheckFactWriter.write(xpy + "\n");
 						needCheckFactCount++;
+						Utils.addKeyLong(needCheckFactPerPredicateCount, parts[0], 1L);
 					}
 				} else {
 					String p = Encoder.id2Entity.get(parts[0].substring("not_".length()));
@@ -124,6 +133,7 @@ public class Conductor {
 					conflictWriter.write("<" + parts[0] + ">\t<" + parts[1] + ">\t<" + parts[2] + ">\n");
 					conflictWriter.write("<" + parts[0] + ">\t<not_" + parts[1] + ">\t<" + parts[2] + ">\n");
 					conflictCount++;
+					Utils.addKeyLong(conflictPerPredicateCount, parts[1], 1L);
 				}
 			}
 			System.out.println("Already in the learning data (positive facts): " + inLearningPositiveFactCount);
@@ -135,6 +145,21 @@ public class Conductor {
 			System.out.println("Negative new facts: " + negativeNewFacts.size());
 			System.out.println("Number of conflicts: " + conflictCount);
 			System.out.println("Done with file: " + fileName);
+			System.out.println("-----");
+			Set<String> predicates = new TreeSet<>();
+			predicates.addAll(goodFactPerPredicateCount.keySet());
+			predicates.addAll(needCheckFactPerPredicateCount.keySet());
+			predicates.addAll(conflictPerPredicateCount.keySet());
+			for (String predicate : predicates) {
+				Long currentGoodFactCount = goodFactPerPredicateCount.get(predicate);
+				if (currentGoodFactCount == null) currentGoodFactCount = 0L;
+				Long currentNeedCheckFactCount = needCheckFactPerPredicateCount.get(predicate);
+				if (currentNeedCheckFactCount == null) currentNeedCheckFactCount = 0L;
+				Long currentConflictCount = conflictPerPredicateCount.get(predicate);
+				if (currentConflictCount == null) currentConflictCount = 0L;
+				Long currentFactCount = currentGoodFactCount + currentNeedCheckFactCount; 
+				System.out.println("\\multirow{3}{*}{IMDB} &     " + predicate + "       &        &     " + currentFactCount + "     &              &    " + currentConflictCount + "                        &       &   " + currentGoodFactCount + "   &               &    " + currentNeedCheckFactCount + "            &              &               \\\\ \\cline{2-12} ");
+			}
 			System.out.println("-----");
 			goodFactWriter.close();
 			needCheckFactWriter.close();
