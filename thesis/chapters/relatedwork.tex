@@ -15,8 +15,15 @@ The World Wide Web Consortium (W3C) defines semantic web and the Resource Descri
 \label{fig1}
 \end{figure}
 
-The RDF can be used to describe knowledge graph where facts are presented in a format: \textit{$<$subject$>$ $<$predicate$>$ $<$object$>$}. This is the fundamental format of many knowledge bases such as YAGO~\cite{ref28}, FreeBase~\footnote{\url{https://developers.google.com/freebase/}}, Wikidata\footnote{\url{https://www.wikidata.org}}, etc. There are several typical knowledge 
-graphs listed in Table~\ref{table1}~\cite{ref27}, which have different scales in the number of predicates, entities and facts.
+The RDF can be used to describe knowledge graph where facts are presented in a format: \textit{$<$subject$>$ $<$predicate$>$ $<$object$>$}. This is the fundamental format of many knowledge bases such as YAGO~\cite{ref28}, FreeBase~\footnote{\url{https://developers.google.com/freebase/}}, Wikidata\footnote{\url{https://www.wikidata.org}}, etc. There are several typical knowledge graphs listed in Table~\ref{table1}~\cite{ref27} which have various scales. Of all the KB mentioned in the table, Google's Knowledge Graph is the largest with 18 billions facts. In our current work, we pay attention to YAGO, IMDB for experimental results.
+
+Though having different number of predicates, entities and facts, these graphs share the following common properties~\cite{ref27}:
+
+\begin{itemize}
+\item Facts from real world are reflected in the knowledge graphs.
+\item The domains are fruitful in the knowledge graphs, e.g, sports, arts, ...
+\item The interconnection between knowledge graphs are taken into consideration, i.e, the mapping of entities and relations are explicitly indicated in each KB.
+\end{itemize}
 
 \begin{table}
 \begin{center}
@@ -41,6 +48,8 @@ Google's Knowledge Graph & 570,000,000 & 18,000,000,000 & 1,500 & 35,000\\
 Google's Knowledge Vault & 45,000,000 & 271,000,000 & 1,100 & 4,469\\
 \hline
 Yahoo! Knowledge Graph & 3,443,743 & 1,391,054,990 & 250 & 800\\
+\hline
+IMDB & & & & \\
 \hline
 \end{tabular}
 \end{center}
@@ -80,9 +89,7 @@ Third, most ILP algorithms generate positive Horn rules without exceptions~\cite
 
 \textbf{ALEPH.} This name stands for A Learning Engine for Proposing Hypotheses which is one of the typical systems in ILP. This tool is developed and extended from P-Progol~\footnote{\url{http://www.cs.ox.ac.uk/activities/machinelearning/Aleph/aleph}}. Like many other ILP systems, as input ALEPH receives the background knowledge and sets of positive, negative examples. After that, it generates a set of rules as an output. More specifically, the tool processes head predicates alternatively. Experiments in~\cite{ref10} show that run time for each head relation varies widely from several seconds to days. This indicates that ALEPH is not scalable for large datasets.
 
-\textbf{FOIL.} To be filled...
-
-\textbf{QuickFOIL.} To address the scalability issues of ILP systems, the system QuickFOIL which is an optimized version of FOIL has been developed. QuickFOIL produces Horn rules in an iterative fashion. Whenever a rule at a certain stage covers an example, the latter is removed from the set. Intuitively, the collection of found rules in each step can be used to summarize original knowledge base. QuickFOIL uses data refinement and pruning techniques to process large-scale input with millions of triples. This tool is a traditional ILP system since it requires negative examples and uses CWA assumption.
+\textbf{QuickFOIL.} To address the scalability issues of ILP systems, the system QuickFOIL which is an optimized version of FOIL~\cite{ref36} has been developed. QuickFOIL produces Horn rules in an iterative fashion. Whenever a rule at a certain stage covers an example, the latter is removed from the set. Intuitively, the collection of found rules in each step can be used to summarize original knowledge base. QuickFOIL uses data refinement and pruning techniques to process large-scale input with millions of triples. This tool is a traditional ILP system since it requires negative examples and uses CWA assumption.
 
 \subsection{Relational Learning Systems}
 
