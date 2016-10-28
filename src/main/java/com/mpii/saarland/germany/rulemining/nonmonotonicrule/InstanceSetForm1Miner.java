@@ -27,10 +27,13 @@ public class InstanceSetForm1Miner extends InstanceSetMiner {
 	}
 
 	@Override
-	public void loadPositiveRules(String fileName) {
+	public void loadPositiveRules(String fileName, int topRuleCount) {
+		int count = 0;
 		List<String> lines = TextFileReader.readLines(fileName);
 		for (String line : lines) {
 			String[] parts = line.split("\t");
+			count++;
+			if (count > topRuleCount) break;
 			positiveRules.add(new PositiveRule(parts[0] + "\t" + parts[1] + "\t" + parts[2], PositiveRuleType.FORM2));
 		}
 	}

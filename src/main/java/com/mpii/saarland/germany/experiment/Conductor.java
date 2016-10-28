@@ -31,9 +31,9 @@ import com.mpii.saarland.germany.utils.Utils;
  */
 public class Conductor {
 
-	static final int[] TOP_RULE_COUNTS = { 10 };
-
 	static final String[] RULE_TYPES = { ".pos.", ".neg.", ".neg.x2." };
+
+	static int topRuleCount;
 
 	static String idealDataFileName;
 
@@ -63,10 +63,8 @@ public class Conductor {
 		System.out.println("Number of predicates in ideal graph: " + idealFacts.getPSet().size());
 
 		for (int i = 0; i < 3; ++i) {
-			for (int topRuleCount : TOP_RULE_COUNTS) {
-				String extensionFileName = extensionPrefixFileName + RULE_TYPES[i] + topRuleCount;
-				evaluate(extensionFileName);
-			}
+			String extensionFileName = extensionPrefixFileName + RULE_TYPES[i] + topRuleCount;
+			evaluate(extensionFileName);
 		}
 	}
 
@@ -152,13 +150,19 @@ public class Conductor {
 			predicates.addAll(conflictPerPredicateCount.keySet());
 			for (String predicate : predicates) {
 				Long currentGoodFactCount = goodFactPerPredicateCount.get(predicate);
-				if (currentGoodFactCount == null) currentGoodFactCount = 0L;
+				if (currentGoodFactCount == null)
+					currentGoodFactCount = 0L;
 				Long currentNeedCheckFactCount = needCheckFactPerPredicateCount.get(predicate);
-				if (currentNeedCheckFactCount == null) currentNeedCheckFactCount = 0L;
+				if (currentNeedCheckFactCount == null)
+					currentNeedCheckFactCount = 0L;
 				Long currentConflictCount = conflictPerPredicateCount.get(predicate);
-				if (currentConflictCount == null) currentConflictCount = 0L;
-				Long currentFactCount = currentGoodFactCount + currentNeedCheckFactCount; 
-				System.out.println("\\multirow{3}{*}{IMDB} &     " + predicate + "       &        &     " + currentFactCount + "     &              &    " + currentConflictCount + "                        &       &   " + currentGoodFactCount + "   &               &    " + currentNeedCheckFactCount + "            &              &               \\\\ \\cline{2-12} ");
+				if (currentConflictCount == null)
+					currentConflictCount = 0L;
+				Long currentFactCount = currentGoodFactCount + currentNeedCheckFactCount;
+				System.out.println(" &     " + predicate + "       &        &     "
+						+ currentFactCount + "     &              &    " + currentConflictCount
+						+ "                        &       &   " + currentGoodFactCount + "   &               &    "
+						+ currentNeedCheckFactCount + "            &              &               \\\\ \\cline{2-12} ");
 			}
 			System.out.println("-----");
 			goodFactWriter.close();
@@ -172,65 +176,61 @@ public class Conductor {
 	static void generateExceptions(RankingType type) {
 		learningFacts = Sampler.indexLearningData();
 		time1 = new Date();
-		ExceptionRanker ranker = new ExceptionRanker(patternFileName, learningFacts);
+		ExceptionRanker ranker = new ExceptionRanker(patternFileName, learningFacts, topRuleCount);
 		ranker.rankRulesWithExceptions(type);
 
 		// This is to convert rule set to DLV format.
 		try {
 			for (String ruleType : Conductor.RULE_TYPES) {
-				for (int topRuleCount : Conductor.TOP_RULE_COUNTS) {
-					int count = 0;
-					Writer ruleWriter = new BufferedWriter(
-							new FileWriter(Conductor.choosenRuleFileName + ruleType + topRuleCount));
-					Writer decodedRuleWriter = new BufferedWriter(
-							new FileWriter(Conductor.choosenRuleFileName + ruleType + topRuleCount + ".decode"));
-					double convictionSum = 0;
-					for (NegativeRule negativeRule : ranker.getChoosenNegativeRules()) {
-						count++;
-						if (count > topRuleCount) {
-							break;
-						}
-						String[] parts = negativeRule.getPositiveRule().getBody().split("\t");
-						String head = negativeRule.getPositiveRule().getHead();
-						String positiveRule = Encoder.entity2Id.get(head) + "(X, Z) :- "
-								+ Encoder.entity2Id.get(parts[0]) + "(X, Y), " + Encoder.entity2Id.get(parts[1])
-								+ "(Y, Z)";
-						String decodedPositiveRule = head + "(X, Z) <- " + parts[0] + "(X, Y) ^ " + parts[1] + "(Y, Z)";
-						String negation = "";
-						String decodedNegation = "";
-						if (negativeRule.getException().getType() == ExceptionType.FIRST) {
-							negation = Encoder.entity2Id.get(negativeRule.getException().getException()) + "(X).";
-							decodedNegation = negativeRule.getException().getException() + "(X).";
-						} else if (negativeRule.getException().getType() == ExceptionType.SECOND) {
-							negation = Encoder.entity2Id.get(negativeRule.getException().getException()) + "(Z).";
-							decodedNegation = negativeRule.getException().getException() + "(Z).";
-						} else {
-							negation = Encoder.entity2Id.get(negativeRule.getException().getException()) + "(X, Z).";
-							decodedNegation = negativeRule.getException().getException() + "(X, Z).";
-						}
-						if (ruleType.equals(".neg.")) {
-							ruleWriter.write(positiveRule + ", not " + negation + "\n");
-							decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
-							double conviction = negativeRule.getStandardConviction();
-							convictionSum += conviction;
-						} else if (ruleType.equals(".pos.")) {
-							ruleWriter.write(positiveRule + ".\n");
-							decodedRuleWriter.write(decodedPositiveRule + ".\n");
-							double conviction = negativeRule.getPositiveRule().getConviction();
-							convictionSum += conviction;
-						} else {
-							ruleWriter.write(positiveRule + ", not " + negation + "\n");
-							decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
-							ruleWriter.write("not_" + positiveRule + ", " + negation + "\n");
-							decodedRuleWriter.write("not_" + decodedPositiveRule + " ^ " + decodedNegation + "\n");
-						}
+				int count = 0;
+				Writer ruleWriter = new BufferedWriter(
+						new FileWriter(Conductor.choosenRuleFileName + ruleType + topRuleCount));
+				Writer decodedRuleWriter = new BufferedWriter(
+						new FileWriter(Conductor.choosenRuleFileName + ruleType + topRuleCount + ".decode"));
+				double convictionSum = 0;
+				for (NegativeRule negativeRule : ranker.getChoosenNegativeRules()) {
+					count++;
+					if (count > topRuleCount) {
+						break;
 					}
-					ruleWriter.close();
-					decodedRuleWriter.close();
-					System.out
-							.println("Done with " + Conductor.choosenRuleFileName + ruleType + topRuleCount + " file");
-					System.out.println("Average conviction = " + (convictionSum / topRuleCount));
+					String[] parts = negativeRule.getPositiveRule().getBody().split("\t");
+					String head = negativeRule.getPositiveRule().getHead();
+					String positiveRule = Encoder.entity2Id.get(head) + "(X, Z) :- " + Encoder.entity2Id.get(parts[0])
+							+ "(X, Y), " + Encoder.entity2Id.get(parts[1]) + "(Y, Z)";
+					String decodedPositiveRule = head + "(X, Z) <- " + parts[0] + "(X, Y) ^ " + parts[1] + "(Y, Z)";
+					String negation = "";
+					String decodedNegation = "";
+					if (negativeRule.getException().getType() == ExceptionType.FIRST) {
+						negation = Encoder.entity2Id.get(negativeRule.getException().getException()) + "(X).";
+						decodedNegation = negativeRule.getException().getException() + "(X).";
+					} else if (negativeRule.getException().getType() == ExceptionType.SECOND) {
+						negation = Encoder.entity2Id.get(negativeRule.getException().getException()) + "(Z).";
+						decodedNegation = negativeRule.getException().getException() + "(Z).";
+					} else {
+						negation = Encoder.entity2Id.get(negativeRule.getException().getException()) + "(X, Z).";
+						decodedNegation = negativeRule.getException().getException() + "(X, Z).";
+					}
+					if (ruleType.equals(".neg.")) {
+						ruleWriter.write(positiveRule + ", not " + negation + "\n");
+						decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
+						double conviction = negativeRule.getStandardConviction();
+						convictionSum += conviction;
+					} else if (ruleType.equals(".pos.")) {
+						ruleWriter.write(positiveRule + ".\n");
+						decodedRuleWriter.write(decodedPositiveRule + ".\n");
+						double conviction = negativeRule.getPositiveRule().getConviction();
+						convictionSum += conviction;
+					} else {
+						ruleWriter.write(positiveRule + ", not " + negation + "\n");
+						decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
+						ruleWriter.write("not_" + positiveRule + ", " + negation + "\n");
+						decodedRuleWriter.write("not_" + decodedPositiveRule + " ^ " + decodedNegation + "\n");
+					}
 				}
+				ruleWriter.close();
+				decodedRuleWriter.close();
+				System.out.println("Done with " + Conductor.choosenRuleFileName + ruleType + topRuleCount + " file");
+				System.out.println("Average conviction = " + (convictionSum / topRuleCount));
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -242,22 +242,20 @@ public class Conductor {
 	static void runDlv() {
 		try {
 			for (String ruleType : RULE_TYPES) {
-				for (int topRuleCount : TOP_RULE_COUNTS) {
-					String ruleFileName = choosenRuleFileName + ruleType + topRuleCount;
-					String extensionFileName = extensionPrefixFileName + ruleType + topRuleCount;
-					String command = dlvBinaryFileName + " -nofacts " + trainingDataDlvFileName + " " + ruleFileName;
-					Writer dlvWriter = new BufferedWriter(new FileWriter(extensionFileName));
-					Process dlvExecutor = Runtime.getRuntime().exec(command);
-					BufferedReader dlvReader = new BufferedReader(new InputStreamReader(dlvExecutor.getInputStream()));
-					String line;
-					while ((line = dlvReader.readLine()) != null) {
-						dlvWriter.write(line + "\n");
-					}
-					dlvExecutor.waitFor();
-					dlvExecutor.destroy();
-					dlvWriter.close();
-					System.out.println("Done with " + extensionFileName + " file");
+				String ruleFileName = choosenRuleFileName + ruleType + topRuleCount;
+				String extensionFileName = extensionPrefixFileName + ruleType + topRuleCount;
+				String command = dlvBinaryFileName + " -nofacts " + trainingDataDlvFileName + " " + ruleFileName;
+				Writer dlvWriter = new BufferedWriter(new FileWriter(extensionFileName));
+				Process dlvExecutor = Runtime.getRuntime().exec(command);
+				BufferedReader dlvReader = new BufferedReader(new InputStreamReader(dlvExecutor.getInputStream()));
+				String line;
+				while ((line = dlvReader.readLine()) != null) {
+					dlvWriter.write(line + "\n");
 				}
+				dlvExecutor.waitFor();
+				dlvExecutor.destroy();
+				dlvWriter.close();
+				System.out.println("Done with " + extensionFileName + " file");
 			}
 			Conductor.time4 = new Date();
 			System.out.println(
@@ -271,22 +269,20 @@ public class Conductor {
 
 	static void findDifference() {
 		try {
-			for (int topRuleCount : TOP_RULE_COUNTS) {
-				String negativeNeedCheckFileName = extensionPrefixFileName + ".neg." + topRuleCount + ".needcheck";
-				String positiveNeedCheckFileName = extensionPrefixFileName + ".pos." + topRuleCount + ".needcheck";
-				List<String> negativeNeedCheckLines = TextFileReader.readLines(negativeNeedCheckFileName);
-				Set<String> negativeNeedCheckLineSet = new HashSet<String>(negativeNeedCheckLines);
-				Writer differebceWriter = new PrintWriter(
-						new File(extensionPrefixFileName + ".diff." + topRuleCount + ".needcheck"));
-				List<String> positiveNeedCheckLines = TextFileReader.readLines(positiveNeedCheckFileName);
-				for (String positiveNeedCheckLine : positiveNeedCheckLines) {
-					if (negativeNeedCheckLineSet.contains(positiveNeedCheckLine)) {
-						continue;
-					}
-					differebceWriter.write(positiveNeedCheckLine + "\n");
+			String negativeNeedCheckFileName = extensionPrefixFileName + ".neg." + topRuleCount + ".needcheck";
+			String positiveNeedCheckFileName = extensionPrefixFileName + ".pos." + topRuleCount + ".needcheck";
+			List<String> negativeNeedCheckLines = TextFileReader.readLines(negativeNeedCheckFileName);
+			Set<String> negativeNeedCheckLineSet = new HashSet<String>(negativeNeedCheckLines);
+			Writer differebceWriter = new PrintWriter(
+					new File(extensionPrefixFileName + ".diff." + topRuleCount + ".needcheck"));
+			List<String> positiveNeedCheckLines = TextFileReader.readLines(positiveNeedCheckFileName);
+			for (String positiveNeedCheckLine : positiveNeedCheckLines) {
+				if (negativeNeedCheckLineSet.contains(positiveNeedCheckLine)) {
+					continue;
 				}
-				differebceWriter.close();
+				differebceWriter.write(positiveNeedCheckLine + "\n");
 			}
+			differebceWriter.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -306,7 +302,7 @@ public class Conductor {
 	}
 
 	public static void main(String[] args) {
-		if (args.length != 2) {
+		if (args.length < 2 || args.length > 3) {
 			System.out.println("Wrong number of parameters.");
 			return;
 		}
@@ -341,6 +337,11 @@ public class Conductor {
 		choosenRuleFileName = dlvPath + "/choosen.rules." + typeName + ".txt";
 		dlvBinaryFileName = workingPath + "/dlv.bin";
 		extensionPrefixFileName = dlvPath + "/extension." + typeName + ".kg";
+		if (args.length == 3) {
+			topRuleCount = Integer.parseInt(args[2]);
+		} else {
+			topRuleCount = TextFileReader.readLines(patternFileName).size();
+		}
 		execute(RankingType.values()[type]);
 	}
 

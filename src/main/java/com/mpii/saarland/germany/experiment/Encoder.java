@@ -94,27 +94,25 @@ public class Encoder {
 	}
 
 	static void decodeDlvOutput() {
-		for (int topRuleCount : Conductor.TOP_RULE_COUNTS) {
-			String extensionFileName = Conductor.extensionPrefixFileName + Conductor.RULE_TYPES[2] + topRuleCount;
-			String line = TextFileReader.readLines(extensionFileName).get(2);
-			String[] facts = line.split(", ");
-			try {
-				Writer decodeFileWriter = new BufferedWriter(new FileWriter(extensionFileName + ".decode"));
-				for (String fact : facts) {
-					if (fact.startsWith("{")) {
-						fact = fact.substring(1);
-					}
-					if (fact.endsWith("}")) {
-						fact = fact.substring(0, fact.length() - 1);
-					}
-					String[] entities = fact.split("\\(|\\)|,");
-					decodeFileWriter.write("<" + id2Entity.get(entities[1]) + ">\t<" + id2Entity.get(entities[0])
-							+ ">\t<" + id2Entity.get(entities[2]) + ">\n");
+		String extensionFileName = Conductor.extensionPrefixFileName + Conductor.RULE_TYPES[2] + Conductor.topRuleCount;
+		String line = TextFileReader.readLines(extensionFileName).get(2);
+		String[] facts = line.split(", ");
+		try {
+			Writer decodeFileWriter = new BufferedWriter(new FileWriter(extensionFileName + ".decode"));
+			for (String fact : facts) {
+				if (fact.startsWith("{")) {
+					fact = fact.substring(1);
 				}
-				decodeFileWriter.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
+				if (fact.endsWith("}")) {
+					fact = fact.substring(0, fact.length() - 1);
+				}
+				String[] entities = fact.split("\\(|\\)|,");
+				decodeFileWriter.write("<" + id2Entity.get(entities[1]) + ">\t<" + id2Entity.get(entities[0]) + ">\t<"
+						+ id2Entity.get(entities[2]) + ">\n");
 			}
+			decodeFileWriter.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 

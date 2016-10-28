@@ -64,20 +64,42 @@ chmod a+x run-rule-mining.sh
 ./run-rule-mining.sh [path to pattern file] [path to knowledge graph file] [ranking option]
 ```
 
+Or if you just concern top k patterns, the following commands can be used:
+
+```
+cd nonmonotonic-rule-mining
+chmod a+x run-rule-mining.sh
+./run-rule-mining.sh [path to pattern file] [path to knowledge graph file] [ranking option] [top k patterns]
+```
+
 #### Example with IMDB Rule Mining
 
 Please download the repository and run the following command for executing IMDB rule mining with opm ranking:
 
 ```
-./run-experiment.sh data/experiment/IMDB/patterns.txt data/experiment/IMDB/training.data.txt 2
+./run-rule-mining.sh data/experiment/IMDB/patterns.txt data/experiment/IMDB/training.data.txt 2
+```
+
+Or with opm ranking and top 10 patterns:
+
+```
+./run-rule-mining.sh data/experiment/IMDB/patterns.txt data/experiment/IMDB/training.data.txt 2 10
 ```
 
 ### Experiment
 
 ```
 cd nonmonotonic-rule-mining folder
-chmod a+x run-rule-mining.sh
+chmod a+x run-experiment.sh
 ./run-experiment.sh [path to working folder] [ranking option]
+```
+
+Or if you just concern top k patterns, the following commands can be used:
+
+```
+cd nonmonotonic-rule-mining folder
+chmod a+x run-experiment.sh
+./run-experiment.sh [path to working folder] [ranking option] [top k patterns]
 ```
 
 #### Example with IMDB Experiment
@@ -86,6 +108,12 @@ Please download the repository and run the following command for executing IMDB 
 
 ```
 ./run-experiment.sh data/experiment/IMDB/ 2
+```
+
+Or with opm ranking and top 10 patterns:
+
+```
+./run-experiment.sh data/experiment/IMDB/ 2 10
 ```
 
 References

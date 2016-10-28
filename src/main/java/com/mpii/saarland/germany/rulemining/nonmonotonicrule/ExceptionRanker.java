@@ -13,6 +13,7 @@ import com.mpii.saarland.germany.rules.Exception;
 import com.mpii.saarland.germany.rules.ExceptionType;
 import com.mpii.saarland.germany.rules.NegativeRule;
 import com.mpii.saarland.germany.rules.PositiveRule;
+import com.mpii.saarland.germany.utils.TextFileReader;
 
 /**
  * 
@@ -27,11 +28,11 @@ public class ExceptionRanker {
 
 	private List<NegativeRule> choosenNegativeRules;
 
-	public ExceptionRanker(String patternFileName, FactIndexer facts) {
+	public ExceptionRanker(String patternFileName, FactIndexer facts, int topRuleCount) {
 		this.facts = facts;
 		newFacts = facts.cloneFact();
 		form2Instances = new InstanceSetForm1Miner();
-		form2Instances.loadPositiveRules(patternFileName);
+		form2Instances.loadPositiveRules(patternFileName, topRuleCount);
 		form2Instances.findInstances(facts);
 		form2Instances.findPositiveNegativeExamples(facts);
 		choosenNegativeRules = new ArrayList<>();
@@ -247,7 +248,11 @@ public class ExceptionRanker {
 		String patternFileName = args[0];
 		FactIndexer facts = new FactIndexer(args[1]);
 		int type = Integer.parseInt(args[2]);
-		ExceptionRanker ranker = new ExceptionRanker(patternFileName, facts);
+		int topRuleCount = TextFileReader.readLines(patternFileName).size();
+		if (args.length == 4) {
+			topRuleCount = Integer.parseInt(args[3]);
+		}
+		ExceptionRanker ranker = new ExceptionRanker(patternFileName, facts, topRuleCount);
 		ranker.rankRulesWithExceptions(RankingType.values()[type]);
 	}
 

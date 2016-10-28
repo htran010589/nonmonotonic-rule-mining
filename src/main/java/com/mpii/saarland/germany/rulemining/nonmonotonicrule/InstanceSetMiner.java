@@ -33,7 +33,7 @@ public abstract class InstanceSetMiner {
 		positiveRule2AbnormalSet = new HashMap<>();
 	}
 
-	public abstract void loadPositiveRules(String fileName);
+	public abstract void loadPositiveRules(String fileName, int topRuleCount);
 
 	public abstract List<Set<String>> findInstances(PositiveRule rule, FactIndexer facts);
 
