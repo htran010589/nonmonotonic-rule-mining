@@ -31,7 +31,7 @@ import com.mpii.saarland.germany.utils.Utils;
  */
 public class Conductor {
 
-	static final String[] RULE_TYPES = { ".pos.", ".neg.", ".neg.x2." };
+	static final String[] RULE_TYPES = { ".pos.", ".neg.", ".aux.", ".neg.aux." };
 
 	static int topRuleCount;
 
@@ -62,7 +62,7 @@ public class Conductor {
 		}
 		System.out.println("Number of predicates in ideal graph: " + idealFacts.getPSet().size());
 
-		for (int i = 0; i < 3; ++i) {
+		for (int i = 0; i < 4; ++i) {
 			String extensionFileName = extensionPrefixFileName + RULE_TYPES[i] + topRuleCount;
 			evaluate(extensionFileName);
 		}
@@ -220,6 +220,9 @@ public class Conductor {
 						decodedRuleWriter.write(decodedPositiveRule + ".\n");
 						double conviction = negativeRule.getPositiveRule().getConviction();
 						convictionSum += conviction;
+					} else if (ruleType.equals(".aux.")) {
+						ruleWriter.write("not_" + positiveRule + ", " + negation + "\n");
+						decodedRuleWriter.write("not_" + decodedPositiveRule + " ^ " + decodedNegation + "\n");
 					} else {
 						ruleWriter.write(positiveRule + ", not " + negation + "\n");
 						decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
