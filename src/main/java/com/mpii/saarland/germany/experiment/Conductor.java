@@ -85,6 +85,7 @@ public class Conductor {
 			Map<String, Long> goodFactPerPredicateCount = new HashMap<>();
 			Map<String, Long> needCheckFactPerPredicateCount = new HashMap<>();
 			Map<String, Long> conflictPerPredicateCount = new HashMap<>();
+			Map<String, Long> negativeFactPerPredicateCount = new HashMap<>();
 			for (String fact : facts) {
 				if (fact.startsWith("{")) {
 					fact = fact.substring(1);
@@ -121,6 +122,7 @@ public class Conductor {
 						inLearningNegativeFactCount++;
 						continue;
 					}
+					Utils.addKeyLong(negativeFactPerPredicateCount, p, 1L);
 					negativeNewFacts.add(xpy);
 				}
 			}
@@ -159,7 +161,10 @@ public class Conductor {
 				if (currentConflictCount == null)
 					currentConflictCount = 0L;
 				Long currentFactCount = currentGoodFactCount + currentNeedCheckFactCount;
-				System.out.println(" &     " + predicate + "       &        &     "
+				Long negativeFactCount = negativeFactPerPredicateCount.get(predicate);
+				if (negativeFactCount == null)
+					negativeFactCount = 0L;
+				System.out.println(" &     " + predicate + "       &    " + negativeFactCount + "    &     "
 						+ currentFactCount + "     &              &    " + currentConflictCount
 						+ "                        &       &   " + currentGoodFactCount + "   &               &    "
 						+ currentNeedCheckFactCount + "            &              &               \\\\ \\cline{2-12} ");
