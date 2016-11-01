@@ -150,6 +150,7 @@ public class Conductor {
 			predicates.addAll(goodFactPerPredicateCount.keySet());
 			predicates.addAll(needCheckFactPerPredicateCount.keySet());
 			predicates.addAll(conflictPerPredicateCount.keySet());
+			predicates.addAll(negativeFactPerPredicateCount.keySet());
 			for (String predicate : predicates) {
 				Long currentGoodFactCount = goodFactPerPredicateCount.get(predicate);
 				if (currentGoodFactCount == null)
