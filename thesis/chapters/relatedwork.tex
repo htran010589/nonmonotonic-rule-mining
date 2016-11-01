@@ -4,9 +4,9 @@ The area of relational learning on semantic web has recently attracted interest 
 
 \section{Semantic Web}
 
-The Semantic Web enables computers to interpret the meaning of the data all over the Internet. Alternatively, it can be defined as "a web of data that can be processed directly and indirectly by machines" in~\cite{ref26}.
+The Semantic Web enables computers to interpret the meaning of the data all over the Internet. Alternatively, it can be defined as ``a web of data that can be processed directly and indirectly by machines" in~\cite{ref26}.
 
-The World Wide Web Consortium (W3C) defines semantic web and the Resource Description Framework (RDF) as a platform for Linked Data~\cite{ref26}. The W3C proposes other technologies such as SPARQL, OWL for data manipulation. Architecture of the W3C can be presented as a stack in Figure~\ref{fig1}~\footnote{\url{https://www.w3.org/DesignIssues/diagrams/sweb-stack/2006a.png}}.
+The World Wide Web Consortium (W3C) defines the semantic web and the Resource Description Framework (RDF) as a platform for Linked Data~\cite{ref26}. The W3C proposes other technologies such as SPARQL, OWL for data manipulation. Architecture of the W3C can be presented as a stack in Figure~\ref{fig1}~\footnote{\url{https://www.w3.org/DesignIssues/diagrams/sweb-stack/2006a.png}}.
 
 \begin{figure}
 \centering
@@ -21,8 +21,8 @@ Though having different number of predicates, entities and facts, these graphs s
 
 \begin{itemize}
 \item Facts from real world are reflected in the knowledge graphs.
-\item The domains are fruitful in the knowledge graphs, e.g, sports, arts, ...
-\item The interconnection between knowledge graphs are taken into consideration, i.e, the mapping of entities and relations are explicitly indicated in each KB.
+\item The domains are fruitful in the knowledge graphs, e.g., sports, arts, ...
+\item The interconnection between knowledge graphs are taken into consideration, i.e., the mapping of entities and relations are explicitly indicated in each KB.
 \end{itemize}
 
 \begin{table}
@@ -49,7 +49,7 @@ Google's Knowledge Vault & 45,000,000 & 271,000,000 & 1,100 & 4,469\\
 \hline
 Yahoo! Knowledge Graph & 3,443,743 & 1,391,054,990 & 250 & 800\\
 \hline
-IMDB & & & & \\
+IMDB & 117,551 & 134,639 & 17,049 & 39 \\
 \hline
 \end{tabular}
 \end{center}
@@ -85,7 +85,7 @@ Rule mining is a core problem in ILP, however, applying ILP algorithms to semant
 
 Second, ILP methods use closed world assumption (CWA), under which a given KB is assumed to be complete and missing facts are treated as false rather than unknown. These methods require both positive and negative examples like traditional machine learning algorithms. This assumption and requirement are not suitable for our problem since there are only in-completed positive facts in real world data~\cite{ref10}.
 
-Third, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since these rules may have low precision, exceptions should be taken into consideration to improve quality of predicted facts. As a result, mining exceptions is an important purpose of our work and naively using ILP techniques are not always suitable for us. The extensions of ILP to Abductive Logic Programming and ILP~\cite{ref11} which we describe in~\ref{related-work-nonmonotonic-rule-mining-systems} are thus of our interest.
+Third, most ILP algorithms generate positive Horn rules without exceptions~\cite{ref11}. Since these rules may have low precision, exceptions should be taken into consideration to improve quality of predicted facts. As a result, mining exceptions is an important purpose of our work and naively using ILP techniques are not always suitable for us.
 
 \textbf{ALEPH.} This name stands for A Learning Engine for Proposing Hypotheses which is one of the typical systems in ILP. This tool is developed and extended from P-Progol~\footnote{\url{http://www.cs.ox.ac.uk/activities/machinelearning/Aleph/aleph}}. Like many other ILP systems, as input ALEPH receives the background knowledge and sets of positive, negative examples. After that, it generates a set of rules as an output. More specifically, the tool processes head predicates alternatively. Experiments in~\cite{ref10} show that run time for each head relation varies widely from several seconds to days. This indicates that ALEPH is not scalable for large datasets.
 
@@ -103,7 +103,7 @@ AMIE+ is a new version of AMIE in which run time performance is enhanced by prun
 
 \textbf{RDF2Rules.} The RDF2Rules~\cite{ref29} focuses on mining cycle patterns on KG, in the next step, rules are discovered based on these relation cycles. Besides, this tool takes care about type of entities for the Horn rules. Thanks to this, the rule quality is enhanced and the authors use a new confidence measure to check this instead of PCA measure~\cite{ref10} in AMIE paper. Experiments show that this tool is efficient, especially with rules containing entity type, it run much faster than AMIE+. However, the cycle form is a restricted condition and it is better if the publication expands this to many different relation patterns.
 
-However, like other ILP platforms, these tools does not take care of nonmonotonic rules, i.e. rules with exceptions since its output is a list of Horn rules. Our work can solve this problem because it aims at generating nonmonotonic rules from a list of positive rules and a big knowledge graph.
+Like other ILP platforms, Relational Learning tools do not take care of nonmonotonic rules, i.e., rules with exceptions since its output is a list of Horn rules. Our work can solve this problem because it aims at generating nonmonotonic rules from a list of positive rules and a big knowledge graph.
 
 \subsection{Nonmonotonic Rule Mining Systems}
 \label{related-work-nonmonotonic-rule-mining-systems}
@@ -112,7 +112,7 @@ While traditional ILP systems do not take into account exceptions or negative at
 
 There are some nonmonotonic rule learning methods taking the uncompleted data into consideration in ~\cite{ref34}. This work pays attention to complicated association between different semantic parts. This is different from the current work where we focus on how good is new predicted data.
 
-\textbf{Nonmonotonic Rule Mining with OWA and flattened data.} Research in ~\cite{ref12} bases on OWA instead of CWA in some mentioned systems. This tool works on flattened knowledge graph, i.e, the graph that all RDF triples are converted to unary facts by concatenating predicates and objects. More specifically, a binary fact such as\textit{bornIn(s1, US)} can be transformed to unary form \textit{bornInUS(s1)}. Thanks to this, a knowledge graph can be converted to a binary transaction table as in Table~\ref{table2} where 1 or 0 mean the corresponding fact appear in the original graph or not. As a result, the authors in~\cite{ref12} may apply Item Set Mining algorithms to find patterns. These patterns can be used to mine positive rules using Association Rule Mining tools~\cite{ref13}.
+\textbf{Nonmonotonic Rule Mining with OWA and flattened data.} Research in~\cite{ref12} bases on OWA instead of CWA in some mentioned systems. This tool works on flattened knowledge graph, i.e., the graph that all RDF triples are converted to unary facts by concatenating predicates and objects. More specifically, a binary fact such as \textit{bornIn(s1, US)} can be transformed to unary form \textit{bornInUS(s1)}. Thanks to this, a knowledge graph can be converted to a binary transaction table as in Table~\ref{table2} where 1 or 0 mean the corresponding fact appear in the original graph or not. As a result, the authors in~\cite{ref12} may apply Item Set Mining algorithms~\cite{ref37} to find patterns. These patterns can be used to mine positive rules using Association Rule Mining tools~\cite{ref13}.
 
 \begin{table}
 \begin{center}
@@ -146,13 +146,13 @@ s10 & 0 & 1 & 0 & 1\\
 \label{table2}
 \end{table}
 
-In the next step, the exceptions for each rule are found based on normal and abnormal sets. In the next step, these negative atoms are ranked based on several score measures and innovative concept of Partial Materialization (PM). In details, PM is the technique that some new predicted facts of other rules are used to measure the quality of a particular one. With the Ordered Partial Materialization (OPM), the idea is similar. The only difference is that the order of rules matters and new generated facts of previous rules instead of all other ones are counted for statistics.
+In the next step, the exceptions for each rule are found based on normal and abnormal sets. Then these negative atoms are ranked based on several score measures and innovative concept of Partial Materialization (PM)~\cite{ref12}. In details, PM is the technique that some new predicted facts of other rules are used to measure the quality of a particular one. With the Ordered Partial Materialization (OPM), the idea is similar. The only difference is that the order of rules matters and new generated facts of previous rules instead of all other ones are counted for statistics.
 
 From the same concept of Partial Materialization and above setting, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
 
 %\section{Other Approaches}
 %
-%Both of above-mentioned approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the knowledge base, e.g, web pages linking to objects or big collection of documents.
+%Both of above-mentioned approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the knowledge base, e.g., web pages linking to objects or big collection of documents.
 %
 %Wikipedia pages can be used to identify relations between entities in~\cite{ref18}. In a larger scale,~\cite{ref19} proposes learning lexical predicate patterns, and searches all over the Internet to find subject-object pairs corresponding to the patterns. These new pairs can be filled to the original graph. As a result, a big text corpora is used in ~\cite{ref19} to learn relations.
 %
