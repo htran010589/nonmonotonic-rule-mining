@@ -1,1 +1,26 @@
-\chapter{Conclusion and Outlook}
+\chapter{Conclusions and Future Work}\label{sec:concl}
+We have presented a method for mining nonmonotonic rules from KGs: first learning a set of Horn rules  and
+then revising them by adding negated atoms into their bodies with the goal of
+improving the quality of a rule set for data prediction.
+To select the best
+revision from potential candidates we devised rule-set ranking
+measures, based on data mining measures and the novel
+concept of partial materialization.
+We evaluated our method with various
+configurations on both general-purpose and domain-specific KGs and observed significant
+improvements over a baseline Horn rule mining.
+
+There are various directions for future work. First, we look
+into extracting evidence for or against exceptions from
+text and web corpora.
+ Second, our framework
+can be enhanced by partial completeness assumptions
+for certain
+predicates (e.g., all countries are available in KG) or constants (e.g.,
+knowledge about Barack Obama is complete).
+Finally, an overriding future direction is to extend our
+work to more complex nonmonotonic rules, with
+higher-arity predicates, aggregates and disjunctions in
+rule heads.
+
+\leanparagraph{Acknowledgements} We would like to thank Jacopo Urbani for the constructive feedback that helped to improve this work.

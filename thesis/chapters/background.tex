@@ -1,6 +1,308 @@
-\chapter{Background}
+%\newcommand*\rot{\rotatebox{90}}
 
-\section{section 1}
+%\begin{figure}[t]
+%\centering
+%\begin{subfigure}[b]{0.75\textwidth}
+%    \centering
+%\includegraphics[width=0.7\textwidth]{figures/kg_edited}
+%\caption{Rule mining for KG completion and KG cleaning}
+%\label{rdf}
+%\end{subfigure}
+%\begin{subfigure}[b]{0.24\textwidth}
+%\scriptsize
+%\renewcommand*{\arraystretch}{0.95}
+%\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+%\hline
+%&  \rot{$\mi{bornInUS}$} &\rot{$\mi{livesInUS}$}&
+%\rot{$\mi{stateless}$}&\rot{$\mi{immigrant}$}&\rot{$\mi{singer}$}&\rot{$\mi{poet}$}&\rot{$\mi{hasUSPass}$}\\ \hline
+%$\mi{p1}$ & $\checkmark$ &$\checkmark$ &&&$\checkmark$&&$\checkmark$ \\ \hline
+%$\mi{p2}$ & $\checkmark$ &$\checkmark$ &&&&&$\checkmark$ \\ \hline
+%$\mi{p3}$ & $\checkmark$ &$\checkmark$ &&&$\checkmark$&$\checkmark$&$\checkmark$ \\ \hline
+%$\mi{p4}$ & $\checkmark$ &$\checkmark$ &&&&&$\checkmark$ \\ \hline
+%$\mi{p5}$ & $\checkmark$ &$\checkmark$ &$\checkmark$&&&& \\ \hline
+%$\mi{p6}$ & $\checkmark$ & &$\checkmark$&&&& \\ \hline
+%$\mi{p7}$ & $\checkmark$ & &$\checkmark$&&&& \\ \hline
+%$\mi{p8}$ & $\checkmark$ & &$\checkmark$&$\checkmark$&&& \\ \hline
+%$\mi{p9}$ & $\checkmark$ & &&$\checkmark$&&$\checkmark$& \\ \hline
+%$\mi{p10}$ & $\checkmark$ & &&$\checkmark$&$\checkmark$&$\checkmark$& \\ \hline
+%$\mi{p11}$ & $\checkmark$ & &&&$\checkmark$&$\checkmark$&$\checkmark$ \\ \hline
+%\end{tabular}
+%\smallskip
+%\caption{US inhabitants KG}
+%\label{tab:im}
+%\end{subfigure}
+%\caption{Examples of Knowledge Graphs}
+%\end{figure}
+\chapter{Background}\label{sec:prelim}
+%\comment{FL: I have removed the preliminaries on KGs since already introduced}
+% \leanparagraph{Knowledge Graphs} 
+% Under the RDF data model \emph{knowledge graphs} (KG) are represented as collections of triples $\tuple{\mi{subject\, predicate\, object}}$ that encode positive unary and binary facts about the world. % often encoded using the RDF data
+% %model~\cite{rdf}, which represents the content of the graph with a set of
+% %triples of the form $\tuple{\mi{subject}\;\mi{predicate}\;\mi{object}}$. These triples encode
+% %positive facts about the world, and they are naturally treated under the OWA. 
+% The unary predicates are the objects of the RDF $\mi{type}$ predicate while the binary ones correspond to all other RDF predicates. We call this the factual representation $\cal F$ %$\cA_{\cG}$ (the subscript $\cG$ is omitted when clear
+% %from context) 
+% of the KG $\cG$ defined over the signature
+% $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, where
+% $\mathbf{C}$, $\mathbf{R}$ and $\mathcal{C}$ are  resp. sets of unary predicates, binary predicates and constants.
 
-\section{section 2}
 
+
+% \begin{example}\label{ex:rdf}
+% The factual representation of the graph $\cG$ from Fig.~\ref{rdf} encompasses the facts $\mi{res(alice)}{,}\mi{art(bob)}{,}\mi{metrop(berlin)},\mi{ism(brad,ann)}{,}\mi{lin(brad,berlin)}$, where $\mi{res}$, $\mi{art,metr,ism,lin}$ stand for $\mi{researcher, artist, metropolitan,isMarriedTo}$ and $\mi{livesIn}$ respectively.
+% The signature of $\cG$ is $\Sigma_{\cG}{=}\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, where $\mathbf{C}{=}\{\mi{res,art,metr}\}$, $\mathbf{R}{=}\{ism,li,hb,hF\}$, with $\mi{hf}$ and $\mi{hb}$ standing for $\mi{hasFriend}$ and $\mi{hasBrother}$ resp. and $\cC$ contains all graph node labels apart from $\mi{researcher,metropolitan,artist}$.\qed
+% \end{example}
+
+
+\leanparagraph{Non-monotonic Logic Programming}
+We consider logic programs in their usual definition~\cite{DBLP:books/sp/Lloyd87} under the answer set semantics. 
+In short, a \emph{(non-monotonic) logic program} $P$ is a set of \emph{rules} of the form
+\begin{equation}
+H\leftarrow B, \naf\ E
+\end{equation}
+ where $H$ is a standard first-order atom of the form $a(\vec{X})$ known as the rule head and denoted as $\mi{Head(r)}$, $B$ is a conjunction of positive atoms of the form $b_1(\vec{Y_1}),\dotsc,b_k(\vec{Y_k})$ to which we refer as $\mi{Body^+}(r)$, and $\naf\ E$, with slight abuse of notation, denotes the conjunction of atoms $\naf\, b_{k+1}(\vec{Y_{k+1}}),\dotsc,\naf\, b_n(\vec{Y_{n}})$. Here, $\naf$ is the so-called \emph{negation as failure (NAF)} or \emph{default negation}. The negated part of the body is denoted as $\mi{Body^-}(r)$.  The rule $r$ is \emph{positive} or \emph{Horn} if $\mi{Body^-}(r)=\emptyset$.  $\vec{X},\vec{Y_1},\ldots,\vec{Y_{n}}$ are tuples of either constants or
+variables whose length corresponds to the arity of the predicates
+$a,b_1,\ldots,b_n$ respectively. The signature of $P$ is given as $\Sigma_{\mi{P}}=\tuple{\mathbf{P},\cC}$, where $\mathbf{P}$ and $\cC$ are resp. sets of predicates and constants occurring in $P$.
+
+The left-hand side $H$ of %a rule
+$r$ denoted with $\mi{Head(r)}$ is called its \emph{head}, while the right-hand side denoted with
+$\mi{Body(r)}$ is the rule's \emph{body}.
+We distinguish $\mi{Body^+(r)}$ and
+$\mi{Body^-(r)}$ as the sets of \emph{positive} and \emph{negative} atoms occurring in
+$\mi{Body}(r)$ respectively. %We say that
+The rule $r$ is \emph{positive} or
+\emph{Horn} if $\mi{Body^-}(r)=\emptyset$, and it is a \emph{fact} if
+$\mi{Body}(r)=\emptyset$.
+
+A logic program $P$ is \emph{ground} if it consists of only ground rules, i.e. rules without
+variables. Ground instantiation $Gr(P)$ of a nonground program $P$ is obtained by substituting variables with constants in all possible ways. The \emph{Herbrand universe}  $\mi{HU(P)}$ (resp. \emph{Herbrand base} $\mi{HB(P)}$) of $\mi{P}$, is the set of all constants occurring in $\mi{P}$, i.e.  $\mi{HU(P)}=\cC$ (resp.
+the set of all possible ground atoms that can be formed with predicates in $\mathbf{P}$
+and constants in $\cC$). We refer to any subset of $\mi{HB(P)}$ as a \emph{Herbrand interpretation}. By $\mi{MM(P)}$ we denote the set-inclusion minimal Herbrand interpretation of a ground positive program $P$.
+
+
+An interpretation $I$ of $P$ is an \emph{answer set} (or \emph{stable model}) of $P$ iff $I \in \mi{MM}(P^I)$, where $P^I$ is the \emph{Gelfond-Lifschitz (GL) reduct} \cite{GL1988} of $P$, obtained from $Gr(P)$ by removing (i) each rule $r$ such that $\mi{Body}^-(r) \cap I\neq\emptyset$, and (ii) all the negative atoms from the remaining rules. The set of answer sets of a program $P$ is denoted by $AS(P)$.
+
+\begin{example}\label{ex:as}
+Consider the program \\
+{\small \leftline{$P = \left\{
+            \renewcommand{\arraystretch}{1.1}
+            \begin{array}{@{\,}l@{~~}l@{}}
+              \mbox{(1) }\mi{livesIn(brad,berlin)};\;\mbox{(2) }\mi{isMarriedTo(brad,ann)};\\
+              \mbox{(3) } \mi{livesIn(Y,Z)\leftarrow isMarriedTo(X,Y),livesIn(X,Z),  \naf\ researcher(Y)}\\
+            \end{array}%
+            \!\right\}$}}
+            
+\normalsize
+{\smallskip
+
+\noindent            
+The ground instantiation $Gr(P)$ of $P$ is obtained by substituting $X,Y,Z$ with $\mi{brad, \,ann}$ and $\mi{berlin}$ respectively. For $I{=}\{${\small$\mi{isMarriedTo(brad,ann){,}livesIn(ann,berlin)}{,}\\ \mi{livesIn(brad,berlin)}$}$\}$, the GL-reduct $P^I$ of $P$ contains the rule $\mi{livesIn(ann,berlin)}\leftarrow \mi{livesIn(brad,berlin),isMarriedTo(brad,ann)}$ and the facts (1), (2). As $I$ is a minimal model of $P^I$, it holds that $I$ is an answer set of $P$.}\qed
+\end{example}
+\normalsize
+The answer set semantics for nonmonotonic logic programs is based on the Closed World Assumption (CWA), under which whatever can not be derived from a program is assumed to be false. Nonmonotonic logic programs are widely applied for formalizing common sense reasoning from incomplete information.
+
+%\comment{FL: I have removed the definition of substitution which is superfluous for the ILP audience}
+% \begin{definition}[Substitution]
+% Let $q(\vec{X})$ be a nonground conjunction of atoms over the signature $\Sigma=\tuple{\bR,\bC,\cC}$ with variables from $\cV$. A \emph{substitution} $\theta: \cV \rightarrow \cC$ is a mapping from variables in $\cV$ to constants in $\cC$.
+% \end{definition}
+% \begin{example}
+% Given a conjunctive query $\mi{q(X,Y,Z)}\leftarrow ism(X,Y),li(X,Z)$, the mapping $\mi{\theta=\{X/bob,Y/alice,Z/berlin\}}$ is a possible substitution.
+% \end{example}
+
+\leanparagraph{Relational association rule mining} 
+%\comment{FL: I will expand this section by adding basics on evaluation measures and the use of association rules for predictive tasks}
+Association rule mining is an exploratory data analysis technique that concerns the extraction of frequent patterns from a relational database at hand and casting them into rules. Association rules are usually used in an unsupervised learning scenario and thus are suited for our needs.
+
+\section{A Theory Revision Framework for Rule-based KG Completion}\label{sec:rev_frame}
+
+%\leanparagraph{Knowledge Graphs} 
+% On the Web, KGs are often encoded using the RDF data
+% model~\cite{rdf}, which represents the content of the graph with a set of
+% triples of the form $\tuple{\mi{subject}\;\mi{predicate}\;\mi{object}}$. % , where $\mi{s}$ is a
+% % subject, $\mi{p}$ is a predicate and $\mi{o}$ is an object.
+%  These triples encode
+% positive facts about the world, and they are naturally treated under the OWA.
+% %An \emph{RDF Graph} is a finite collection of RDF triples.
+% In this work, we focus on KGs without blank nodes or schema.
+% %(TBox in the OWL terminology). 
+% For simplicity, we represent the triples using unary and binary
+% predicates. The unary predicates are the objects of the RDF $\mi{isA}$ predicate
+% while the binary ones correspond to all other RDF predicates. 
+%To simplify matters we identify a given KG with
+% e.g., $\tuple{\mi{alice\;isA\;researcher}}$ and $\tuple{\mi{bob \;isMarriedTo\;alice}}$ %in $\cG$ 
+% correspond to $\mi{researcher(alice)}$  %$\cA_{\cG}$, 
+% and $\mi{isMarriedTo(bob,alice)}$.
+
+%In this paper we address the problem of completing a KG. %\ju{ (The previous sentence can be dropped: You already said it in the intro)}. 
+%\comment{FL: This section goes directly to the definition of the KG completion problem.}
+% Under the RDF data model \emph{knowledge graphs} (KG) are represented as collections of triples $\tuple{\mi{subject\, predicate\, object}}$ that encode positive unary and binary facts about the world. % often encoded using the RDF data
+% %model~\cite{rdf}, which represents the content of the graph with a set of
+% %triples of the form $\tuple{\mi{subject}\;\mi{predicate}\;\mi{object}}$. These triples encode
+% %positive facts about the world, and they are naturally treated under the OWA. 
+% The unary predicates are the objects of the RDF $\mi{type}$ predicate while the binary ones correspond to all other RDF predicates. We call this the factual representation $\cal F$ %$\cA_{\cG}$ (the subscript $\cG$ is omitted when clear
+% %from context) 
+% of the KG $\cG$ defined over the signature
+% $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, where
+% $\mathbf{C}$, $\mathbf{R}$ and $\mathcal{C}$ are  resp. sets of unary predicates, binary predicates and constants.
+% \begin{example}\label{ex:rdf}
+% The factual representation of the graph $\cG$ from Fig.~\ref{rdf} encompasses the facts $\mi{res(alice)}{,}\mi{art(bob)}{,}\mi{metrop(berlin)},\mi{ism(brad,ann)}{,}\mi{lin(brad,berlin)}$, where $\mi{res}$, \\$\mi{art,metr,ism,lin}$ stand for $\mi{researcher, artist, metropolitan,isMarriedTo}$ and $\mi{livesIn}$ respectively.
+% The signature of $\cG$ is $\Sigma_{\cG}{=}\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, where $\mathbf{C}{=}\{\mi{res,art,metr}\}$,\\ $\mathbf{R}{=}\{ism,li,hb,hF\}$, with $\mi{hf}$ and $\mi{hb}$ standing for $\mi{hasFriend}$ and $\mi{hasBrother}$ resp. and $\cC$ contains all graph node labels apart from $\mi{researcher,metropolitan,artist}$.\qed
+% \end{example}
+
+We start with defining the KG completion problem formally.
+%To this end, let us 
+To this aim, let us introduce the
+factual representation %$\cG$ (the subscript $\cG$ is omitted when clear from context) 
+of a KG $\cG$ as the collection of facts defined over the signature 
+$\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, where
+$\mathbf{C}$, $\mathbf{R}$ and $\mathcal{C}$ are sets of unary predicates, binary predicates and constants, resp.
+Following \cite{DBLP:conf/semweb/DarariNPR13}, we define the gap between the available graph $\cG^a$ and the ideal graph $\cG^i$. 
+
+\begin{definition}[Incomplete data source] An incomplete data source is a pair
+    $G = (\cG^a, \cG^i)$ of two KGs, where $\cG^a\subseteq \cG^i$ and
+    $\Sigma_{\cG^a}=\Sigma_{\cG^i}$. 
+%     We call $\cG^a$ the available
+%     graph and $\mathcal{G}^i$ the ideal graph.  
+\end{definition}
+
+Our goal is to obtain a set of nonmonotonic rules, such that their application results in a good approximation of the ideal graph.
+% Our solution is based on the application of rules within the framework of nonmonotonic logic programming under answer set semantics (see \cite{GL1988} for details).
+% \leanparagraph{Nonmonotonic Logic Programs}
+% We define a logic program in the standard way~\cite{DBLP:books/sp/Lloyd87}. 
+% In short, a (nonmonotonic) \emph{logic program} $P$ is a set of \emph{rules} of the form
+% \begin{equation}
+% H\leftarrow B, \naf\ E
+% \end{equation}
+%  where $H$ is a standard first-order atom of the form $a(\vec{X})$, $B$ is a conjunction of atoms of the form $b_1(\vec{Y_1}),\dotsc,b_k(\vec{Y_k})$ and $\naf\ E$ with slight abuse of notation denotes the conjunction of atoms $\naf\, b_{k+1}(\vec{Y_{k+1}}),\dotsc,\naf\, b_n(\vec{Y_{n}})$, where $\naf$ is called \emph{negation as failure (NAF)} or \emph{default negation}.
+% $\vec{X},\vec{Y_1},\ldots,\vec{Y_{n}}$ are tuples of either constants or
+% variables whose length corresponds to the arity of the predicates
+% $a,b_1,\ldots,b_n$ respectively. The signature of $P$ is given as $\Sigma_{\mi{P}}=\tuple{\mathbf{P},\cC}$, where $\mathbf{P}$ and $\cC$ are sets of predicates and constants occurring in $P$ respectively. Positive, negative body and head of a rule $r$ are defined rs usual \cite{DBLP:books/sp/Lloyd87} and denoted resp. as $B^+(r),B^-(r)$ and $H(r)$.
+% We consider answer set semantics in this work, see \cite{GL1988} for details.
+% * <francesca.a.lisi@gmail.com> 2016-07-13T10:28:31.329Z:
+%
+% definition of substitution is not necessary
+%
+% ^ <francesca.a.lisi@gmail.com> 2016-07-13T10:28:51.319Z.
+%\begin{definition}[Substitution] 
+
+% DS: Ok
+
+% A \emph{substitution} $\theta=\{X_1/t_1,\dotsc,X_k/t_k\}$ is a mapping from variables to
+% terms. The application of a substitution $\theta$ to a conjunction of atoms $F$, denoted
+% as $F\theta$, is obtained by replacing each occurrence  of the variable $X_i$ in $F$ with
+% the term $t_i$, for each $1 \leq i \leq n$.
+% \end{definition}
+\begin{definition}[Rule-based KG completion]\label{def:graphcompl}
+Let a factual representation of a KG $\cG$ be given over the signature $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\cC}$. Let, moreover, $\cR$ be a set of rules mined from $\cG$, i.e. rules over the signature $\Sigma_{\cR}=\tuple{\mathbf{C}\cup \mathbf{R},\cC}$. Then \emph{completion of $\cG$ \wrt\ $\cR$} is a graph $\cG_{\cR}$ constructed from any answer set $\cG_{\cR}\in AS(\cR \cup \cG)$.
+\end{definition}
+\begin{example}
+The completion of $\cG$ \wrt\ a rule set $P$ from Example~\ref{ex:as} is $I$.
+\end{example}
+
+%The graph $\cG^a$ is the graph that we have available as input. 
+Note that $\cG^i$ is the perfect completion of $\cG^a$, which is supposed to contain all
+correct facts with entities and relations from $\Sigma_{\cG^a}$ that hold
+in the current state of the world.
+Given a potentially incomplete graph $\cG^a$ and a set $\cR_H$ of Horn rules mined from $\cG^a$, our goal is to add default negated atoms (exceptions) to the
+rules in $\cR_{H}$ and obtain a revised ruleset $\cR_{\mi{NM}}$ such that the
+set difference between $\cG^a_{\cR_{\mi{NM}}}$ and $\cG^i$ is as small as possible. 
+%Formally, we call $\cR_{\mi{NM}}$ an \emph{ideal nonmonotonic} revision, which for single rules is defined as follows:
+%\begin{definition}[Ideal nonmonotonic revision]\label{def:nmrev} Let
+%    $G=(\cG^a,\cG^i)$ be an incomplete data source. Moreover, let
+%    $r:\;a\leftarrow b_1,\dotsc, b_k$ be a Horn rule % in $\cR_{\mi{H}}$ (i.e.
+%    mined from $\cG^a$. An \emph{ideal nonmonotonic revision} of $r$ \wrt\ $\cG$
+%    is any rule \begin{equation}\label{eq:lp} r':\;\;a \leftarrow b_1,\dotsc,
+%        b_k,\naf\ b_{k+1}, \naf\ b_n, \end{equation} such that $\cG^i \triangle
+%    \cG^a_{r'}\subset \cG^i\triangle \cG^a_{r}$ \footnote{$\cG_1 \triangle
+%    \cG_2=(\cG_1 \backslash \cG_2)\cup (\cG_2 \backslash \cG_1)$}, i.e. the
+%    completion of $\cG^a$ based on $r'$ is closer to $\cG^i$ then the completion
+%    of $\cG^a$ based on $r$, and $\cG^a_{r''}\triangle \cG^i\subset
+%    \cG^a_{r'}\triangle \cG^i$ for no other nonmonotonic revision $r''\neq r'$
+%    of $r$. If k=n, then the revision coincides with the original rule.  \end{definition}
+Normally, the ideal graph $\cG^i$ is not available, and due to the OWA negative examples for the predicates in $\cG^a$ cannot be inferred and applying standard measures from ILP to evaluate the quality of a revised ruleset is impossible.
+%\comment{DS: TODO: justify why not use positive only learning?}
+For that reason instead we exploit measures from predictive association rule mining (see \cite{rulemeasures} for a survey) to approximately estimate the quality of a revised ruleset. We devise two quality functions $q_{\mi{rm}}$ and $q_{\mi{conflict}}$, that take a ruleset $\cR$ and a KG $\cG$ as input and output a real value, reflecting the suitability of $\cR$ for data prediction. The former generalizes standard predictive association rule measures $\mi{rm}$  to rulesets. More specifically, 
+\begin{equation}
+q_{\mi{rm}} (\cR,\cG)=\dfrac{\sum_{r\in \cR}rm(r,\cG)}{|\cR|}.
+\end{equation}
+%where $\mi{rm}$ is some standard association rule measure. 
+
+%\comment{Dang: I explain the rule measure used in the experiment}
+%\comment{DS: Thanks, Dang. Could you please specify the formula for the relative support that you are using?}
+
+As regards the rule measure $rm$ in the experiment, we use conviction with the following formula ($h_r$ is a head of rule $r$):
+
+\begin{equation}
+rm(r, \cG)=conviction(r, \cG)= \dfrac{1 - support(h_{r}, \cG)}{1 - confidence(r, \cG)}.
+\end{equation}
+
+Here we use the relative support with the formula:
+
+\begin{equation}
+support(p, \cG)=\dfrac{|\{(X, Y): p(X, Y) \in \cG\}|}{|\{X:\exists Y, p(X, Y) \in \cG\}| \times |\{Y:\exists X, p(X, Y) \in \cG\}|}
+\end{equation}
+
+Conversely, the latter estimates the number of conflicting predictions that the rules in a set generate. To measure $\mi{q_{conflict}}$ for a given 
+$\cR$, we create an extended set of rules $\cR^{aux}$, which contains each rule $r$ in $\cR$ 
+together with 
+its auxiliary version $r^{\mi{aux}}$, constructed as follows: 1) transform $r$ into a Horn rule by removing $\naf$ from negated body atoms, and 2) replace the head predicate $\mi{a}$ of $r$ with a newly introduced predicate $\mi{not\_a}$ which intuitively contains instances which are \emph{not} in $\mi{a}$. 
+Formally, 
+
+\begin{equation}
+\mi{q_{conflict}(\cR,\cG)=\sum_{p\in pred(\cR^{\mi{aux}})} \dfrac{|\{ \vec{c}\,|\,p(\vec{c}),not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}{|\{ \vec{c}\,|\,not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}}
+\label{eq:conflict}
+\end{equation}
+
+We are now ready to define our problem.
+
+\begin{definition}[Quality-based Horn theory revision (QHTR)] 
+Given a set $\cR_{\mi{H}}$ of Horn rules, a KG $\cG$, and the quality functions $\mi{q_{rm}}$ and $\mi{q_{conflict}}$, the quality-based Horn theory revision problem is to find a set $\cR_{\mi{NM}}$ of rules obtained by adding default negated atoms to $\mi{Body(r)}$  for some $r\in \cR_{\mi{H}}$, such that (i) $q_{\mi{rm}}(\cR_{\mi{NM}},\cG)$ is maximal, and (ii) $q_{\mi{conflict}}(\cR_{\mi{NM}},\cG)$ is minimal.
+\end{definition}
+
+%\ju{A general comment for future work: Since you now target binary predicates, you might consider the addition of a third quality measure which privileges exceptions which contain a minimal number of variables. This can be useful to detect situations where the exceptions where some variables can be substituted only by a single constant, etc.}
+
+% The QHR problem is tightly related to theory revision from examples \cite{wr1996}, where given a possibly incorrect theory in the form of first-order clauses, and positive and negative examples, the goal is to modify the theory (in a minimal way) to get the correct theory, which covers all positive examples and none of the negative ones. 
+
+% In our setting positive and negative examples are not explicitly given, and due to the incompleteness of the KG, their construction is not immediately possible. This forms the major obstacle that does not allow us to apply techniques for the former problem to solving QHR.
+
+Following the common practice, we consider only rules with  linked variables \cite{DBLP:conf/kr/Helft89}.
+Prior to tackling QHTR problem we introduce the notions of $r$-(ab)normal substitutions and Exception Witness Sets (EWSs) that are used in our revision framework.
+
+
+\begin{definition}[$r$-(ab)normal substitutions]\label{sec:rulelearn}
+Let $\cG$ be a KG, $\mi{r}$ a Horn rule mined from $\cG$, and let $\cV$ be a set of variables occurring in $\mi{r}$. Then
+\begin{itemize}
+\item $\mi{NS(r, \cG)=\{\theta\, |\, H(r)\theta,B(r)\theta \in \cG\}}$ is an $\mi{r}$-normal set of substitutions;
+\item $\mi{ABS(r, \cG)=\{\theta'\, |\, B(r)\theta' \in \cG,\;H(r)\theta' \not \in \cG\}}$ is an $\mi{r}$-abnormal set of substitutions,
+\end{itemize} 
+where $\theta,\theta':\cV \rightarrow \cC$.
+\end{definition}
+
+\begin{example}\label{ex:abns}
+For the KG from Fig.~\ref{rdf} and $\mi{r:\;livesIn(Y,Z)}\leftarrow \mi{isMarriedTo(X,Y), }$\\$\mi{livesIn(X,Z)}$ we have
+\begin{itemize}
+\item $\mi{NS}(r,\cG)=\{\mi{\theta_1,\theta_2,\theta_3}\}$, where $\theta_1=\{\mi{X/Brad,Y/Ann,Z/Berlin}\},$\\$\theta_2=\{\mi{X/John, Y/Kate, Z/Chicago}\},\theta_3=\{\mi{X/Sue,Y/Li,Z/Beijin}\}$
+\item $\mi{ABS}(r,\cG)=\{\mi{\theta_4,\theta_5,\theta_6}\}$, where $\theta_4=\{\mi{X/Bob, Y/Alice, Z/Berlin}\}, \theta_5=\{\mi{X/Clara, Y/Dave,Z/Chicago}\}, \theta_6=\{\mi{X/Mat,Y/Lucy,Z/Amsterdam}\}$. 
+\end{itemize}
+\end{example}
+ 
+Intuitively, if the given data was complete, then the $r$-normal and $r$-abnormal substitutions would exactly correspond to substitutions for which
+the rule $r$ holds (resp. does not hold) in $\cG^i$. However, some $r$-abnormal substitutions
+might be classified as such due to the OWA.  In order to distinguish the ``wrongly'' and ``correctly'' classified substitutions in the $r$-abnormal set, we construct \emph{exception witness sets} ($\mi{EWS}$).
+
+
+\begin{definition}[Exception Witness Set (EWS)] \label{def:ews}
+Let $\cG$ be a KG, let $r$ be a rule mined from it, let $\cV$ be a set of variables occurring in $r$ and $\vec{X}\subseteq \cV$. Exception witness set for $r$ \wrt\ $\cG$ and $\vec{X}$ is a maximal set of predicates $\mi{EWS(r,\cG,\vec{X})}=\{e_1,\dotsc,e_k\}$, s.t.
+\begin{itemize}
+\item $\mi{e_i}(\vec{X}\theta_j)\in \cG$ for some $\theta_j\in \mi{ABS(r,\cG)}$, $1 \leq i\leq k$ and
+\item $\mi{e_1}(\vec{X}\theta'),\dotsc,\mi{e_k}(\vec{X}\theta')\not \in \cG$ for all $\theta' \in \mi{NS(r,\cG)}$.
+\end{itemize}
+\end{definition}
+
+
+\begin{example}
+For the KG in Fig.~\ref{rdf} and $r$ from Ex.~\ref{ex:abns} we have that $\mi{EWS(r,\cG,X)}=\{\mi{researcher}\}$. If $\mi{artist(bob), artist(clara),artist(mat)}$ were in $\cG$ then it would hold that  $\mi{EWS(r,\cG,Y)}=\{\mi{artist}\}$. Moreover, if $\mi{brad}$ with $\mi{ann}$ and $\mi{john}$ with $\mi{kate}$ lived in cities different from $\mi{berlin}$ and $\mi{chicago}$, then $\mi{EWS(r,\cG,Z)}=\{\mi{metropolitan}\}$. 
+\end{example}
+In general when binary atoms are allowed in the rules, there might be potentially too many possible $\mi{EWS}$s to construct and consider. %\ju{I don't understand the previous sentence. According to def. 5, EWS are sets of predicates. Therefore, the number of EWSs is capped by the maximum number of predicates, which is independent from the predicates' arity}. DS: this is not true. EWSs are defined with respect to all possible subsets of size at most two of variables.
+For a rule with $n$ distinct variables, $n^2$ candidate $\mi{EWS}$ sets can exist. %\ju{(Following from my previous comment) the previous sentence is wrong since EWSs are defined as sets of predicates. The number of distinct variables is here irrelevant. I feel something is missing here}.
+%\ju{(general comment) The last paragraph is very important: It sketches the main contribution of the work. You might want to spend more words on it.}

@@ -1,0 +1,36 @@
+\begin{table*}[t]
+\centering
+\begin{tabularx}{\textwidth}{@{}lll*{6}{Y}@{}}
+\toprule
+\multirow{2}{*}{} & \multicolumn{1}{c}{\multirow{2}{*}{\textbf{Approach}}} & \multicolumn{1}{c}{\multirow{2}{*}{\textbf{Source}}} & \multicolumn{3}{c}{\textbf{Count@Top-K}} & \multicolumn{3}{c}{\textbf{Prec@Top-K}} \\
+\cmidrule(lr){4-6} \cmidrule(l){7-9}
+                  &                   &                               & \textbf{1}            & \textbf{2}           & \textbf{3}           & \textbf{1}          & \textbf{2}          & \textbf{3}   \\    
+                             
+                             \midrule
+\multirow{10}{*}{\texttt{Persons}}     & \multirow{4}{*}{Type-Aware} & First Name  & 8	& 10	& 12	& 87.50 	& 80.00 	& 66.67 	\\
+                             &                             & Last Name   & 14	& 17	& 19	& 92.86 	& 88.24 	& 78.95 	\\
+                             &                             & rdfs:label   & 156	& 288	& 383	& 79.49 	& 63.19 	& 57.44 	\\
+                             &                             & redirects   & 113	& 210	& 285	& 69.91 	& 57.62 	& 50.18 	\\
+                              \cmidrule{2-9}
+                             & \multirow{4}{*}{Combined}   & First Name  & 7	& 10	& 12	& 100.00 	& 90.00 	& 75.00 	\\
+                             &                             & Last Name   & 16	& 22	& 25	& 87.50 	& 81.82 	& 76.00 	\\
+                             &                             & rdfs:label   & 160	& 307	& 421	& 81.25 	& 64.82 	& 57.24 	\\
+                             &                             & redirects   & 108	& 210	& 288	& 67.59 	& 60.00 	& 54.51 	\\
+                             \cmidrule{2-9}
+                             & \multirow{2}{*}{Transliteration} & First Name  & 26	& 52	& 76	& 80.77 	& 61.54 	& 56.58 	\\
+                             &                             & Last Name   & 94	& 188	& 279	& 70.21 	& 63.83 	& 55.91 	\\
+                             \midrule
+
+\multirow{4}{*}{\texttt{Non-Persons}} & \multirow{2}{*}{Type-Aware} & rdfs:label   & 269	& 519	& 742	& 53.16 	& 43.16 	& 36.66 	\\
+                             &                             & redirects    & 191	& 370	& 526	& 45.55 	& 34.86 	& 30.99 	\\
+                             \cmidrule{2-9}
+                             & \multirow{2}{*}{Combined}   & rdfs:label   & 273	& 533	& 770	& 49.82 	& 41.84 	& 36.75 	\\
+                             &                             &  redirects & 195	& 378	& 539	& 46.67 	& 39.42 	& 34.69 	\\
+                              \midrule
+\texttt{Categories} & Categories & Categories  & 118	& 234	& 340	& 67.80 	& 52.99 	& 46.18 	\\
+
+\bottomrule
+\end{tabularx}
+\caption[shorten caption]{full caption}
+\label{table:translation-eval}
+\end{table*}
