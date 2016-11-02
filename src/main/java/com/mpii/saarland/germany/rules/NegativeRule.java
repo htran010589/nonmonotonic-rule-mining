@@ -55,6 +55,10 @@ public class NegativeRule {
 		return true;
 	}
 
+	public String toString() {
+		return positiveRule.toString() + "\t" + exception.toString();
+	}
+
 	public String toStringWithStatistics() {
 		return "not " + exception.toString() + "\t" + positiveNegativeConviction + "\t" + standardConviction + "\t"
 				+ auxiliaryConviction + "\t" + negativeExceptionPositiveHeadConfidence + "\t"

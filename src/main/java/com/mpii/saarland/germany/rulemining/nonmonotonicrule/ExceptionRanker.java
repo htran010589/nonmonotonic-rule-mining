@@ -97,7 +97,7 @@ public class ExceptionRanker {
 	 * This method is to recalculate conviction of negative rules based on old
 	 * and new facts.
 	 */
-	public void recalculateConviction(PositiveRule positiveRule, FactIndexer newFacts) {
+	public Map<String, NegativeRule> recalculateConviction(PositiveRule positiveRule, FactIndexer newFacts) {
 		List<Set<String>> instances = form2Instances.findInstances(positiveRule, newFacts);
 		Set<String> bodyExamples = new HashSet<String>();
 		Set<String> positiveHeadRuleExamples = instances.get(0);
@@ -160,7 +160,7 @@ public class ExceptionRanker {
 		}
 
 		// Calculate statistics
-		List<NegativeRule> negativeRules = new ArrayList<>();
+		Map<String, NegativeRule> negativeRule2Statistics = new HashMap<>();
 		for (Exception exception : exceptionCandidateSet) {
 			NegativeRule newNegativeRule = new NegativeRule(positiveRule, exception);
 			newNegativeRule.setNegativeExceptionBodyCount(negativeExceptionBodyCount.get(exception));
@@ -170,9 +170,10 @@ public class ExceptionRanker {
 			newNegativeRule
 					.setPositiveExceptionNegativeHeadRuleCount(positiveExceptionNegativeHeadRuleCount.get(exception));
 			newNegativeRule.calculateConviction();
-			negativeRules.add(newNegativeRule);
+			negativeRule2Statistics.put(newNegativeRule.toString(), newNegativeRule);
 		}
 
+		List<NegativeRule> negativeRules = new ArrayList<>(negativeRule2Statistics.values());
 		// Sort negative rules according to positive negative, standard
 		// convictions
 		Comparator<NegativeRule> sortByPositiveNegativeConviction = (NegativeRule r1,
@@ -192,10 +193,11 @@ public class ExceptionRanker {
 		}
 		System.out.println();
 
-		// Select best revised rule
+		// Select best revised rule.
 		if (!negativeRules.isEmpty()) {
 			choosenNegativeRules.add(negativeRules.get(0));
 		}
+		return negativeRule2Statistics;
 	}
 
 	public void rankRulesWithExceptions(RankingType type) {
@@ -209,8 +211,16 @@ public class ExceptionRanker {
 			rule.setConfidence();
 			rule.setConviction();
 		}
+
+		// Naive ranking is conducted.
+		Map<String, NegativeRule> negativeRule2Statistics = new HashMap<>();
+		for (PositiveRule rule : form2Instances.positiveRules) {
+			negativeRule2Statistics.putAll(recalculateConviction(rule, facts));
+		}
+
 		if (type == RankingType.OPM) {
 			// Ordered partial materialization is conducted.
+			choosenNegativeRules.clear();
 			form2Instances.positiveRules.sort(
 					(PositiveRule r1, PositiveRule r2) -> new Double(r2.getConviction()).compareTo(r1.getConviction()));
 			for (PositiveRule rule : form2Instances.positiveRules) {
@@ -219,6 +229,7 @@ public class ExceptionRanker {
 			}
 		} else if (type == RankingType.PM) {
 			// Partial materialization is conducted.
+			choosenNegativeRules.clear();
 			for (PositiveRule rule : form2Instances.positiveRules) {
 				predict(rule, 1L);
 			}
@@ -227,10 +238,13 @@ public class ExceptionRanker {
 				recalculateConviction(rule, newFacts);
 				predict(rule, 1L);
 			}
-		} else {
-			// Naive ranking is conducted.
-			for (PositiveRule rule : form2Instances.positiveRules) {
-				recalculateConviction(rule, facts);
+		}
+
+		if (type == RankingType.OPM || type == RankingType.PM) {
+			for (int i = 0; i < choosenNegativeRules.size(); ++i) {
+				// Update statistics.
+				NegativeRule updatedRule = negativeRule2Statistics.get(choosenNegativeRules.get(i).toString());
+				choosenNegativeRules.set(i, updatedRule);
 			}
 		}
 
