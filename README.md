@@ -1,4 +1,4 @@
-Nonmonotonic Rule Mining System
+NORUMIS - Nonmonotonic Rule Mining System
 =============
 
 

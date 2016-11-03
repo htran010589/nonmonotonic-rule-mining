@@ -1,5 +1,17 @@
-\chapter{Methodology}\label{sec:meth}
- Our methodology for solving the QHTR problem comprises four steps, which we now discuss in details.
+\chapter{NORUMIS - Nonmonotonic Rule Mining System}\label{sec:meth}
+
+\section{System Overview}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/system_overview}
+\caption{Overview of Our System}
+\label{rdf}
+\end{figure}
+
+\section{Steps in the System}
+
+Our methodology for solving the QHTR problem comprises four steps, which we now discuss in details.
 %\begin {enumerate*} [label=(\itshape\roman*\upshape)]
 %\item[(1)] determining $r$-normal and $r$-abnormal substitutions for every rule $r\in \cR_{H}$,
 %\item[(2)] computing exception witness sets $\mi{EWS(r,\cG, X)}$, $\mi{EWS(r,\cG,Y)}$ and $\mi{EWS(r,\cG,X,Y)}$ for $r$ with $h(X,Y)$ in the head,
@@ -41,3 +53,7 @@ score(r^j_i,\cG)=\dfrac{\mi{rm(r^j_i,\cG_{\cR'})+rm({r^j_i}^{aux},\cG_{\cR'})}}{
 
 The algorithms for Step 1 and 2 are extended versions of those from \cite{iswc2016}. We neglect further details here for space reasons.
 %\ju{(General comment) From my understanding of this section, one problem that I see is that you do not distinguish revisions based on the number of variables in the EWS. In other words, EWS(r,G,X) and EWS(r,G,<X,Y>) are considererd equally. My feeling is that EWS with the smaller number of variables will score higher because it will be easier to find evidence (ie. support and number of comflicts) that support such EWS. For this paper this is obviously fine, but in the future I think more sophisticated ranking functions must be devised.} DS: sure, this is also among my concerns. As you rightly mentioned, the choice of the best revision needs more involved rankers. We treated exceptions in all EWS equally just for this preliminary results.
+
+\section{Implementation}
+
+\section{Scalability}
