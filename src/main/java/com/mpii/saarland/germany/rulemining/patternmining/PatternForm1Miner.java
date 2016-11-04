@@ -35,6 +35,9 @@ public class PatternForm1Miner {
 					continue;
 				}
 				for (String h : hSet) {
+					if (h.equals(p) && p.equals(q)) {
+						continue;
+					}
 					Utils.addKeyLong(pattern2Long, h + "\t" + p + "\t" + q, 1);
 				}
 			}
@@ -44,7 +47,7 @@ public class PatternForm1Miner {
 			}
 		}
 		System.out.println();
-		List<String> topPatterns = Utils.getTopK(pattern2Long, 300);
+		List<String> topPatterns = Utils.getTopK(pattern2Long, pattern2Long.size());
 		for (String pattern : topPatterns) {
 			System.out.println(pattern);
 		}
