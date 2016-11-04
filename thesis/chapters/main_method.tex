@@ -1,15 +1,19 @@
 \chapter{NORUMIS - Nonmonotonic Rule Mining System}\label{sec:meth}
 
+NORUMIS stands for Nonmonotonic Rule Mining System which is the main tool developed from the current work. In this chapter, our system are described in details with the following organization. Firstly, an overview of the system is mentioned. Secondly, the main method with a novel concept of Partial Materialization is discussed. Finally, we talk about the implementation of components in the system.
+
 \section{System Overview}
+
+There are five components in the system as indicated in Figure~\ref{system_overview}. The NORUMIS receipts an input as a set of mined positive Horn rules and a knowledge graph. The corresponding output is a set of nonmonotonic rules derived from given Horn rules by adding negated atoms. The five components are described in details in the rest of this chapter.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/system_overview}
-\caption{Overview of Our System}
-\label{rdf}
+\caption{Components of the NORUMIS}
+\label{system_overview}
 \end{figure}
 
-\section{Steps in the System}
+\section{Methodology}
 
 Our methodology for solving the QHTR problem comprises four steps, which we now discuss in details.
 %\begin {enumerate*} [label=(\itshape\roman*\upshape)]
