@@ -89,8 +89,18 @@ public class Sampler {
 		Set<String> predicates = new TreeSet<>();
 		predicates.addAll(idealFacts.getPSet());
 		for (String predicate : predicates) {
-			int learningFactCount = learningFacts.getXySetFromP(predicate).size();
-			int idealFactCount = idealFacts.getXySetFromP(predicate).size();
+			int learningFactCount = -1;
+			try {
+				learningFactCount = learningFacts.getXySetFromP(predicate).size();
+			} catch (NullPointerException ex) {
+				learningFactCount = 0;
+			}
+			int idealFactCount = -1;
+			try {
+				idealFactCount = idealFacts.getXySetFromP(predicate).size();
+			} catch (NullPointerException ex) {
+				idealFactCount = 0;
+			}
 			System.out.println(predicate + " & " + learningFactCount + " & " + idealFactCount + "\\\\");
 		}
 	}
