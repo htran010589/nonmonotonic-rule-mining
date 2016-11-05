@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.utils.Utils;
@@ -79,6 +81,18 @@ public class Sampler {
 			ex.printStackTrace();
 		}
 		return learningFacts;
+	}
+
+	static void countFactsPerPredicate() {
+		FactIndexer learningFacts = new FactIndexer(Conductor.trainingDataFileName);
+		FactIndexer idealFacts = new FactIndexer(Conductor.idealDataFileName);
+		Set<String> predicates = new TreeSet<>();
+		predicates.addAll(idealFacts.getPSet());
+		for (String predicate : predicates) {
+			int learningFactCount = learningFacts.getXySetFromP(predicate).size();
+			int idealFactCount = idealFacts.getXySetFromP(predicate).size();
+			System.out.println(predicate + " & " + learningFactCount + " & " + idealFactCount + "\\\\");
+		}
 	}
 
 }
