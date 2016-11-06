@@ -94,54 +94,54 @@ The Algorithm~\ref{algo1} which solves the presented problem, is now described i
 \item Finally, from line $19$ to $28$, the algorithm focuses on selecting types for objects based on ranking frequency of predicate-type pair. In details, for each \textit{<SPO>} triple, the algorithm computes $ratio(PT)$ with each $T$ being a type of object $O$ and stores popular pair $PT$ into a set $TL$. After that, we find $TOP\_K$ types $T_{i}$ from $TL$ with the lowest $freq(PT_{i})$. Then, the object $O$ is replaced by these $T_{i}$ and new facts are added to a set $R$ which is returned in (30) as an output. For example, if parameters are fixed as in Example~\ref{ex5}, then the tuple \textit{<Kevin marriedTo Britney>} will be replaced by the fact \textit{marriedToSinger(Kevin)} in the output.
 \end{itemize}
 
-%\begin{algorithm}
-%\label{algo1}
-%\caption{Predicate Abstraction Algorithm}
-%
-%\SetAlgoLined
-%\KwData{Set $L$ of \textit{<SPO>} triples, $MIN\_FREQ,$\\$MIN\_RATIO, TOP\_K$}
-%$R$ $\leftarrow$ empty set
-%
-%\For{each \textit{<SPO>} triple from $L$} {
-%	\If{$P$ is type predicate} {
-%		add $O$ to the set of types for $P$
-%	}
-%	$freq(PO)++$  //  for predicate-object pair
-%
-%	$freq(P)++$  //  for predicate
-%}
-%
-%\For{each \textit{<SPO>} triple from $L$} {
-%	\For{each type $T$ from type set of $O$} {
-%		$freq(PT)++$  //  for predicate-type pair
-%	}
-%}
-%
-%\For{each \textit{<SPO>} triple from $L$} {
-%	\If{$freq(PO) > MIN\_FREQ$} {
-%		add $SPO$ to $R$
-%	}
-%}
-%\For{each \textit{<SPO>} triple from $L$} {
-%
-%	$TL$ $\leftarrow$ empty set
-%
-%	\For{each type $T$ from type set of $O$} {
-%		$ratio(PT) \leftarrow freq(PT) / freq(P)$
-%
-%		\If{$ratio(PT) > MIN\_RATIO$} {
-%			add $T$ to type set $TL$
-%		}
-%	}
-%	sort types in $TL$ based on ascending order of predicate-type frequency
-%
-%	choose $TOP\_K$ types and add corresponding subject-predicate-type triples to $R$
-%
-%}
-%
-%\Return $R$
-%
-%\end{algorithm}
+\begin{algorithm}
+\label{algo1}
+\caption{Predicate Abstraction Algorithm}
+
+\SetAlgoLined
+\KwData{Set $L$ of \textit{<SPO>} triples, $MIN\_FREQ,$\\$MIN\_RATIO, TOP\_K$}
+$R$ $\leftarrow$ empty set
+
+\For{each \textit{<SPO>} triple from $L$} {
+	\If{$P$ is type predicate} {
+		add $O$ to the set of types for $P$
+	}
+	$freq(PO)++$  //  for predicate-object pair
+
+	$freq(P)++$  //  for predicate
+}
+
+\For{each \textit{<SPO>} triple from $L$} {
+	\For{each type $T$ from type set of $O$} {
+		$freq(PT)++$  //  for predicate-type pair
+	}
+}
+
+\For{each \textit{<SPO>} triple from $L$} {
+	\If{$freq(PO) > MIN\_FREQ$} {
+		add $SPO$ to $R$
+	}
+}
+\For{each \textit{<SPO>} triple from $L$} {
+
+	$TL$ $\leftarrow$ empty set
+
+	\For{each type $T$ from type set of $O$} {
+		$ratio(PT) \leftarrow freq(PT) / freq(P)$
+
+		\If{$ratio(PT) > MIN\_RATIO$} {
+			add $T$ to type set $TL$
+		}
+	}
+	sort types in $TL$ based on ascending order of predicate-type frequency
+
+	choose $TOP\_K$ types and add corresponding subject-predicate-type triples to $R$
+
+}
+
+\Return $R$
+
+\end{algorithm}
 
 The Algorithm~\ref{algo1} assumes that the parameters are fixed and provided. In fact, in practice the $TOP\_K$ parameter can be different for different predicates and domains, while it is fixed in our method. Thus, choosing the parameters automatically for open domain is an open problem, which needs to be further studied. In the next section, we model the predicate abstraction problem using Integer Linear Programming~\cite{ref1} which does not use the parameter $TOP\_K$ above.
 

@@ -8,7 +8,7 @@ There are five components in the system as indicated in Figure~\ref{system_overv
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/system_overview}
+\includegraphics[width=0.75\textwidth]{figures/system_overview}
 \caption{Components of the NORUMIS}
 \label{system_overview}
 \end{figure}
@@ -59,5 +59,14 @@ The algorithms for Step 1 and 2 are extended versions of those from \cite{iswc20
 %\ju{(General comment) From my understanding of this section, one problem that I see is that you do not distinguish revisions based on the number of variables in the EWS. In other words, EWS(r,G,X) and EWS(r,G,<X,Y>) are considererd equally. My feeling is that EWS with the smaller number of variables will score higher because it will be easier to find evidence (ie. support and number of comflicts) that support such EWS. For this paper this is obviously fine, but in the future I think more sophisticated ranking functions must be devised.} DS: sure, this is also among my concerns. As you rightly mentioned, the choice of the best revision needs more involved rankers. We treated exceptions in all EWS equally just for this preliminary results.
 
 \section{Implementation}
+
+\textbf{Data Indexing.}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1.0\textwidth]{figures/data_indexing}
+\caption{NORUMIS Data Indexer}
+\label{system_overview}
+\end{figure}
 
 \section{Scalability}
