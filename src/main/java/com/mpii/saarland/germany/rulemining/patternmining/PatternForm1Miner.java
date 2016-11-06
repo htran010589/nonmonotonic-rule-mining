@@ -67,7 +67,11 @@ public class PatternForm1Miner {
 	}
 
 	public static void main(String[] args) throws Exception {
-		minePatterns(args[0], Integer.parseInt(args[1]));
+		int type = 1;
+		if (args.length == 2) {
+			type = Integer.parseInt(args[1]);
+		}
+		minePatterns(args[0], type);
 	}
 
 }
