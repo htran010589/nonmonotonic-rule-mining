@@ -298,17 +298,16 @@ public class Conductor {
 	}
 
 	public static void execute(RankingType type) {
-		Sampler.countFactsPerPredicate();
-//		if (!(new File(encodeFileName).exists())) {
-//			Encoder.encode();
-//		}
-//		Encoder.loadEncode();
-//		if (!(new File(trainingDataDlvFileName).exists())) {
-//			Encoder.convert2DlvKnowledgeGraph();
-//		}
-//		generateExceptions(type);
-//		runDlv();
-//		evaluate();
+		if (!(new File(encodeFileName).exists())) {
+			Encoder.encode();
+		}
+		Encoder.loadEncode();
+		if (!(new File(trainingDataDlvFileName).exists())) {
+			Encoder.convert2DlvKnowledgeGraph();
+		}
+		generateExceptions(type);
+		runDlv();
+		evaluate();
 	}
 
 	public static void main(String[] args) {
