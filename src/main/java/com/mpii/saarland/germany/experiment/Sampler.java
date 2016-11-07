@@ -26,14 +26,14 @@ public class Sampler {
 			Conductor.idealFacts = new FactIndexer(Conductor.idealDataFileName);
 			Writer learningDataWriter = new BufferedWriter(new FileWriter(Conductor.trainingDataFileName));
 			Map<String, Long> predicateCount = new HashMap<String, Long>();
-			Map<String, Long> deletedPredicateCount = new HashMap<String, Long>();
+			Map<String, Long> remainPredicateCount = new HashMap<String, Long>();
 			Map<String, Long> entityDegree = new HashMap<String, Long>();
 			for (String xpy : Conductor.idealFacts.getXpySet()) {
 				String[] parts = xpy.split("\t");
 				Utils.addKeyLong(entityDegree, parts[0], 1);
 				Utils.addKeyLong(entityDegree, parts[2], 1);
 				Utils.addKeyLong(predicateCount, parts[1], 1);
-				Utils.addKeyLong(deletedPredicateCount, parts[1], 1);
+				Utils.addKeyLong(remainPredicateCount, parts[1], 1);
 			}
 			for (String xpy : Conductor.idealFacts.getXpySet()) {
 				String[] parts = xpy.split("\t");
@@ -42,14 +42,14 @@ public class Sampler {
 					delete = false;
 				if (entityDegree.get(parts[2]) <= 1)
 					delete = false;
-				if ((1.0 * (deletedPredicateCount.get(parts[1]) - 1) / predicateCount.get(parts[1])) < 0.8)
+				if ((1.0 * (remainPredicateCount.get(parts[1]) - 1) / predicateCount.get(parts[1])) < 0.8)
 					delete = false;
 				if (!delete) {
 					learningDataWriter.write("<" + parts[0] + ">\t<" + parts[1] + ">\t<" + parts[2] + ">\n");
 				} else {
 					Utils.addKeyLong(entityDegree, parts[0], -1);
 					Utils.addKeyLong(entityDegree, parts[2], -1);
-					Utils.addKeyLong(deletedPredicateCount, parts[1], -1);
+					Utils.addKeyLong(remainPredicateCount, parts[1], -1);
 				}
 			}
 			for (String x : Conductor.idealFacts.getXSet()) {
@@ -83,21 +83,38 @@ public class Sampler {
 		return learningFacts;
 	}
 
+	static Map<String, Long> getFactCountPerPredicate(String fileName) {
+		Map<String, Long> predicate2Count = new HashMap<>();
+		try {
+			BufferedReader learningDataReader = new BufferedReader(new FileReader(fileName));
+			String line;
+			while ((line = learningDataReader.readLine()) != null) {
+				line = line.substring(1, line.length() - 1);
+				String[] parts = line.split(">\t<");
+				Utils.addKeyLong(predicate2Count, parts[1], 1L);
+			}
+			learningDataReader.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return predicate2Count;
+	}
+
 	static void countFactsPerPredicate() {
-		FactIndexer learningFacts = new FactIndexer(Conductor.trainingDataFileName);
-		FactIndexer idealFacts = new FactIndexer(Conductor.idealDataFileName);
+		Map<String, Long> trainingPredicate2Count = getFactCountPerPredicate(Conductor.trainingDataFileName);
+		Map<String, Long> idealPredicate2Count = getFactCountPerPredicate(Conductor.idealDataFileName);
 		Set<String> predicates = new TreeSet<>();
-		predicates.addAll(idealFacts.getPSet());
+		predicates.addAll(trainingPredicate2Count.keySet());
 		for (String predicate : predicates) {
-			int learningFactCount = -1;
+			long learningFactCount = -1;
 			try {
-				learningFactCount = learningFacts.getXySetFromP(predicate).size();
+				learningFactCount = trainingPredicate2Count.get(predicate);
 			} catch (NullPointerException ex) {
 				learningFactCount = 0;
 			}
-			int idealFactCount = -1;
+			long idealFactCount = -1;
 			try {
-				idealFactCount = idealFacts.getXySetFromP(predicate).size();
+				idealFactCount = idealPredicate2Count.get(predicate);
 			} catch (NullPointerException ex) {
 				idealFactCount = 0;
 			}
