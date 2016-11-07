@@ -24,15 +24,11 @@ public class FactIndexer {
 
 	private String sourceFile;
 
-	private Map<String, Set<String>> x2PySet;
-
 	private Map<String, Set<String>> y2PxSet;
 
 	private Map<String, Set<String>> x2TSet;
 
-	private Map<String, Set<String>> t2XSet;
-
-	private Map<String, Set<String>> pt2XSet;
+//	private Map<String, Set<String>> pt2XSet;
 
 	private Map<String, Set<String>> p2XySet;
 
@@ -46,7 +42,7 @@ public class FactIndexer {
 
 	private Map<String, Long> xt2Frequency;
 
-	private Map<String, Long> ptx2Frequency;
+//	private Map<String, Long> ptx2Frequency;
 
 	private Map<String, Long> px2Frequency;
 
@@ -55,18 +51,16 @@ public class FactIndexer {
 	private Map<String, Long> xpy2Frequency;
 
 	private void allocate() {
-		x2PySet = new HashMap<>();
 		y2PxSet = new HashMap<>();
 		x2TSet = new HashMap<>();
-		t2XSet = new HashMap<>();
-		pt2XSet = new HashMap<>();
+//		pt2XSet = new HashMap<>();
 		p2XySet = new HashMap<>();
 		p2XSet = new HashMap<>();
 		p2YSet = new HashMap<>();
 		xy2PSet = new HashMap<>();
 		py2XSet = new HashMap<>();
 		xt2Frequency = new HashMap<>();
-		ptx2Frequency = new HashMap<>();
+//		ptx2Frequency = new HashMap<>();
 		px2Frequency = new HashMap<>();
 		py2Frequency = new HashMap<>();
 		xpy2Frequency = new HashMap<>();
@@ -89,11 +83,9 @@ public class FactIndexer {
 	 */
 	public FactIndexer cloneFact() {
 		FactIndexer newFacts = new FactIndexer();
-		newFacts.x2PySet = Utils.cloneMap(x2PySet);
 		newFacts.y2PxSet = Utils.cloneMap(y2PxSet);
 		newFacts.x2TSet = Utils.cloneMap(x2TSet);
-		newFacts.t2XSet = Utils.cloneMap(t2XSet);
-		newFacts.pt2XSet = Utils.cloneMap(pt2XSet);
+//		newFacts.pt2XSet = Utils.cloneMap(pt2XSet);
 		newFacts.p2XySet = Utils.cloneMap(p2XySet);
 		newFacts.p2XSet = Utils.cloneMap(p2XSet);
 		newFacts.p2YSet = Utils.cloneMap(p2YSet);
@@ -101,8 +93,8 @@ public class FactIndexer {
 		newFacts.py2XSet = Utils.cloneMap(py2XSet);
 		newFacts.xt2Frequency = new HashMap<>();
 		newFacts.xt2Frequency.putAll(xt2Frequency);
-		newFacts.ptx2Frequency = new HashMap<>();
-		newFacts.ptx2Frequency.putAll(ptx2Frequency);
+//		newFacts.ptx2Frequency = new HashMap<>();
+//		newFacts.ptx2Frequency.putAll(ptx2Frequency);
 		newFacts.px2Frequency = new HashMap<>();
 		newFacts.px2Frequency.putAll(px2Frequency);
 		newFacts.py2Frequency = new HashMap<>();
@@ -124,7 +116,6 @@ public class FactIndexer {
 				xpy2Frequency.remove(xpy);
 				add = false;
 			}
-			Utils.updateKeyString(x2PySet, parts[0], parts[1] + "\t" + parts[2], add);
 			Utils.updateKeyString(y2PxSet, parts[2], parts[1] + "\t" + parts[0], add);
 			Utils.updateKeyString(p2XySet, parts[1], parts[0] + "\t" + parts[2], add);
 			Utils.updateKeyString(xy2PSet, parts[0] + "\t" + parts[2], parts[1], add);
@@ -156,7 +147,6 @@ public class FactIndexer {
 				add = false;
 			}
 			Utils.updateKeyString(x2TSet, parts[0], parts[2], add);
-			Utils.updateKeyString(t2XSet, parts[2], parts[0], add);
 		}
 	}
 
@@ -183,38 +173,34 @@ public class FactIndexer {
 		LOG.info("Done with loading facts");
 	}
 
-	public void indexPattern(String[] parts, long frequency) {
-		Set<String> tSet = x2TSet.get(parts[2]);
-		if (tSet == null) {
-			return;
-		}
-		for (String t : tSet) {
-			String ptx = parts[1] + "\t" + t + "\t" + parts[0];
-			boolean add = true;
-			Utils.addKeyLong(ptx2Frequency, ptx, frequency);
-			if (ptx2Frequency.get(ptx) == 0) {
-				ptx2Frequency.remove(ptx);
-				add = false;
-			}
-			Utils.updateKeyString(pt2XSet, parts[1] + "\t" + t, parts[0], add);
-		}
-	}
+//	public void indexPattern(String[] parts, long frequency) {
+//		Set<String> tSet = x2TSet.get(parts[2]);
+//		if (tSet == null) {
+//			return;
+//		}
+//		for (String t : tSet) {
+//			String ptx = parts[1] + "\t" + t + "\t" + parts[0];
+//			boolean add = true;
+//			Utils.addKeyLong(ptx2Frequency, ptx, frequency);
+//			if (ptx2Frequency.get(ptx) == 0) {
+//				ptx2Frequency.remove(ptx);
+//				add = false;
+//			}
+//			Utils.updateKeyString(pt2XSet, parts[1] + "\t" + t, parts[0], add);
+//		}
+//	}
 
-	public void indexPatterns() {
-		for (String fact : xpy2Frequency.keySet()) {
-			String[] parts = fact.split("\t");
-			indexPattern(parts, 1L);
-		}
-		LOG.info("Done with loading patterns pt2X");
-	}
+//	public void indexPatterns() {
+//		for (String fact : xpy2Frequency.keySet()) {
+//			String[] parts = fact.split("\t");
+//			indexPattern(parts, 1L);
+//		}
+//		LOG.info("Done with loading patterns pt2X");
+//	}
 
 	public void index() {
 		indexFacts(sourceFile);
-		indexPatterns();
-	}
-
-	public Set<String> getPySetFromX(String x) {
-		return x2PySet.get(x);
+//		indexPatterns();
 	}
 
 	public Set<String> getPxSetFromY(String y) {
@@ -229,17 +215,9 @@ public class FactIndexer {
 		return xpy2Frequency.keySet();
 	}
 
-	public Set<String> getTSet() {
-		return t2XSet.keySet();
-	}
-
-	public Set<String> getXSetFromPt(String pt) {
-		return pt2XSet.get(pt);
-	}
-
-	public Set<String> getXSetFromT(String t) {
-		return t2XSet.get(t);
-	}
+//	public Set<String> getXSetFromPt(String pt) {
+//		return pt2XSet.get(pt);
+//	}
 
 	public Set<String> getXySetFromP(String p) {
 		return p2XySet.get(p);
@@ -266,11 +244,7 @@ public class FactIndexer {
 	}
 
 	public Set<String> getXSet() {
-		return x2PySet.keySet();
-	}
-
-	public Set<String> getYSet() {
-		return y2PxSet.keySet();
+		return x2TSet.keySet();
 	}
 
 	public boolean checkXpy(String xpy) {

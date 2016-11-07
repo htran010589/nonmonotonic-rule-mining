@@ -74,7 +74,7 @@ public class Sampler {
 				line = line.substring(1, line.length() - 1);
 				String[] parts = line.split(">\t<");
 				learningFacts.indexFact(parts, 1L);
-				learningFacts.indexPattern(parts, 1L);
+//				learningFacts.indexPattern(parts, 1L);
 			}
 			learningDataReader.close();
 		} catch (IOException ex) {

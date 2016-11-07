@@ -88,7 +88,7 @@ public class ExceptionRanker {
 			}
 			parts = new String[] { x, h, z };
 			newFacts.indexFact(parts, frequency);
-			newFacts.indexPattern(parts, frequency);
+//			newFacts.indexPattern(parts, frequency);
 		}
 	}
 
