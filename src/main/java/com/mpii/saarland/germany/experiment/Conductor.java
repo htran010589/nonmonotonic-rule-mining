@@ -306,8 +306,8 @@ public class Conductor {
 			Encoder.convert2DlvKnowledgeGraph();
 		}
 		generateExceptions(type);
-//		runDlv();
-//		evaluate();
+		runDlv();
+		evaluate();
 	}
 
 	public static void main(String[] args) {
