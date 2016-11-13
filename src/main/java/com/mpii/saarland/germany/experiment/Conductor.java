@@ -31,15 +31,21 @@ import com.mpii.saarland.germany.utils.Utils;
  */
 public class Conductor {
 
-	static final String[] RULE_TYPES = { ".pos.", ".neg.", ".neg.aux." };
+//	static final String[] RULE_TYPES = { ".pos.", ".neg.", ".neg.aux." };
+
+	static final String[] RULE_TYPES = { ".pos.", ".neg." };
 
 	static int topRuleCount;
+
+	static int withDlv;
 
 	static String idealDataFileName;
 
 	static String encodeFileName;
 
 	static String patternFileName;
+
+	static String selectedPatternFileName;
 
 	static String trainingDataFileName;
 
@@ -62,7 +68,7 @@ public class Conductor {
 		}
 		System.out.println("Number of predicates in ideal graph: " + idealFacts.getPSet().size());
 
-		for (int i = 0; i < 3; ++i) {
+		for (int i = 0; i < 2; ++i) {
 			String extensionFileName = extensionPrefixFileName + RULE_TYPES[i] + topRuleCount;
 			evaluate(extensionFileName);
 		}
@@ -165,10 +171,7 @@ public class Conductor {
 				Long negativeFactCount = negativeFactPerPredicateCount.get(predicate);
 				if (negativeFactCount == null)
 					negativeFactCount = 0L;
-				System.out.println(" &     " + predicate + "       &    " + negativeFactCount + "    &     "
-						+ currentFactCount + "     &              &    " + currentConflictCount
-						+ "                        &       &   " + currentGoodFactCount + "   &               &    "
-						+ currentNeedCheckFactCount + "            &              &               \\\\ \\cline{2-12} ");
+				System.out.println("Predicted facts: " + predicate + "\t" + currentFactCount + "\t" + currentGoodFactCount + "\t" + currentNeedCheckFactCount);
 			}
 			System.out.println("-----");
 			goodFactWriter.close();
@@ -182,7 +185,7 @@ public class Conductor {
 	static void generateExceptions(RankingType type) {
 		learningFacts = Sampler.indexLearningData();
 		time1 = new Date();
-		ExceptionRanker ranker = new ExceptionRanker(patternFileName, learningFacts, topRuleCount);
+		ExceptionRanker ranker = new ExceptionRanker(patternFileName, selectedPatternFileName, learningFacts, topRuleCount);
 		ranker.rankRulesWithExceptions(type);
 
 		// This is to convert rule set to DLV format.
@@ -303,15 +306,14 @@ public class Conductor {
 			Encoder.convert2DlvKnowledgeGraph();
 		}
 		generateExceptions(type);
-		runDlv();
-		evaluate();
+		if (withDlv == 1) {
+			runDlv();
+			evaluate();
+			Encoder.decodeDlvOutput();
+		}
 	}
 
 	public static void main(String[] args) {
-		if (args.length < 2 || args.length > 3) {
-			System.out.println("Wrong number of parameters.");
-			return;
-		}
 		File workingFolder = new File(args[0]);
 		if (!workingFolder.exists()) {
 			System.out.println("Working folder does not exist.");
@@ -335,19 +337,18 @@ public class Conductor {
 		}
 		String dlvPath = dlvFolder.getAbsolutePath();
 		String typeName = RankingType.values()[type].toString().toLowerCase();
+		topRuleCount = Integer.parseInt(args[2]);
+		withDlv = Integer.parseInt(args[3]);
+
 		idealDataFileName = workingPath + "/ideal.data.txt";
 		encodeFileName = workingPath + "/encode.txt";
 		patternFileName = workingPath + "/patterns.txt";
+		selectedPatternFileName = workingPath + "/selected.patterns.txt";
 		trainingDataFileName = workingPath + "/training.data.txt";
 		trainingDataDlvFileName = dlvPath + "/training.data.kg";
 		choosenRuleFileName = dlvPath + "/choosen.rules." + typeName + ".txt";
 		dlvBinaryFileName = workingPath + "/dlv.bin";
 		extensionPrefixFileName = dlvPath + "/extension." + typeName + ".kg";
-		if (args.length == 3) {
-			topRuleCount = Integer.parseInt(args[2]);
-		} else {
-			topRuleCount = TextFileReader.readLines(patternFileName).size();
-		}
 		execute(RankingType.values()[type]);
 	}
 

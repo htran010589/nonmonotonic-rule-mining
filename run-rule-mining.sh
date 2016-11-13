@@ -1,4 +1,5 @@
 mvn compile
+export MAVEN_OPTS="-Xmx400G"
 if [ $# -eq 3 ]
 then
 	mvn exec:java -Dexec.mainClass="com.mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker" -Dexec.args="$1 $2 $3"

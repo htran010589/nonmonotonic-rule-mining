@@ -28,7 +28,9 @@ public class ExceptionRanker {
 
 	private List<NegativeRule> choosenNegativeRules;
 
-	public ExceptionRanker(String patternFileName, FactIndexer facts, int topRuleCount) {
+	private Set<String> selectedPatterns;
+
+	public ExceptionRanker(String patternFileName, String selectedPatternFileName, FactIndexer facts, int topRuleCount) {
 		this.facts = facts;
 		newFacts = facts.cloneFact();
 		form2Instances = new InstanceSetForm1Miner();
@@ -36,6 +38,18 @@ public class ExceptionRanker {
 		form2Instances.findInstances(facts);
 		form2Instances.findPositiveNegativeExamples(facts);
 		choosenNegativeRules = new ArrayList<>();
+		readSelectedPatterns(selectedPatternFileName);
+	}
+
+	public void readSelectedPatterns(String fileName) {
+		List<String> lines = TextFileReader.readLines(fileName);
+		selectedPatterns = null;
+		if (lines == null) return;
+		selectedPatterns = new HashSet<>();
+		for (String line : lines) {
+			String[] parts = line.split("\t");
+			selectedPatterns.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
+		}
 	}
 
 	/**
@@ -193,8 +207,10 @@ public class ExceptionRanker {
 		System.out.println();
 
 		// Select best revised rule.
-		if (!negativeRules.isEmpty()) {
-			choosenNegativeRules.add(negativeRules.get(0));
+		if (selectedPatterns == null || (selectedPatterns != null && selectedPatterns.contains(positiveRule.getHead() + "\t" + positiveRule.getBody()))) {
+			if (!negativeRules.isEmpty()) {
+				choosenNegativeRules.add(negativeRules.get(0));
+			}
 		}
 		return negativeRule2Statistics;
 	}
@@ -212,12 +228,14 @@ public class ExceptionRanker {
 		}
 
 		// Naive ranking is conducted.
+		System.out.println("Naive Ranking:");
 		Map<String, NegativeRule> negativeRule2Statistics = new HashMap<>();
 		for (PositiveRule rule : form2Instances.positiveRules) {
 			negativeRule2Statistics.putAll(recalculateConviction(rule, facts));
 		}
 
 		if (type == RankingType.OPM) {
+			System.out.println("OPM Ranking:");
 			// Ordered partial materialization is conducted.
 			choosenNegativeRules.clear();
 			form2Instances.positiveRules.sort(
@@ -227,6 +245,7 @@ public class ExceptionRanker {
 				predict(rule, 1L);
 			}
 		} else if (type == RankingType.PM) {
+			System.out.println("PM Ranking:");
 			// Partial materialization is conducted.
 			choosenNegativeRules.clear();
 			for (PositiveRule rule : form2Instances.positiveRules) {
@@ -245,6 +264,10 @@ public class ExceptionRanker {
 				NegativeRule updatedRule = negativeRule2Statistics.get(choosenNegativeRules.get(i).toString());
 				choosenNegativeRules.set(i, updatedRule);
 			}
+		}
+		System.out.println("Choosen revised rules:");
+		for (NegativeRule revisedRule : choosenNegativeRules) {
+			System.out.println(revisedRule.toString());
 		}
 
 		Comparator<NegativeRule> sortByPositiveNegativeConviction = (NegativeRule r1,
@@ -265,7 +288,7 @@ public class ExceptionRanker {
 		if (args.length == 4) {
 			topRuleCount = Integer.parseInt(args[3]);
 		}
-		ExceptionRanker ranker = new ExceptionRanker(patternFileName, facts, topRuleCount);
+		ExceptionRanker ranker = new ExceptionRanker(patternFileName, null, facts, topRuleCount);
 		ranker.rankRulesWithExceptions(RankingType.values()[type]);
 	}
 

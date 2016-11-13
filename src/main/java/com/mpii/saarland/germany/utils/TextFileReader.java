@@ -1,10 +1,12 @@
 package com.mpii.saarland.germany.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,9 @@ public class TextFileReader {
 
 	public static List<String> readLines(String filePath) {
 		List<String> lines = new ArrayList<String>();
+		if (!new File(filePath).exists()) {
+			return null;
+		}
 		BufferedReader dataReader = null;
 		try {
 			dataReader = new BufferedReader(new FileReader(filePath));
