@@ -57,7 +57,7 @@ public class Conductor {
 
 	static String dlvBinaryFileName;
 
-	static Date time1, time2, time3, time4;
+	public static Date time1, time2, time3, time4;
 
 	static FactIndexer idealFacts, learningFacts;
 
@@ -188,6 +188,9 @@ public class Conductor {
 		ExceptionRanker ranker = new ExceptionRanker(patternFileName, selectedPatternFileName, learningFacts, topRuleCount);
 		ranker.rankRulesWithExceptions(type);
 
+		Conductor.time3 = new Date();
+		System.out.println("Done Exception Ranking with " + (Conductor.time3.getTime() - Conductor.time2.getTime()));
+
 		// This is to convert rule set to DLV format.
 		try {
 			for (String ruleType : Conductor.RULE_TYPES) {
@@ -244,8 +247,6 @@ public class Conductor {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		Conductor.time3 = new Date();
-		System.out.println(time3.getTime());
 	}
 
 	static void runDlv() {
@@ -267,8 +268,7 @@ public class Conductor {
 				System.out.println("Done with " + extensionFileName + " file");
 			}
 			Conductor.time4 = new Date();
-			System.out.println(
-					"Time for DLV (seconds): " + ((Conductor.time4.getTime() - Conductor.time3.getTime()) / 1000.0));
+			System.out.println("Done with DLV in " + (Conductor.time4.getTime() - Conductor.time3.getTime()));
 		} catch (InterruptedException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {

@@ -1,6 +1,7 @@
 package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mpii.saarland.germany.experiment.Conductor;
 import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.rules.PositiveRule;
 
@@ -53,6 +55,8 @@ public abstract class InstanceSetMiner {
 			ExceptionMiner.findCandidates(positiveRule, abnormalSet, normalSet, facts);
 		}
 		LOG.info("Done with finding EWS");
+		Conductor.time2 = new Date();
+		System.out.println("Done EWS with " + (Conductor.time2.getTime() - Conductor.time1.getTime()));
 	}
 
 	public List<PositiveRule> getPositiveRules() {

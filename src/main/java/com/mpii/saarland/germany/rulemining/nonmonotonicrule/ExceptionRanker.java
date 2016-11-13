@@ -196,13 +196,8 @@ public class ExceptionRanker {
 				NegativeRule r2) -> new Double(r2.getStandardConviction()).compareTo(r1.getStandardConviction());
 		negativeRules.sort(sortByPositiveNegativeConviction.thenComparing(sortByStandardConviction));
 
-		int count = 0;
 		for (NegativeRule negativeRule : negativeRules) {
-			count++;
 			System.out.println(negativeRule.toStringWithStatistics());
-			if (count > 10) {
-				break;
-			}
 		}
 		System.out.println();
 
