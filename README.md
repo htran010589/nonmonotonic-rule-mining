@@ -17,11 +17,11 @@ The pattern file contains positive rule on each line. The positive rule is in a 
 
 ### Ranking Option
 
-As regards the ranking option, it can be 0, 1, 2 which stand for naive, pm and opm ranking, respectively. For the definition of naive, pm and opm ranking, please refer to our paper in [1].
+As regards the ranking option, it can be 0, 1, 2 which stands for naive, pm and opm ranking, respectively. For the definition of naive, pm and opm ranking, please refer to our paper in [1].
 
 ### DLV Option
 
-With the DLV option, it can be 0, 1 which stand for without and with DLV, respectively. More specifically, option 1 means DLV is enabled and choosen rules are applied to the learning graph. This option is also mentioned in experiment section.
+With the DLV option, it can be 0, 1 which stands for without and with DLV, respectively. More specifically, option 1 means DLV is enabled and choosen rules are applied to the learning graph. This option is also mentioned in experiment section.
 
 Operating System and Required Softwares
 ------------
