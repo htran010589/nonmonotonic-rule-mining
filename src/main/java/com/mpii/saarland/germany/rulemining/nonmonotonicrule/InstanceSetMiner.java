@@ -56,7 +56,7 @@ public abstract class InstanceSetMiner {
 		}
 		LOG.info("Done with finding EWS");
 		Conductor.time2 = new Date();
-		System.out.println("Done EWS with " + (Conductor.time2.getTime() - Conductor.time1.getTime()));
+//		System.out.println("Done EWS with " + (Conductor.time2.getTime() - Conductor.time1.getTime()));
 	}
 
 	public List<PositiveRule> getPositiveRules() {

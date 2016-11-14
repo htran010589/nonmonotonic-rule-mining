@@ -28,13 +28,3 @@ hasLanguage	directedBy	hasLanguage	8
 hasSuccessor	createdBy	created	7
 createdBy	hasSuccessor	directedBy	6
 isCitizenOf	influencedBy	isCitizenOf	6
-livesIn	directed	producedIn	6
-hasDuration	hasPredecessor	hasDuration	5
-hasDuration	hasSuccessor	hasDuration	5
-hasLanguage	directed	hasLanguage	5
-hasPredecessor	createdBy	created	5
-hasProductionYear	hasPredecessor	hasProductionYear	5
-hasProductionYear	hasSuccessor	hasProductionYear	5
-produced	produced	hasPredecessor	5
-produced	produced	hasSuccessor	5
-producedIn	directed	producedIn	5

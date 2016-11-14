@@ -19,6 +19,10 @@ The pattern file contains positive rule on each line. The positive rule is in a 
 
 As regards the ranking option, it can be 0, 1, 2 which stand for naive, pm and opm ranking, respectively. For the definition of naive, pm and opm ranking, please refer to our paper in [1].
 
+### DLV Option
+
+With the DLV option, it can be 0, 1 which stand for without and with DLV, respectively. More specifically, option 1 means DLV is enabled and choosen rules are applied to the learning graph. This option is also mentioned in experiment section.
+
 Operating System and Required Softwares
 ------------
 
@@ -91,29 +95,15 @@ Or with opm ranking and top 10 patterns:
 ```
 cd nonmonotonic-rule-mining folder
 chmod a+x run-experiment.sh
-./run-experiment.sh [path to working folder] [ranking option]
-```
-
-Or if you just concern top k patterns, the following commands can be used:
-
-```
-cd nonmonotonic-rule-mining folder
-chmod a+x run-experiment.sh
-./run-experiment.sh [path to working folder] [ranking option] [top k patterns]
+./run-experiment.sh [path to working folder] [ranking option] [top k patterns] [dlv option]
 ```
 
 #### Example with IMDB Experiment
 
-Please download the repository and run the following command for executing IMDB experiment with opm ranking:
+Please download the repository and run the following command for executing IMDB experiment with opm ranking, top 10 patterns and enable DLV option:
 
 ```
-./run-experiment.sh data/experiment/IMDB/ 2
-```
-
-Or with opm ranking and top 10 patterns:
-
-```
-./run-experiment.sh data/experiment/IMDB/ 2 10
+./run-experiment.sh data/experiment/IMDB/ 2 10 1
 ```
 
 References

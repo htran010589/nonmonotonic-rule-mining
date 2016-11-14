@@ -20,6 +20,9 @@ public class TextFileReader {
 	private static final Logger LOG = LoggerFactory.getLogger(TextFileReader.class);
 
 	public static List<String> readLines(String filePath) {
+		if (filePath == null) {
+			return null;
+		}
 		List<String> lines = new ArrayList<String>();
 		if (!new File(filePath).exists()) {
 			return null;
