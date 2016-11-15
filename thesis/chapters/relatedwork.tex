@@ -57,7 +57,7 @@ IMDB & 117,551 & 134,639 & 17,049 & 39 \\
 \label{table1}
 \end{table}
 
-\section{Statistics-based Approaches}
+\section{Statistics-based Approaches for Relational Learning}
 
 The statistics-based approaches focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
 
@@ -67,7 +67,7 @@ While many tensor factorization methods use subject, predicate and object as thr
 
 Distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close to each other. The closeness can be checked based on some predefined distance measures. This approach can be expanded to structure embedding model~\cite{ref8}.
 
-\section{Logic-based Approaches}
+\section{Logic-based Approaches for Relational Learning}
 
 The logic-based approaches aim at finding observable patterns in order to infer new links in the knowledge graph~\cite{ref1}. Since the patterns can be directly seen in the data, these algorithms are more interpretable than the ones based on statistical approaches. For instance, a pattern extracted from the graph can be represented in the form:\\
 
@@ -150,12 +150,12 @@ In the next step, the exceptions for each rule are found based on normal and abn
 
 From the same concept of Partial Materialization and above setting, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
 
-%\section{Other Approaches}
-%
-%Both of above-mentioned approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the knowledge base, e.g., web pages linking to objects or big collection of documents.
-%
-%Wikipedia pages can be used to identify relations between entities in~\cite{ref18}. In a larger scale,~\cite{ref19} proposes learning lexical predicate patterns, and searches all over the Internet to find subject-object pairs corresponding to the patterns. These new pairs can be filled to the original graph. As a result, a big text corpora is used in ~\cite{ref19} to learn relations.
-%
-%With the intuition that entities appearing in the same table should have the same relations, authors in~\cite{ref20} try to refine knowledge graph based on Wikipedia tables. Similar research works are conducted using page lists~\cite{ref21} or HTML tables~\cite{ref22}.
-%
-%Instead of documents, interlinks are used to add relation edges to knowledge graph~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted to YAGO if they also appear in the latter knowledge graph. This way can be extended to mapping method with probabilities in~\cite{ref25}.
+\section{Discussion}
+
+Both of above-mentioned approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the knowledge base, e.g, web pages linking to objects or big collection of documents.
+
+Wikipedia pages can be used to identify relations between entities in~\cite{ref18}. In a larger scale,~\cite{ref19} proposes learning lexical predicate patterns, and searches all over the Internet to find subject-object pairs corresponding to the patterns. These new pairs can be filled to the original graph. As a result, a big text corpora is used in ~\cite{ref19} to learn relations.
+
+With the intuition that entities appearing in the same table should have the same relations, authors in~\cite{ref20} try to refine knowledge graph based on Wikipedia tables. Similar research works are conducted using page lists~\cite{ref21} or HTML tables~\cite{ref22}.
+
+Instead of documents, interlinks are used to add relation edges to knowledge graph~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted to YAGO if they also appear in the latter knowledge graph. This way can be extended to mapping method with probabilities in~\cite{ref25}.
