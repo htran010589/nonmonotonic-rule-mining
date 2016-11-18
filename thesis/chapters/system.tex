@@ -28,6 +28,70 @@ There are five components in the system as indicated in Figure~\ref{system_overv
 
 Pseudocode and explanation.
 
+\IncMargin{1.5em}
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\KwResult{Write here the result}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{Write here the input}
+\Output{Write here the output}
+\BlankLine
+ 
+$x\leftarrow 0$    \;
+$y\leftarrow 0$    \;
+\BlankLine
+\ForEach{ForEach condition}{    
+    
+    \BlankLine
+    
+    \tcc{comments on code}    
+    \ForEach{ForEach condition}{
+        \If{If condition}{
+            instruction(s) like below: \\
+            increase $x$ by $1$\;
+            decrease $y$ by $2$\;
+        }
+                
+        \BlankLine
+        
+        \uIf{If condition}{
+            instruction
+        }
+        \uElseIf{ElseIf condition}{
+            instruction
+        }
+        \uElse{
+            instruction
+        }                
+    }    
+}
+\caption{Nested ForEach loop with If/ElseIf/Else condition}
+\end{algorithm}
+\DecMargin{1.5em}
+
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\KwResult{Write here the result}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{Write here the input}
+\Output{Write here the output}
+\BlankLine
+ 
+\While{While condition}{
+    instructions\;
+    \eIf{condition}{
+        instructions1\;
+        instructions2\;
+    }{
+        instructions3\;
+    }
+}
+ 
+\caption{While loop with If/Else condition}
+\end{algorithm}
+
 \subsection{Normal and Abnormal Set Mining}
 
 Pseudocode and explanation.
@@ -54,6 +118,8 @@ Should use at least one designed picture.
 \section{Optimisation}
 
 I will talk about speeding up PM ranking in this section.
+
+\section{Usage}
 
 \section{Discussion}
 
