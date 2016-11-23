@@ -152,8 +152,25 @@ public class KgCombiner {
 		}
 	}
 
+	public static void clean(String filePath) {
+		List<String> lines = TextFileReader.readLines(filePath);
+		for (String line : lines) {
+			String[] parts = line.split("\t");
+			if (line.contains("<-")) {
+				System.out.println(parts[0] + "\tConv: " + parts[1] + "\tConf: " + parts[2]);
+				continue;
+			}
+			if (line.startsWith("not ")) {
+				System.out.println(parts[0] + "\tPosNegConv: " + parts[1] + "\tConv: " + parts[2]);
+				continue;
+			}
+			System.out.println(line);
+		}
+	}
+
 	public static void main(String[] args) throws Exception {
-		generateTable2(args[0]);
+//		generateTable2(args[0]);
+		clean(args[0]);
 	}
 
 }
