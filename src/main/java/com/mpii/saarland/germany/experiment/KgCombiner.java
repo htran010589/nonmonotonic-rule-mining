@@ -156,6 +156,10 @@ public class KgCombiner {
 		List<String> lines = TextFileReader.readLines(filePath);
 		for (String line : lines) {
 			String[] parts = line.split("\t");
+			if (line.contains("<-") && line.contains(" not ")) {
+				System.out.println(line);
+				continue;
+			}
 			if (line.contains("<-")) {
 				System.out.println(parts[0] + "\tConv: " + parts[1] + "\tConf: " + parts[2]);
 				continue;
