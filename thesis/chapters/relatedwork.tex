@@ -1,7 +1,7 @@
 \chapter{Related Work}
 \label{chap:relwork}
 
-The area of relational learning in the context of Semantic Web has recently attracted interest from many researchers. The approaches that aim at tackling this problem can be mainly classified into two groups: statistics-based and logic-based. In this chapter we review Semantic Web and the relevant works from these groups.
+The area of relational learning in the context of Semantic Web has recently attracted interest from many researchers. The approaches that aim at tackling this problem can be mainly classified into two groups: statistics-based, text-based and logic-based. In this chapter we review Semantic Web and the relevant works from these groups.
 
 \section{Semantic Web}
 
@@ -86,7 +86,7 @@ Third, most ILP algorithms generate positive Horn rules without exceptions~\cite
 
 \textbf{ALEPH.} This name stands for A Learning Engine for Proposing Hypotheses which is one of the typical systems in ILP. This tool is developed and extended from P-Progol~\footnote{\url{http://www.cs.ox.ac.uk/activities/machinelearning/Aleph/aleph}}. Like many other ILP systems, as input ALEPH receives the background knowledge and sets of positive, negative examples. After that, it generates a set of rules as an output. More specifically, the tool processes head predicates alternatively. Experiments in~\cite{ref10} show that run time for each head relation varies widely from several seconds to days. This indicates that ALEPH is not scalable for large datasets.
 
-\textbf{QuickFOIL.} To address the scalability issues of ILP systems, the system QuickFOIL which is an optimized version of FOIL~\cite{ref36} has been developed. QuickFOIL produces Horn rules in an iterative fashion. Whenever a rule at a certain stage covers an example, the latter is removed from the set. Intuitively, the collection of found rules in each step can be used to summarize original knowledge base. QuickFOIL uses data refinement and pruning techniques to process large-scale input with millions of triples. This tool is a traditional ILP system since it requires negative examples and uses CWA assumption.
+\textbf{QuickFOIL.} To address the scalability issues of ILP systems, the system QuickFOIL which is an optimized version of FOIL~\cite{ref36} has been developed. In each stage QuickFOIL produces a new Horn rule that optimize some measure score. Whenever this rule covers an example, the latter is removed from the set of positive examples. Intuitively, the collection of found rules in each step can be used to summarize original dataset. QuickFOIL uses data refinement and pruning techniques to process large-scale input with millions of facts. This tool is a traditional ILP system since it requires negative examples and uses CWA assumption.
 
 \subsection{Relational Learning Systems}
 
@@ -96,7 +96,7 @@ Relational Learning systems do not require negative examples in the data, thus, 
 
 \textbf{AMIE(+).} The scalability and CWA assumption issues of ILP are tackled in AMIE(+)~\cite{ref10} system. This tool receives a large knowledge graph as an input and generates top positive Horn rules of high quality. Initially, AMIE begins with a list of rules with empty body and binary head predicate. After that, the rules can be expanded with additional relations and variables by three mining operators. These operators are executed by query manipulation to explore new predicates and instances. As regards the implementation, AMIE uses in-memory database with fact indexes to run select and existence queries.
 
-AMIE+ is a new version of AMIE whose run time performance is enhanced by pruning and optimizing evaluation. While the former is implemented by query refining, the latter uses measure approximation. Experimental work in~\cite{ref10} shows that this platform can process millions of triples in RDF graph and its mined rules surpass those of other methods in terms of efficiency.
+AMIE+ is a new version of AMIE whose run time performance is enhanced by pruning and optimizing evaluation. While the former implements query exploiting refinement, the latter uses measure approximation. Experimental work in~\cite{ref10} shows that this platform can process millions of triples in RDF graph and it surpasses other methods in terms of efficiency.
 
 \textbf{RDF2Rules.} The RDF2Rules~\cite{ref29} focuses on mining cyclic patterns from KGs, which are postprocessed and cast into rules. Besides, this tool exploits entity types to create and test mined rules. As a result, the rule quality is enhanced and the authors use a new confidence measure to verify this. Experiments show that this tool is efficient, especially with rules containing entity type, it run much faster than AMIE+. However, the form of the mined rule is restricted to cycles, which makes the system more restrictive than the AMIE+.
 
@@ -109,7 +109,7 @@ Rules with exceptions are traditionally learned by nonmonotonic rule learning sy
 
 There are some nonmonotonic rule learning methods that account for incomplete data~\cite{ref34}. This work pays attention to complicated association between different semantic parts. This is different from the current work where we focus on the quality of the predicted data.
 
-\textbf{Nonmonotonic Rule Mining under OWA over the flattened data.} Research in~\cite{ref12} bases on OWA instead of CWA in some mentioned systems. This tool works on flattened knowledge graph, i.e., the graph that all RDF triples are converted to unary facts by concatenating predicates and objects. More specifically, a binary fact such as \textit{bornIn(s1, US)} can be transformed to unary form \textit{bornInUS(s1)}. Thanks to this, a knowledge graph can be converted to a binary transaction table as in Table~\ref{table2} where 1 or 0 mean the corresponding fact appear in the original graph or not. As a result, the authors in~\cite{ref12} may apply Item Set Mining algorithms~\cite{ref37} to find patterns. These patterns can be used to mine positive rules using Association Rule Mining tools~\cite{ref13}.
+\textbf{Nonmonotonic Rule Mining under OWA over the flattened data.} The work made some steps towards learning nonmonotonic programs from incomplete KGs~\cite{ref12}. This tool works on the flattened KG, that is, the graph in which all RDF triples are converted to unary facts by concatenating predicates and objects. More specifically, a binary fact such as \textit{bornIn(s1, US)} is transformed to a fact in the unary form \textit{bornInUS(s1)}. This way, a KG is converted to a binary transaction table (see Table~\ref{table2} as an example) where 1 and 0 mean the corresponding fact appear in the original graph or not. This representation allows one to apply highly optimized Item Set Mining algorithms~\cite{ref37} to extract data patterns. These patterns are then used to create positive association rules~\cite{ref13}.
 
 \begin{table}
 \begin{center}
@@ -143,16 +143,16 @@ s10 & 0 & 1 & 0 & 1\\
 \label{table2}
 \end{table}
 
-In the next step, the exceptions for each rule are found based on normal and abnormal sets. Then these negative atoms are ranked based on several score measures and innovative concept of Partial Materialization (PM)~\cite{ref12}. In details, PM is the technique that some new predicted facts of other rules are used to measure the quality of a particular one. With the Ordered Partial Materialization (OPM), the idea is similar. The only difference is that the order of rules matters and new generated facts of previous rules instead of all other ones are counted for statistics.
+In the next step, the exceptions for each rule are found and ranked based on several score measures and innovative concept of Partial Materialization (PM)~\cite{ref12}. The core idea of PM is that the authors want to enable the interaction between revised rules.
 
-From the same concept of Partial Materialization and above setting, we extend this work to the master thesis using different predictive measures. Another difference between the thesis and~\cite{ref12} is the format of the data. While la latter convert relations to unary forms, the former retains it in nature format. Thus, binary predicates with subjects and objects may appear in the resulting rules, not just the unary ones.
+A difference between the thesis and~\cite{ref12} is the format of the data. While in~\cite{ref12} binary facts are translated to unary ones, in this thesis we keep the facts in their natural relational format.
 
-\section{Discussion}
+\section{Text-based Approaches}
 
-Both of above-mentioned approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the knowledge base, e.g, web pages linking to objects or big collection of documents.
+Both of statistics-based and logic-based approaches are internal methods, that is, only data inside the graph is used to infer new relations. On the contrary, this section focuses on different approaches that require data outside the KG, that is, web pages linking to objects or big collection of documents.
 
-Wikipedia pages can be used to identify relations between entities in~\cite{ref18}. In a larger scale,~\cite{ref19} proposes learning lexical predicate patterns, and searches all over the Internet to find subject-object pairs corresponding to the patterns. These new pairs can be filled to the original graph. As a result, a big text corpora is used in ~\cite{ref19} to learn relations.
+In~\cite{ref18}, wikipedia pages can be used to identify relations between entities. In a larger scale,~\cite{ref19} proposes learning lexical predicate patterns, and searches all over the Internet to find subject-object pairs corresponding to these patterns. These new pairs can be added to the original graph. As a result, a big text corpora is used in ~\cite{ref19} to learn relations.
 
-With the intuition that entities appearing in the same table should have the same relations, authors in~\cite{ref20} try to refine knowledge graph based on Wikipedia tables. Similar research works are conducted using page lists~\cite{ref21} or HTML tables~\cite{ref22}.
+Assuming that entities appearing in the same table should have the same relations, authors in~\cite{ref20} try to refine knowledge graph based on Wikipedia tables. Similarly, ~\cite{ref21}, ~\cite{ref22} exploit page lists or HTML tables, respectively.
 
-Instead of documents, interlinks are used to add relation edges to knowledge graph~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted to YAGO if they also appear in the latter knowledge graph. This way can be extended to mapping method with probabilities in~\cite{ref25}.
+Instead of documents, interlinks are used to add labelled edges to the KG~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted into YAGO if they also appear in the latter knowledge graph. In~\cite{ref25} this approach has been extended to a probabilistic setting, where for every deduced relation a corresponding probabilistic weight is computed.
