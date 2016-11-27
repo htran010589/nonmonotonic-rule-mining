@@ -60,11 +60,11 @@ IMDB & 117,551 & 134,639 & 17,049 & 39 \\
 
 \section{Statistics-based Approaches for Relational Learning}
 
-Relational learning is a research that ``represent, reason and learn in domains with complex relational structure"~\cite{ref43}. Many frameworks in this field are fundamentally suitable for Semantic Web, and thus, both research aspects develop hand-in-hand together. In this section, we discuss about relational learning from statistics view. The statistics-based approaches focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
+Relational Learning is a research that ``represent, reason and learn in domains with complex relational structure"~\cite{ref43}. Many frameworks in this field are fundamentally suitable for Semantic Web, and thus, both research aspects develop hand-in-hand together. In this section, we discuss about Relational Learning from statistics view. The statistics-based approaches focus on building models with latent features which are not directly observable from the original data~\cite{ref1}. The core idea is to infer correlation between objects based on selected hidden features. Besides, feature extraction is automatically executed in these methods.
 
 RESCAL is one of principal algorithms in this direction where relations of all hidden feature pairs are taken into consideration~\cite{ref2, ref3}. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
 
-While many tensor factorization methods use subject, predicate and object as three dimensions to model a knowledge graph as a cube, some matrix decomposition algorithms try to transform this cube into a two dimensional data. For instance, in~\cite{ref6, ref7} subject and object dimensions are merged into one representing a pair of entities.
+While many tensor factorization methods use subject, predicate and object as three dimensions to model a knowledge graph as a cube, some matrix decomposition algorithms try to transform this cube into a two dimensional data. For instance, in~\cite{ref6, ref7} subject and object dimensions are merged into one representing a pair of entities. This preprocessing step is data flattening technique and a similar work in this thesis is discussed in Section~\ref{system:discuss}.
 
 Distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close to each other. The closeness can be checked based on some predefined distance measures. This approach can be expanded to structure embedding model~\cite{ref8}.
 
@@ -95,7 +95,7 @@ Third, most ILP algorithms generate positive Horn rules without exceptions~\cite
 
 Though this method is one of the most popular tools in ILP, experiments in~\cite{ref10} show that its run time can be up to days. This indicates that ALEPH is not scalable for large datasets.
 
-\textbf{QuickFOIL.} To address the scalability issues of ILP systems, the system QuickFOIL which is an optimized version of FOIL~\cite{ref36} has been developed. In each stage QuickFOIL produces a new Horn rule that optimizes some measure score. Whenever this rule covers an example, the latter is removed from the set of positive ones. Intuitively, the collection of found rules in each step can be used to summarize original dataset. QuickFOIL uses data refinement and pruning techniques to process large-scale input with millions of facts. This tool is a traditional ILP system since it requires negative examples and uses CWA assumption.
+\textbf{QuickFOIL.} To address the scalability issues of ILP systems, the system QuickFOIL which is an optimized version of FOIL~\cite{ref36} has been developed. In each stage QuickFOIL produces a new Horn rule that optimizes some measure score. Whenever this rule covers an example, the latter is removed from the set of positive ones~\cite{ref10}. Intuitively, the collection of found rules in each step can be used to summarize original dataset. QuickFOIL uses data refinement and pruning techniques to process large-scale input with millions of facts. This tool is a traditional ILP system since it requires negative examples and uses CWA assumption.
 
 \subsection{Relational Learning Systems}
 
