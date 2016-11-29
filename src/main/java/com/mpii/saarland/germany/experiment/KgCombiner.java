@@ -172,9 +172,33 @@ public class KgCombiner {
 		}
 	}
 
+	public static String stan(String ent) {
+		if (ent.startsWith("<")) return ent;
+		return "<" + ent + ">";
+	}
+
+	public static void convertWikidata(String path) throws Exception {
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		String line;
+		while ((line = br.readLine()) != null) {
+			if (!line.startsWith("\"")) continue;
+			if (!line.endsWith("\"")) continue;
+			if (line.length() <= 2) continue;
+			line = line.substring(1, line.length() - 1);
+			String[] parts = line.split("\",\"");
+			if (parts.length != 3) continue;
+			String s = stan(parts[0]);
+			String p = stan(parts[1]);
+			String o = stan(parts[2]);
+			System.out.println(s + "\t" + p + "\t" + o);
+		}
+		br.close();
+	}
+
 	public static void main(String[] args) throws Exception {
 //		generateTable2(args[0]);
-		clean(args[0]);
+//		clean(args[0]);
+		convertWikidata(args[0]);
 	}
 
 }
