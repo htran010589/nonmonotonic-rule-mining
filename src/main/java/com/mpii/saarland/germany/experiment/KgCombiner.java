@@ -195,10 +195,21 @@ public class KgCombiner {
 		br.close();
 	}
 
+	public static void convertHornRules(String path) throws Exception {
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		String line;
+		while ((line = br.readLine()) != null) {
+			String[] parts = line.split("\t");
+			System.out.println(parts[0] + "(X, Z) :- " + parts[1] + "(X, Y), " + parts[2] + "(Y, Z)\t" + parts[3]);
+		}
+		br.close();
+	}
+
 	public static void main(String[] args) throws Exception {
 //		generateTable2(args[0]);
 //		clean(args[0]);
-		convertWikidata(args[0]);
+//		convertWikidata(args[0]);
+		convertHornRules(args[0]);
 	}
 
 }

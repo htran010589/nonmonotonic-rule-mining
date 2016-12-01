@@ -55,15 +55,15 @@ public class PositiveRule {
 		StringBuilder result = new StringBuilder(head);
 		String[] parts = body.split("\t");
 		if (type == PositiveRuleType.FORM2) {
-			result.append("(X, Z) <- ");
-			result.append(parts[0] + "(X, Y) ^ ");
+			result.append("(X, Z) :- ");
+			result.append(parts[0] + "(X, Y), ");
 			result.append(parts[1] + "(Y, Z)");
 		}
 		return result.toString();
 	}
 
 	public String toStringWithStatistics() {
-		return toString() + "\t" + conviction + "\t" + confidence + "\t" + headCount + "\t" + bodyCount;
+		return toString() + "\tConv: " + conviction + "\tConf: " + confidence;
 	}
 
 	public void setHeadSupport(FactIndexer facts) {

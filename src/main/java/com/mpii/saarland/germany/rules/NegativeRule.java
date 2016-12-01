@@ -56,15 +56,11 @@ public class NegativeRule {
 	}
 
 	public String toString() {
-		return positiveRule.toString() + "\t" + exception.toString();
+		return positiveRule.toString() + ", not " + exception.toString();
 	}
 
 	public String toStringWithStatistics() {
-		return "not " + exception.toString() + "\t" + positiveNegativeConviction + "\t" + standardConviction + "\t"
-				+ auxiliaryConviction + "\t" + negativeExceptionPositiveHeadConfidence + "\t"
-				+ positiveExceptionNegativeHeadConfidence + "\t" + negativeExceptionPositiveHeadRuleCount + "\t"
-				+ negativeExceptionBodyCount + "\t" + positiveExceptionNegativeHeadRuleCount + "\t"
-				+ positiveExceptionBodyCount;
+		return "not " + exception.toString() + "\tPosNegConv: " + positiveNegativeConviction + "\tConv: " + standardConviction;
 	}
 
 	public long getNegativeExceptionPositiveHeadRuleCount() {

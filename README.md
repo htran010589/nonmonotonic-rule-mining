@@ -5,7 +5,7 @@ RUMIS - Nonmonotonic Rule Mining System
 Tool Description
 ------------
 
-This system is used to mine nonmonotonic rules from a knowledge graph and a list of positive Horn rules. For example, based on given facts and a positive rule livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z); the tool may find out that the rule is not true if X is a researcher. As a result, livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z), not Researcher(X) can be mined in the final result.
+RUMIS is a system for mining nonmonotonic rules from a knowledge graph (KG) under the Open World Assumption (OWA). It exploits association rule learning techniques. It first extracts frequent conjunctive queries from a KG and then casts them into rules based on conviction measure. The rules are revised by incorporating exceptions in the form of negated atoms into the rule bodies to improve their predictive quality. For example, based on given facts and a positive rule livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z); the tool may find out that the rule is not true if X is a researcher. As a result, livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z), not Researcher(X) can be mined in the final result.
 
 ### Knowledge Graph File
 
@@ -21,7 +21,7 @@ As regards the ranking option, it can be 0, 1, 2 which stands for naive, pm and 
 
 ### DLV Option
 
-With the DLV option, it can be 0, 1 which stands for without and with DLV, respectively. More specifically, option 1 means DLV is enabled and choosen rules are applied to the learning graph. This option is also mentioned in experiment section.
+With the DLV option, it can be 0, 1 which stands for without and with DLV, respectively. More specifically, option 1 means DLV is enabled and chosen rules are applied to the learning graph. This option is also mentioned in experiment section.
 
 Operating System and Required Softwares
 ------------
@@ -52,7 +52,7 @@ chmod a+x run-pattern-mining.sh
 
 Note that current system only supports patterns or positive rules with format 2.
 
-#### Example with IMDB Pattern Mining
+#### Example:
 
 Please download the repository and run the following command for executing IMDB pattern mining:
 
@@ -76,7 +76,7 @@ chmod a+x run-rule-mining.sh
 ./run-rule-mining.sh [path to pattern file] [path to knowledge graph file] [ranking option] [top k patterns]
 ```
 
-#### Example with IMDB Rule Mining
+#### Example:
 
 Please download the repository and run the following command for executing IMDB rule mining with opm ranking:
 
@@ -98,7 +98,7 @@ chmod a+x run-experiment.sh
 ./run-experiment.sh [path to working folder] [ranking option] [top k patterns] [dlv option]
 ```
 
-#### Example with IMDB Experiment
+#### Example:
 
 Please download the repository and run the following command for executing IMDB experiment with opm ranking, top 10 patterns and enable DLV option:
 
