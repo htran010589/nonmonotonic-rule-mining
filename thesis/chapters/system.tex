@@ -24,7 +24,7 @@ There are five components in the system as indicated in Figure~\ref{system_overv
 \label{system_overview}
 \end{figure}
 
-\subsection{Pattern Mining}
+\subsection{Positive Rule Mining}
 
 Pseudocode and explanation.
 
@@ -32,73 +32,125 @@ Pseudocode and explanation.
 \begin{algorithm}[H]
 \DontPrintSemicolon
 \SetAlgoLined
-\KwResult{Write here the result}
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{Write here the input}
-\Output{Write here the output}
+\Input{KG $\cG$}
+\Output{Set of positive rules with the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
 \BlankLine
- 
-$x\leftarrow 0$    \;
-$y\leftarrow 0$    \;
+$absSupp \leftarrow \{\}$\\
 \BlankLine
-\ForEach{ForEach condition}{    
-    
+\ForEach{Triple $YqZ$ in $\cG$} {
     \BlankLine
-    
-    \tcc{comments on code}    
-    \ForEach{ForEach condition}{
-        \If{If condition}{
-            instruction(s) like below: \\
-            increase $x$ by $1$\;
-            decrease $y$ by $2$\;
-        }
-                
-        \BlankLine
-        
-        \uIf{If condition}{
-            instruction
-        }
-        \uElseIf{ElseIf condition}{
-            instruction
-        }
-        \uElse{
-            instruction
-        }                
-    }    
+	$pXSet \leftarrow getPredicateSubjectSet(\cG, Y)$\\
+	\ForEach{Pair $pX$ in $pXSet$} {
+		$hSet \leftarrow getPredicateSet(\cG, X, Z)$\\
+		$absSupp[hpq]++$\\
+%        \uIf{If condition}{
+%            instruction
+%        }
+%        \uElseIf{ElseIf condition}{
+%            instruction
+%        }
+%        \uElse{
+%            instruction
+%        }
+	}
 }
-\caption{Nested ForEach loop with If/ElseIf/Else condition}
+\BlankLine
+Sort $hpq$ according to deacreasing order of $absSupp[hpq]$\\
+\Return $absSupp$\\
+\caption{Positive Rule Mining}
 \end{algorithm}
 \DecMargin{1.5em}
 
-\begin{algorithm}[H]
-\DontPrintSemicolon
-\SetAlgoLined
-\KwResult{Write here the result}
-\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{Write here the input}
-\Output{Write here the output}
-\BlankLine
- 
-\While{While condition}{
-    instructions\;
-    \eIf{condition}{
-        instructions1\;
-        instructions2\;
-    }{
-        instructions3\;
-    }
-}
- 
-\caption{While loop with If/Else condition}
-\end{algorithm}
+%\begin{algorithm}[H]
+%\DontPrintSemicolon
+%\SetAlgoLined
+%\KwResult{Write here the result}
+%\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+%\Input{Write here the input}
+%\Output{Write here the output}
+%\BlankLine
+% 
+%\While{While condition}{
+%    instructions\;
+%    \eIf{condition}{
+%        instructions1\;
+%        instructions2\;
+%    }{
+%        instructions3\;
+%    }
+%}
+% 
+%\caption{While loop with If/Else condition}
+%\end{algorithm}
 
 \subsection{Normal and Abnormal Set Mining}
 
 Pseudocode and explanation.
 
+\IncMargin{1.5em}
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{KG $\cG$, $h$, $p$, $q$}
+\Output{Normal and abnormal sets of the rule \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
+\BlankLine
+$NS \leftarrow \{\}$\\
+$ABS \leftarrow \{\}$\\
+$YZSet \leftarrow getSubjectObjectSet(\cG, q)$\\
+\BlankLine
+\ForEach{Pair $YZ$ in $YZSet$} {
+    \BlankLine
+	$XSet \leftarrow getSubjectSet(\cG, p, Y)$\\
+	\ForEach{$X$ in $XSet$} {
+	\uIf{$XhZ$ is in $\cG$} {
+		Add $XZ$ to $NS$\\
+	}
+	\uElse {
+		Add $XZ$ to $ABS$\\
+	}
+%        \uElse{
+%            instruction
+%        }
+	}
+}
+\BlankLine
+\Return $NS$ and $ABS$\\
+\caption{Normal and Abnormal Set Mining}
+\end{algorithm}
+\DecMargin{1.5em}
+
 \subsection{Exception Witness Set Mining}
 
 Pseudocode and explanation.
+
+\IncMargin{1.5em}
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{KG $\cG$, $h$, $p$, $q$}
+\Output{Exception witness Set of the rule \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
+\BlankLine
+$NS \leftarrow getNormalSet(\cG, h, p, q)$\\
+$ABS \leftarrow getAbnormalSet(\cG, h, p, q)$\\
+$EWS+ \leftarrow \{\}$
+$EWS- \leftarrow \{\}$
+\BlankLine
+\ForEach{Pair $XZ$ in $ABS$} {
+	$pSet \leftarrow getPredicateSet(\cG, X, Z)$\\
+	$EWS+$ $\leftarrow$ $EWS+$ $\cup$ $pSet$\\
+}
+\ForEach{Pair $XZ$ in $NS$} {
+	$pSet \leftarrow getPredicateSet(\cG, X, Z)$\\
+	$EWS-$ $\leftarrow$ $EWS-$ $\cup$ $pSet$\\
+}
+$EWS$ $\leftarrow$ $EWS+$ $\setminus$ $EWS-$\\
+\Return $EWS$\\
+\caption{Exception Witness Set Mining}
+\end{algorithm}
+\DecMargin{1.5em}
 
 \subsection{Measure Plugin}
 
@@ -115,16 +167,39 @@ Should use at least one designed picture.
 \label{pm_ranking}
 \end{figure}
 
-\section{Optimisation}
+\textbf{OPM Ranking.} Describe...
 
-I will talk about speeding up PM ranking in this section.
+\IncMargin{1.5em}
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{KG $\cG$, Set of positive rules $\cR_{H}$}
+\Output{Set of best revisions $R_{NM}$ for the given positive rules}
+\BlankLine
+$\cG' \leftarrow \cG$\\
+$R_{NM} \leftarrow \{\}$\\
+\BlankLine
+\ForEach{Rule $r$ in $R_H$} {
+	Rank exceptions of $r$ based on $\cG'$, choose $r'$ as the best revision of $r$\\
+	Add $r'$ to $R_{NM}$\\
+	Predict new facts by applying all revisions of $r$ to $\cG$ then index these facts to $\cG'$\\
+}
+\Return $R_{NM}$\\
+\caption{OPM Ranking}
+\end{algorithm}
+\DecMargin{1.5em}
+
+%\section{Optimisation}
+%
+%I will talk about speeding up PM ranking in this section.
 
 \section{Usage}
 
-\section{Discussion}
-\label{system:discuss}
-
-I will add RI lab part here.
+%\section{Discussion}
+%\label{system:discuss}
+%
+%I will add RI lab part here.
 
 %\subsection{INTRODUCTION}
 %This report proposes a predicate abstraction algorithm for an RDF\footnote{\url{https://en.wikipedia.org/wiki/Resource_Description_Framework}} graph. More specifically, given an RDF file containing a set of subject-predicate-object triples \textit{<SPO>}, the algorithm focuses on \textbf{selecting types} for objects $O$ and uses these types for \textbf{abstracting} binary facts to unary ones.
