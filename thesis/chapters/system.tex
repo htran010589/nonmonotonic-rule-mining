@@ -1,19 +1,35 @@
 \chapter{RUMIS - Nonmonotonic Rule Mining System}\label{chap:system}
 
-RUMIS stands for Nonmonotonic Rule Mining System which is the main tool developed from the current work. In this chapter, our system are described in details with the following organization. Firstly, an overview of the system is mentioned. Secondly, the main method with a novel concept of Partial Materialization is discussed. Finally, we talk about the implementation of components in the system.
+RUMIS stands for Nonmonotonic Rule Mining System which is the main tool developed from the current work. In this chapter, our system describes practical implementation for the current work in details with the following organization. First, an overview of the system is discussed. Second, the implementation of main components in the system are presented. Finally, we talk about installation and usage this system.
 
 \section{System Overview}
+\label{sec:overview}
 
-There are five components in the system as indicated in Figure~\ref{system_overview}. The RUMIS receipts an input as a set of mined positive Horn rules and a knowledge graph. The corresponding output is a set of nonmonotonic rules derived from given Horn rules by adding negated atoms. The five components are described in details in the rest of this chapter.
+There are six components in the system as indicated in Figure~\ref{system_overview}. RUMIS finds the nonmonotonic rules in the following steps:
+
+\begin{itemize}
+\item In pipeline 1, a KG $\cG$ as an input is passed to the system. First, $\cG$ is stored and indexed to the database by Component 1.
+\item In pipeline 2, Horn rules of the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} are mined by Component 2 using Database Indexing.
+\item In pipeline 3, normal and abnormal sets are found by Component 3.
+\item In pipeline 4, exception witness sets are found based on normal and abnormal sets in the previous step.
+\item In pipelines 5 and 6, exception candidates are ranked in Component 6 using a measure plugged by Component 5. RUMIS allocates a separate component for measure plugin to flexibly extend ranking criteria in the future.
+\item In pipeline 7, after being ranked, the best revision for each Horn rule is added to the output of RUMIS.
+\end{itemize}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.75\textwidth]{figures/system_overview}
-\caption{Components of the RUMIS}
+\includegraphics[width=0.85\textwidth]{figures/system_overview}
+\caption{Components of RUMIS}
 \label{system_overview}
 \end{figure}
 
 \section{Implementation}
+
+In this section, the main components mentioned in Section~\ref{sec:overview} are described in details. To simplify the problem of \textit{language bias}, the implementation of RUMIS only take the following positive rule form into consideration:
+
+\begin{center}
+$r2: h(X, Z) \leftarrow p(X, Y), q(Y, Z)$
+\end{center}
 
 \subsection{Data Indexing}
 
@@ -21,12 +37,30 @@ There are five components in the system as indicated in Figure~\ref{system_overv
 \centering
 \includegraphics[width=1.0\textwidth]{figures/data_indexing}
 \caption{RUMIS Data Indexer}
-\label{system_overview}
+\label{data_indexing}
 \end{figure}
+
+Since the KG $\cG$ can be huge, it takes a long time to find instance and exception witness sets of a positive rule. To overcome this, data indexing is taken into consideration to speed up processing data. [may talk more about intuition of indexing in traditional search engine]. Figure~\ref{data_indexing} illustrates data indexed from part of KG in Figure~\ref{fig1.1}. In Figure~\ref{data_indexing}, based on the index, if predicate \textit{isMarriedTo} is given, we can find set of subject-object pairs corresponding to this relation, i.e., \textit{<Brad, Ann>} and \textit{<John, Kate>}. [can extend more with examples in the figure].
+
+Data Indexing provides the following functions that are exploited in the rest components:
+
+\begin{itemize}
+\item \textit{getPredicateSubjectSet($\cG$, object):} This function is to return a set of predicate-subject pairs corresponding to a given \textit{object} in KG $\cG$.
+\item \textit{getPredicateSet($\cG$, subject, object):} This function is to return a set of predicates corresponding to given \textit{subject, object} entiries in KG $\cG$.
+\item \textit{getSubjectSet($\cG$, predicate, object):} This function is to return a set of subjects corresponding to given \textit{predicate, object} in KG $\cG$.
+\item \textit{getSubjectObjectSet($\cG$, predicate):} This function is to return a set of subject-object pairs corresponding to given \textit{predicate} in KG $\cG$.
+\end{itemize}
 
 \subsection{Positive Rule Mining}
 
-Pseudocode and explanation.
+Positive Rule Mining is to find Horn rules with the largest \textit{absolute support}. The way how this works is illustrated in Algorithm~\ref{algo1} with the following steps:
+
+\begin{itemize}
+\item First, in line 1, \textit{absSupp} is created with the aim to store absolute support of positive rules. More specifically, $absSupp[hpq]$ is the absolute support of rule \textit{r2}.
+\item Second, in line 2 and 3, for each triple \textit{$<$Y q Z$>$} from KG $\cG$, a set of pairs \textit{X, p} are found such that \textit{X p Y} is in $\cG$. Command in line 3 is executed using \textit{getPredicateSubjectSet} function in Data Indexing component.
+\item Third, from line 5 to 6, with \textit{X, Z} found in the previous step, RUMIS searchs for every relation $h$ such that \textit{$<$X h Z$>$} is in $\cG$. At this point, it is guaranteed that \textit{h(X, Z), p(X, Y), q(Y, Z)}. After that, in line 7, absolute support of the rule \textit{r2} is increased by $1$.
+\item Finally, all rules are sorted in decreasing order of absolute support.
+\end{itemize}
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -43,22 +77,16 @@ $absSupp \leftarrow \{\}$\\
 	$pXSet \leftarrow getPredicateSubjectSet(\cG, Y)$\\
 	\ForEach{Pair $pX$ in $pXSet$} {
 		$hSet \leftarrow getPredicateSet(\cG, X, Z)$\\
-		$absSupp[hpq]++$\\
-%        \uIf{If condition}{
-%            instruction
-%        }
-%        \uElseIf{ElseIf condition}{
-%            instruction
-%        }
-%        \uElse{
-%            instruction
-%        }
+		\ForEach{Predicate $h$ in $hSet$} {
+			$absSupp[hpq]++$\\
+		}
 	}
 }
 \BlankLine
 Sort $hpq$ according to deacreasing order of $absSupp[hpq]$\\
 \Return $absSupp$\\
 \caption{Positive Rule Mining}
+\label{algo1}
 \end{algorithm}
 \DecMargin{1.5em}
 
@@ -85,8 +113,6 @@ Sort $hpq$ according to deacreasing order of $absSupp[hpq]$\\
 %\end{algorithm}
 
 \subsection{Normal and Abnormal Set Mining}
-
-Pseudocode and explanation.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -118,12 +144,19 @@ $YZSet \leftarrow getSubjectObjectSet(\cG, q)$\\
 \BlankLine
 \Return $NS$ and $ABS$\\
 \caption{Normal and Abnormal Set Mining}
+\label{algo2}
 \end{algorithm}
 \DecMargin{1.5em}
 
-\subsection{Exception Witness Set Mining}
+This component is to find normal and abnormal sets of rule \textit{r2} with the following steps:
 
-Pseudocode and explanation.
+\begin{itemize}
+\item First, from line 1 to 2, normal and abnormal sets are created.
+\item Second, from line 3 to 5, for each pair \textit{Y, Z} such that \textit{$<$Y q Z$>$} is in $\cG$, a set of $X$ such that \textit{$<$X p Y$>$} is in $\cG$ are found based on Data Indexing component. At this point, it is guaranteed that \textit{X, Y, Z}  fulfills the body of \textit{r2}.
+\item Finally, for every $X$ mentioned in the previous step, \textit{$<$X h Z$>$} is verified to be in the the KG or not. If it is in $\cG$, \textit{$<$X Z$>$} is added to normal set, otherwise it is added to abnormal set.
+\end{itemize}
+
+\subsection{Exception Witness Set Mining}
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -135,8 +168,8 @@ Pseudocode and explanation.
 \BlankLine
 $NS \leftarrow getNormalSet(\cG, h, p, q)$\\
 $ABS \leftarrow getAbnormalSet(\cG, h, p, q)$\\
-$EWS+ \leftarrow \{\}$
-$EWS- \leftarrow \{\}$
+$EWS+ \leftarrow \{\}$\\
+$EWS- \leftarrow \{\}$\\
 \BlankLine
 \ForEach{Pair $XZ$ in $ABS$} {
 	$pSet \leftarrow getPredicateSet(\cG, X, Z)$\\
@@ -149,16 +182,25 @@ $EWS- \leftarrow \{\}$
 $EWS$ $\leftarrow$ $EWS+$ $\setminus$ $EWS-$\\
 \Return $EWS$\\
 \caption{Exception Witness Set Mining}
+\label{algo3}
 \end{algorithm}
 \DecMargin{1.5em}
 
+This component is to find EWS for each positive rule with the form \textit{r2}. Algorithm~\ref{algo3} presents the way how this component is processed with binary predicate exceptions [specify more]. Unary exceptions can be mined in the similar way with binary ones. There are several steps in EWS mining as follows.
+
+\begin{itemize}
+\item First, normal and abnormal instance sets are found from Algorithm~\ref{algo2} in line 1 and 2. In addition, from line 3 to 4, $EWS+$ and $EWS-$ (i.e., set of relations between \textit{$<$X Z$>$} in the abnormal and normal sets, resp.) are created.
+\item Second, From line 5 to 8, for every pair \textit{$<$X Z$>$} in the abnormal set, all relations between them are added to the $EWS+$. Similar stage for $EWS-$ from line 9 to 12.
+\item Finally, exception witness set $EWS$ is calculated as the difference between $EWS+$ and $EWS-$.
+\end{itemize}
+
 \subsection{Measure Plugin}
 
-Just description text.
+[ToDo: describe this part]
 
 \subsection{Exception Ranking}
 
-Should use at least one designed picture.
+[ToDo: Describe in genaral PM and OPM ranking]
 
 \begin{figure}[ht]
 \centering
@@ -167,7 +209,7 @@ Should use at least one designed picture.
 \label{pm_ranking}
 \end{figure}
 
-\textbf{OPM Ranking.} Describe...
+\textbf{PM Ranking.} [ToDo: Describe PM ranking]
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -179,6 +221,35 @@ Should use at least one designed picture.
 \BlankLine
 $\cG' \leftarrow \cG$\\
 $R_{NM} \leftarrow \{\}$\\
+\BlankLine
+\ForEach{Rule $r$ in $R_H$} {
+	Predict new facts by applying all revisions of $r$ to $\cG$ then index these facts to $\cG'$\\
+}
+\BlankLine
+\ForEach{Rule $r$ in $R_H$} {
+	Predict new facts by applying all revisions of $r$ to $\cG$ then remove these facts' indexes from $\cG'$\\
+	Rank exceptions of $r$ based on $\cG'$, choose $r'$ as the best revision of $r$\\
+	Add $r'$ to $R_{NM}$\\
+	Predict new facts by applying all revisions of $r$ to $\cG$ then index these facts to $\cG'$\\
+}
+\Return $R_{NM}$\\
+\caption{PM Ranking}
+\end{algorithm}
+\DecMargin{1.5em}
+
+\textbf{OPM Ranking.} [ToDo: Describe OPM ranking]
+
+\IncMargin{1.5em}
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{KG $\cG$, Set of positive rules $\cR_{H}$}
+\Output{Set of best revisions $R_{NM}$ for the given positive rules}
+\BlankLine
+$\cG' \leftarrow \cG$\\
+$R_{NM} \leftarrow \{\}$\\
+Sort all rules in $R_H$ according to the decreasing order of conviction\\
 \BlankLine
 \ForEach{Rule $r$ in $R_H$} {
 	Rank exceptions of $r$ based on $\cG'$, choose $r'$ as the best revision of $r$\\
@@ -195,6 +266,8 @@ $R_{NM} \leftarrow \{\}$\\
 %I will talk about speeding up PM ranking in this section.
 
 \section{Usage}
+
+[ToDo: Describe installation and usage]
 
 %\section{Discussion}
 %\label{system:discuss}

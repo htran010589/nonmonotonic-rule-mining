@@ -12,7 +12,7 @@ The World Wide Web Consortium (W3C) defines the Semantic Web and the Resource De
 \begin{figure}
 \centering
 \includegraphics[width=0.65\textwidth]{figures/semantic_web.png}
-\caption{The Semantic Web technologies}
+\caption{The Semantic Web Technologies}
 \label{fig1}
 \end{figure}
 
@@ -53,7 +53,7 @@ IMDB & 117,551 & 134,639 & 17,049 & 39 \\
 \hline
 \end{tabular}
 \end{center}
-\caption{List of typical knowledge graphs}
+\caption{List of Typical Knowledge Graphs}
 \label{table1}
 \end{table}
 
@@ -63,13 +63,13 @@ Relational Learning is a research field that focuses on ``representing, reasonin
 
 RESCAL is one of principal algorithms in this direction where relations of all hidden feature pairs are taken into consideration~\cite{ref2, ref3} to measure likelihood of true facts. This method is extended to classical tensor decomposition algorithm~\cite{ref4} and neural tensor network~\cite{ref5}.
 
-While many tensor factorization methods use subject, predicate and object as three dimensions to model a knowledge graph as a cube, some algorithms transform this cube into two dimensional data in a preprocessing step. For instance, in~\cite{ref6, ref7} subject and object in every triple are merged into a single element representing a pair of entities. A similar preprocessing step which we call data flattening is discussed in Section~\ref{system:discuss} in more details.
+While many tensor factorization methods use subject, predicate and object as three dimensions to model a KG as a cube, some algorithms transform this cube into two dimensional data in a preprocessing step. For instance, in~\cite{ref6, ref7} subject and object in every triple are merged into a single element representing a pair of entities. A similar preprocessing step which we call data flattening is discussed in Section~\ref{system:discuss} in more details.
 
 Distance-based models use the intuition that entities have high chance to be related to each other if their hidden representation features are close to each other. The closeness can be checked based on some predefined distance measures. This approach is expanded to structure embedding models in~\cite{ref8}.
 
 \section{Logic-based Approaches for Relational Learning}
 
-The logic-based approaches aim at finding observable patterns in order to infer new links in the knowledge graph~\cite{ref1}. Since the patterns can be directly seen in the data, these algorithms are more interpretable than the ones based on statistical approaches. For instance, a pattern extracted from the graph in Figure~\ref{fig1.1} can be represented as rule $r1$ in Section~\ref{chap:motivation}. This rule reflects a triangular pattern in the KG, and since the rules are extracted from the graph, it should be vice versa, that is, predicates correspond to the labels. Since this pattern is frequently observed, it can be extracted to predict new links in the KG. For instance, if we apply the rule $r1$ to a KG in Figure~\ref{fig1.1}, we can deduce the facts \textit{livesIn(Lucy, Amsterdam)} and \textit{livesIn(Dave, Chicago)}.
+The logic-based approaches aim at finding observable patterns in order to infer new links in the KG~\cite{ref1}. Since the patterns can be directly seen in the data, these algorithms are more interpretable than the ones based on statistical approaches. For instance, a pattern extracted from the graph in Figure~\ref{fig1.1} can be represented as rule $r1$ in Section~\ref{chap:motivation}. This rule reflects a triangular pattern in the KG, and since the rules are extracted from the graph, it should be vice versa, that is, predicates correspond to the labels. Since this pattern is frequently observed, it can be extracted to predict new links in the KG. For instance, if we apply the rule $r1$ to a KG in Figure~\ref{fig1.1}, we can deduce the facts \textit{livesIn(Lucy, Amsterdam)} and \textit{livesIn(Dave, Chicago)}.
 
 In the rest of this section, we review some of the most prominent logic-based relational learning systems in details and illustrate them with typical tools.
 
@@ -152,7 +152,7 @@ s10 & 0 & 1 & 0 & 1\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Transaction table as flattened knowledge graph data.}
+\caption{Transaction Table as Flattened Knowledge Graph Data.}
 \label{table2}
 \end{table}
 
@@ -166,4 +166,4 @@ Wikipedia pages can be used to identify relations between entities~\cite{ref18}.
 
 In~\cite{ref20} the authors refine KGs by exploiting the assumption that entities appearing in the same table should have the same relations. Similarly, ~\cite{ref21} and ~\cite{ref22} exploit page lists and HTML tables, respectively.
 
-Instead of documents, interlinks between the same entities in different KGs can be used to add new facts~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted into YAGO if they also appear in the latter knowledge graph. In~\cite{ref25} this approach has been extended to a probabilistic setting, where for every deduced relation a corresponding probabilistic weight is computed.
+Instead of documents, interlinks between the same entities in different KGs can be used to add new facts~\cite{ref23, ref24}. More specifically, relations of two entities in FreeBase can be inserted into YAGO if they also appear in the latter KG. In~\cite{ref25} this approach has been extended to a probabilistic setting, where for every deduced relation a corresponding probabilistic weight is computed.
