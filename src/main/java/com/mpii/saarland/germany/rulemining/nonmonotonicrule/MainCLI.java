@@ -18,9 +18,13 @@ import com.mpii.saarland.germany.utils.TextFileReader;
 public class MainCLI {
 
 	public static void main(String[] args) throws ParseException {
-//		String arg = " -e=pos -t=data/experiment/IMDB/training.data.txt ";
+//		String arg = " -e=pos -l=data/experiment/IMDB/training.data.txt ";
 //		String arg = " -e=neg -p=data/experiment/IMDB/patterns.txt -t=data/experiment/IMDB/training.data.txt -r=0";
 //		String arg = " -e=exp -f=data/experiment/IMDB -r=0";
+
+		for (int i = 0; i < args.length; ++i) {
+			System.out.println("i = '" + args[i] + "'");
+		}
 
 		Option helpOption = Option.builder("h").longOpt("help").required(false)
 				.desc("command line interface description.").build();
