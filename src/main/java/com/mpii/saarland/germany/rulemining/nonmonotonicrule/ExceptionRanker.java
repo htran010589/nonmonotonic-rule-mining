@@ -278,22 +278,4 @@ public class ExceptionRanker {
 		return choosenNegativeRules;
 	}
 
-	public static void main(String[] args) {
-		if (args.length == 0) {
-			args = new String[3];
-			args[0] = "data/experiment/IMDB/patterns.txt";
-			args[1] = "data/experiment/IMDB/training.data.txt";
-			args[2] = "0";
-		}
-		String patternFileName = args[0];
-		FactIndexer facts = new FactIndexer(args[1]);
-		int type = Integer.parseInt(args[2]);
-		int topRuleCount = TextFileReader.readLines(patternFileName).size();
-		if (args.length == 4) {
-			topRuleCount = Integer.parseInt(args[3]);
-		}
-		ExceptionRanker ranker = new ExceptionRanker(patternFileName, null, facts, topRuleCount);
-		ranker.rankRulesWithExceptions(RankingType.values()[type]);
-	}
-
 }

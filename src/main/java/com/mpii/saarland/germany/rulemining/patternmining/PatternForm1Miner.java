@@ -17,7 +17,7 @@ public class PatternForm1Miner {
 	/**
 	 * If type = 0, we mine patterns based on #(X, Z), otherwise #(X, Y, Z).
 	 */
-	static void minePatterns(String factFileName, int type) {
+	public static void minePatterns(String factFileName) {
 		FactIndexer facts = new FactIndexer(factFileName);
 		Map<String, Long> pattern2Long = new HashMap<>();
 		Map<String, Set<String>> pattern2Pair = new HashMap<>();
@@ -42,11 +42,7 @@ public class PatternForm1Miner {
 					if (h.equals(p) && p.equals(q)) {
 						continue;
 					}
-					if (type == 0) {
-						Utils.updateKeyString(pattern2Pair, h + "\t" + p + "\t" + q, x + "\t" + z, true);
-					} else {
-						Utils.addKeyLong(pattern2Long, h + "\t" + p + "\t" + q, 1);
-					}
+					Utils.addKeyLong(pattern2Long, h + "\t" + p + "\t" + q, 1);
 				}
 			}
 			count++;
@@ -55,23 +51,10 @@ public class PatternForm1Miner {
 			}
 		}
 		System.out.println();
-		if (type == 0) {
-			for (String pattern : pattern2Pair.keySet()) {
-				pattern2Long.put(pattern, 1L * pattern2Pair.get(pattern).size());
-			}
-		}
 		List<String> topPatterns = Utils.getTopK(pattern2Long, pattern2Long.size());
 		for (String pattern : topPatterns) {
 			System.out.println(pattern);
 		}
-	}
-
-	public static void main(String[] args) throws Exception {
-		int type = 1;
-		if (args.length == 2) {
-			type = Integer.parseInt(args[1]);
-		}
-		minePatterns(args[0], type);
 	}
 
 }

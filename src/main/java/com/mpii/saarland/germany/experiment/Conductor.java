@@ -35,31 +35,31 @@ public class Conductor {
 
 	static final String[] RULE_TYPES = { ".pos.", ".neg." };
 
-	static int topRuleCount;
+	public static int topRuleCount;
 
-	static int withDlv;
+	public static int withDlv;
 
-	static String idealDataFileName;
+	public static String idealDataFileName;
 
-	static String encodeFileName;
+	public static String encodeFileName;
 
-	static String patternFileName;
+	public static String patternFileName;
 
-	static String selectedPatternFileName;
+	public static String selectedPatternFileName;
 
-	static String trainingDataFileName;
+	public static String trainingDataFileName;
 
-	static String trainingDataDlvFileName;
+	public static String trainingDataDlvFileName;
 
-	static String choosenRuleFileName;
+	public static String choosenRuleFileName;
 
-	static String extensionPrefixFileName;
+	public static String extensionPrefixFileName;
 
-	static String dlvBinaryFileName;
+	public static String dlvBinaryFileName;
 
 	public static Date time1, time2, time3, time4;
 
-	static FactIndexer idealFacts, learningFacts;
+	public static FactIndexer idealFacts, learningFacts;
 
 	static void evaluate() {
 		idealFacts = new FactIndexer(idealDataFileName);
@@ -311,45 +311,6 @@ public class Conductor {
 			evaluate();
 			Encoder.decodeDlvOutput();
 		}
-	}
-
-	public static void main(String[] args) {
-		File workingFolder = new File(args[0]);
-		if (!workingFolder.exists()) {
-			System.out.println("Working folder does not exist.");
-			return;
-		}
-		int type = 2;
-		try {
-			type = Integer.parseInt(args[1]);
-		} catch (NumberFormatException ex) {
-			System.out.println("Parameter 2 should be from 0 to 2.");
-			return;
-		}
-		if (type < 0 || type > 2) {
-			System.out.println("Parameter 2 should be from 0 to 2.");
-			return;
-		}
-		String workingPath = workingFolder.getAbsolutePath();
-		File dlvFolder = new File(workingPath + "/DLV");
-		if (!dlvFolder.exists()) {
-			dlvFolder.mkdir();
-		}
-		String dlvPath = dlvFolder.getAbsolutePath();
-		String typeName = RankingType.values()[type].toString().toLowerCase();
-		topRuleCount = Integer.parseInt(args[2]);
-		withDlv = Integer.parseInt(args[3]);
-
-		idealDataFileName = workingPath + "/ideal.data.txt";
-		encodeFileName = workingPath + "/encode.txt";
-		patternFileName = workingPath + "/patterns.txt";
-		selectedPatternFileName = workingPath + "/selected.patterns.txt";
-		trainingDataFileName = workingPath + "/training.data.txt";
-		trainingDataDlvFileName = dlvPath + "/training.data.kg";
-		choosenRuleFileName = dlvPath + "/choosen.rules." + typeName + ".txt";
-		dlvBinaryFileName = workingPath + "/dlv.bin";
-		extensionPrefixFileName = dlvPath + "/extension." + typeName + ".kg";
-		execute(RankingType.values()[type]);
 	}
 
 }
