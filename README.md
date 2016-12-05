@@ -45,9 +45,9 @@ Usage
 ### Pattern Mining
 
 ```
-cd nonmonotonic-rule-mining
-chmod a+x run-pattern-mining.sh
-./run-pattern-mining.sh [path to knowledge graph file]
+$ cd nonmonotonic-rule-mining
+$ chmod a+x run-pattern-mining.sh
+$ ./run.sh -e=pos -l=[path to knowledge graph file]
 ```
 
 Note that current system only supports patterns or positive rules with format 2.
@@ -57,23 +57,15 @@ Note that current system only supports patterns or positive rules with format 2.
 Please download the repository and run the following command for executing IMDB pattern mining:
 
 ```
-./run-pattern-mining.sh data/experiment/IMDB/ideal.data.txt
+$ ./run.sh -e=pos -l=data/experiment/IMDB/ideal.data.txt
 ```
 
 ### Rule Mining
 
 ```
-cd nonmonotonic-rule-mining
-chmod a+x run-rule-mining.sh
-./run-rule-mining.sh [path to pattern file] [path to knowledge graph file] [ranking option]
-```
-
-Or if you just concern top k patterns, the following commands can be used:
-
-```
-cd nonmonotonic-rule-mining
-chmod a+x run-rule-mining.sh
-./run-rule-mining.sh [path to pattern file] [path to knowledge graph file] [ranking option] [top k patterns]
+$ cd nonmonotonic-rule-mining
+$ chmod a+x run-rule-mining.sh
+$ ./run.sh -e=neg -p=[path to pattern file] -l=[path to knowledge graph file] -r=[ranking option]
 ```
 
 #### Example:
@@ -81,29 +73,23 @@ chmod a+x run-rule-mining.sh
 Please download the repository and run the following command for executing IMDB rule mining with opm ranking:
 
 ```
-./run-rule-mining.sh data/experiment/IMDB/patterns.txt data/experiment/IMDB/training.data.txt 2
-```
-
-Or with opm ranking and top 10 patterns:
-
-```
-./run-rule-mining.sh data/experiment/IMDB/patterns.txt data/experiment/IMDB/training.data.txt 2 10
+$ ./run.sh -e=neg -p=data/experiment/IMDB/patterns.txt -l=data/experiment/IMDB/training.data.txt -r=2
 ```
 
 ### Experiment
 
 ```
-cd nonmonotonic-rule-mining folder
-chmod a+x run-experiment.sh
-./run-experiment.sh [path to working folder] [ranking option] [top k patterns] [dlv option]
+$ cd nonmonotonic-rule-mining folder
+$ chmod a+x run-experiment.sh
+$ ./run.sh -e=exp -f=[path to working folder] -r=[ranking option] -t=[top k patterns]
 ```
 
 #### Example:
 
-Please download the repository and run the following command for executing IMDB experiment with opm ranking, top 10 patterns and enable DLV option:
+Please download the repository and run the following command for executing IMDB experiment with opm ranking, top 10 patterns:
 
 ```
-./run-experiment.sh data/experiment/IMDB/ 2 10 1
+$ ./run.sh -e=exp -f=data/experiment/IMDB/ -r=2 -t=10
 ```
 
 References
