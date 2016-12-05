@@ -15,7 +15,7 @@ import com.mpii.saarland.germany.indexing.FactIndexer;
 import com.mpii.saarland.germany.rulemining.patternmining.PatternForm1Miner;
 import com.mpii.saarland.germany.utils.TextFileReader;
 
-public class MainCli {
+public class MainCLI {
 
 	public static void main(String[] args) throws ParseException {
 //		String arg = " -e=pos -t=data/experiment/IMDB/training.data.txt ";
