@@ -32,8 +32,8 @@ public class MainCLI {
 		Option posOption = Option.builder("p").longOpt("pos").numberOfArgs(1).required(false).type(String.class)
 				.desc("this requires a tab-seperated file for positive rules.").build();
 
-		Option trainOption = Option.builder("t").longOpt("train").numberOfArgs(1).required(false).type(String.class)
-				.desc("this requires a training graph file path in SPO format.").build();
+		Option trainOption = Option.builder("l").longOpt("learn").numberOfArgs(1).required(false).type(String.class)
+				.desc("this requires a learning graph file path in SPO format.").build();
 
 		Option idealOption = Option.builder("f").longOpt("folder").numberOfArgs(1).required(false).type(String.class)
 				.desc("this requires an experiment folder.").build();
@@ -47,8 +47,8 @@ public class MainCLI {
 		Option dlvOption = Option.builder("d").longOpt("dlv").required(false)
 				.desc("this flag is to enable DLV in order to extend knowledge graph.").build();
 
-		Option topOption = Option.builder("h").longOpt("high").numberOfArgs(1).required(false).type(Number.class)
-				.desc("this requires number of top positive rules with high absolute support.").build();
+		Option topOption = Option.builder("t").longOpt("top").numberOfArgs(1).required(false).type(Number.class)
+				.desc("this requires number of positive rules with top absolute support.").build();
 
 		Options options = new Options();
 		options.addOption(helpOption);
@@ -76,18 +76,18 @@ public class MainCLI {
 		}
 		String execution = commandLine.getOptionValue("exe");
 		if (execution.equals("pos")) {
-			String trainFileName = commandLine.getOptionValue("train");
+			String trainFileName = commandLine.getOptionValue("learn");
 			PatternForm1Miner.minePatterns(trainFileName);
 			return;
 		}
 		if (execution.equals("neg")) {
 			String patternFileName = commandLine.getOptionValue("pos");
-			String trainFileName = commandLine.getOptionValue("train");
+			String trainFileName = commandLine.getOptionValue("learn");
 			int rank = Integer.parseInt(commandLine.getOptionValue("rank"));
 			FactIndexer facts = new FactIndexer(trainFileName);
 			int topRuleCount = TextFileReader.readLines(patternFileName).size();
-			if (commandLine.hasOption("high")) {
-				topRuleCount = Integer.parseInt(commandLine.getOptionValue("high"));
+			if (commandLine.hasOption("top")) {
+				topRuleCount = Integer.parseInt(commandLine.getOptionValue("top"));
 			}
 			ExceptionRanker ranker = new ExceptionRanker(patternFileName, null, facts, topRuleCount);
 			ranker.rankRulesWithExceptions(RankingType.values()[rank]);
@@ -129,8 +129,8 @@ public class MainCLI {
 			Conductor.extensionPrefixFileName = dlvPath + "/extension." + rankName + ".kg";
 
 			Conductor.topRuleCount = TextFileReader.readLines(Conductor.patternFileName).size();
-			if (commandLine.hasOption("high")) {
-				Conductor.topRuleCount = Integer.parseInt(commandLine.getOptionValue("high"));
+			if (commandLine.hasOption("top")) {
+				Conductor.topRuleCount = Integer.parseInt(commandLine.getOptionValue("top"));
 			}
 			Conductor.withDlv = 0;
 			if (commandLine.hasOption("dlv")) {
