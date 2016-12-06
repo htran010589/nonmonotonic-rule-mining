@@ -5,91 +5,87 @@ RUMIS - Nonmonotonic Rule Mining System
 Tool Description
 ------------
 
-RUMIS is a system for mining nonmonotonic rules from a knowledge graph (KG) under the Open World Assumption (OWA). It exploits association rule learning techniques. It first extracts frequent conjunctive queries from a KG and then casts them into rules based on conviction measure. The rules are revised by incorporating exceptions in the form of negated atoms into the rule bodies to improve their predictive quality. For example, based on given facts and a positive rule livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z); the tool may find out that the rule is not true if X is a researcher. As a result, livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z), not Researcher(X) can be mined in the final result.
+RUMIS is a system for mining nonmonotonic rules from a knowledge graph (KG) under the Open World Assumption (OWA). It exploits association rule learning techniques. It first extracts frequent conjunctive queries from a KG and then casts them into rules based on conviction measure. The rules are revised by incorporating exceptions in the form of negated atoms into the rule bodies to improve their predictive quality. For example, based on given facts and a positive rule livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z); the tool may find out that the rule is not true if X is a researcher. As a result, livesIn(X, Z) :- isMarriedTo(X, Y), livesIn(Y, Z), not Researcher(X) can be mined in the final result. Researcher(X) in this case is an exception for the Horn rule.
 
-### Knowledge Graph File
+### Knowledge Graph Format
 
-The knowlege graph file is in RDF format (format 1). This file also contains unary fact with predicate being "type". You can see this format in data/experiment/IMDB/ideal.data.txt or data/experiment/IMDB/training.data.txt of the repository.
+The knowlege graph is presented in a tab seperated file containing triples in the format <subject predicate object> (format 1). You can see this format in data/experiment/IMDB/ideal.data.txt or data/experiment/IMDB/training.data.txt of the repository.
 
-### Pattern File
+### Horn Rule Format
 
-The pattern file contains positive rule on each line. The positive rule is in a format: h\tabp\tabq (format 2), that means h(X, Z) :- p(X, Y), q(Y, Z). This is the only form that the system currently supports. You can see this format in data/experiment/IMDB/patterns.txt of the repository.
+Each line in this file represents a positive rule of the form
+h(X, Z) :- p(X, Y), q(Y, Z) and its absolute support s (format 2), i.e., the number of substitutions X/c, Y/d, Z/e that
+satisfy the above rule. Rules are sorted in the decreasing order based on their absolute support. You can see this format in data/experiment/IMDB/patterns.txt of the repository.
 
-### Ranking Option
+### Exception Ranking
 
-As regards the ranking option, it can be 0, 1, 2 which stands for naive, pm and opm ranking, respectively. For the definition of naive, pm and opm ranking, please refer to our paper in [1].
+Exceptions for each positive Horn rule are ranked based on a particular ranking criteria. There are three kinds of ranking: Naive, PM and OPM. For the their definitions, please refer to our paper in [1].
 
-### DLV Option
+### Command Line Options
 
-With the DLV option, it can be 0, 1 which stands for without and with DLV, respectively. More specifically, option 1 means DLV is enabled and chosen rules are applied to the learning graph. This option is also mentioned in experiment section.
+Users can choose some of the following options to get a suitable mode for RUMIS:
+
+ -e,--exe <arg>      this requires a function for execution, i.e., pos and neg are corresponding to positve and nonmonotonic rule mining, resp.
+ -h,--help           command line interface description.
+ -l,--learn <arg>    this requires a learning graph file path in format 1.
+ -p,--pos <arg>      this requires an Horn rule file in format 2.
+ -r,--rank <arg>     this requires a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
+ -t,--top <arg>      this requires number of positive rules with top absolute support.
 
 Operating System and Required Softwares
 ------------
 
-This tool is developed and currently tested in Linux, we may extend it to Windows in the future. Besides, Apache Maven and DLV should be installed before running the system.
+This tool is developed and currently tested in Linux, we may extend it to Windows in the future. Besides, Apache Maven should be installed before running the system.
 
 Installation
 ------------
 
 ```
 Download Apache Maven from https://maven.apache.org and install.
-Create an experiment folder, copy ideal.data.txt (ideal knowledge graph file), patterns.txt (pattern file), training.data.txt (training graph file) to this folder.
-(Note that ideal and training knowledge graph file are in format 1 while pattern file is in format 2)
-Download DLV from http://www.dlvsystem.com, choose a version for Linux, rename it to dlv.bin and copy to the experiment folder.
-Download the repository of the system from https://github.com/htran010589/nonmonotonic-rule-mining/archive/master.zip, then uncompress it.
 ```
 
 Usage
 ------------
 
-### Pattern Mining
+Firat of all, please locate to the repository folder and set run.sh as executable file:
 
 ```
 $ cd nonmonotonic-rule-mining
 $ chmod a+x run-pattern-mining.sh
+```
+
+### Horn Rule Mining
+
+Please run the Horn rule mining with the following command:
+
+```
 $ ./run.sh -e=pos -l=[path to knowledge graph file]
 ```
 
-Note that current system only supports patterns or positive rules with format 2.
+Note that current system only supports positive rules with format 2.
 
 #### Example:
 
-Please download the repository and run the following command for executing IMDB pattern mining:
+Please download the repository and run the following command for executing IMDB Horn rule mining:
 
 ```
 $ ./run.sh -e=pos -l=data/experiment/IMDB/ideal.data.txt
 ```
 
-### Rule Mining
+### Nonmonotonic Rule Mining
+
+Please run the nonmonotonic rule mining with the following command:
 
 ```
-$ cd nonmonotonic-rule-mining
-$ chmod a+x run-rule-mining.sh
 $ ./run.sh -e=neg -p=[path to pattern file] -l=[path to knowledge graph file] -r=[ranking option]
 ```
 
 #### Example:
 
-Please download the repository and run the following command for executing IMDB rule mining with opm ranking:
+Please download the repository and run the following command for executing IMDB nonmonotonic rule mining with OPM ranking:
 
 ```
 $ ./run.sh -e=neg -p=data/experiment/IMDB/patterns.txt -l=data/experiment/IMDB/training.data.txt -r=2
-```
-
-### Experiment
-
-```
-$ cd nonmonotonic-rule-mining folder
-$ chmod a+x run-experiment.sh
-$ ./run.sh -e=exp -f=[path to working folder] -r=[ranking option] -t=[top k patterns]
-```
-
-#### Example:
-
-Please download the repository and run the following command for executing IMDB experiment with opm ranking, top 10 patterns:
-
-```
-$ ./run.sh -e=exp -f=data/experiment/IMDB/ -r=2 -t=10
 ```
 
 References
