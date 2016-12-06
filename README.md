@@ -26,10 +26,15 @@ Exceptions for each positive Horn rule are ranked based on a particular ranking 
 Users can choose some of the following options to get a suitable mode for RUMIS:
 
  -e,--exe <arg>      this requires a function for execution, i.e., pos and neg are corresponding to positve and nonmonotonic rule mining, resp.
+
  -h,--help           command line interface description.
+
  -l,--learn <arg>    this requires a learning graph file path in format 1.
+
  -p,--pos <arg>      this requires an Horn rule file in format 2.
+
  -r,--rank <arg>     this requires a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
+
  -t,--top <arg>      this requires number of positive rules with top absolute support.
 
 Operating System and Required Softwares
@@ -41,7 +46,7 @@ Installation
 ------------
 
 ```
-Download Apache Maven from https://maven.apache.org and install.
+Download Apache Maven 2.2.1 from https://maven.apache.org and install.
 ```
 
 Usage
