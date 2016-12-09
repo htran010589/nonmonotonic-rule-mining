@@ -47,7 +47,7 @@ public class ExceptionRanker {
 		if (lines == null) return;
 		selectedPatterns = new HashSet<>();
 		for (String line : lines) {
-			String[] parts = line.split("\t");
+			String[] parts = line.split("(\\(X, Z\\) :- )|(\\(X, Y\\), )|(\\(Y, Z\\)\t)");
 			selectedPatterns.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
 		}
 	}

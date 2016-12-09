@@ -53,7 +53,9 @@ public class PatternForm1Miner {
 		System.out.println();
 		List<String> topPatterns = Utils.getTopK(pattern2Long, pattern2Long.size());
 		for (String pattern : topPatterns) {
-			System.out.println(pattern);
+//			System.out.println(pattern);
+			String[] parts = pattern.split("\t");
+			System.out.println(parts[0] + "(X, Z) :- " + parts[1] + "(X, Y), " + parts[2] + "(Y, Z)\t" + parts[3]);
 		}
 	}
 

@@ -250,6 +250,7 @@ public class Conductor {
 	}
 
 	static void runDlv() {
+		System.out.println("Start DLV");
 		try {
 			for (String ruleType : RULE_TYPES) {
 				String ruleFileName = choosenRuleFileName + ruleType + topRuleCount;

@@ -8,9 +8,10 @@ These days witness the development of information extraction methods, which are 
 
 KGs are normally incomplete due to automatic construction. Hence, they should be processed under the Open World Assumption (OWA). The \textit{knowledge completion problem} (also known as \textit{link prediction}) plays an important role in improving the quality of KGs. To achieve this, rule learning approaches~\cite{ref39, ref10} are used to create rules which can infer new potentially missing facts. However, the existing methods only pay attention to positive rules, which do not take exceptions (negated atoms) into consideration and may therefore infer wrong facts. For instance, a rule:
 
-\begin{center}
-$r1: livesIn(Y,Z) \leftarrow isMarriedTo(X,Y), livesIn(X,Z)$
-\end{center}
+\begin{equation}
+r1: livesIn(Y,Z) \leftarrow isMarriedTo(X,Y), livesIn(X,Z)
+\end{equation}
+\label{rule1}
 
 can be discovered from the graph in Figure~\ref{fig1.1} and exploited to predict new facts $livesIn(Alice, Berlin), livesIn(Dave, Chicago)$ and $livesIn(Lucy, Amsterdam)$. It can be seen that the first two facts might be incorrect because $Alice$ and $Dave$ are researchers and the rule $r1$ might have researcher as an exception. Mining exceptions should be taken into account to improve the rule quality and subsequently the quality of facts it produces.
 

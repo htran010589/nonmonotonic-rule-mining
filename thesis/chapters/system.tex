@@ -1,19 +1,19 @@
 \chapter{RUMIS - Nonmonotonic Rule Mining System}\label{chap:system}
 
-RUMIS stands for Nonmonotonic Rule Mining System which is the main tool developed from the current work. In this chapter, our system describes practical implementation for the current work in details with the following organization. First, an overview of the system is discussed. Second, the implementation of main components in the system are presented. Finally, we talk about installation and usage this system.
+RUMIS stands for Nonmonotonic Rule Mining System which is the main tool developed in the current work. This chapter describes in details the practical implementation of theory framework presented in Chapter~\ref{chap:frame} and uses background definitions in Chapter~\ref{chap:back}. Organization of the chapter is as follows, first, an overview of the RUMIS is discussed. Second, the implementations of main components in the system are presented. Finally, we talk about installation and usage of the system.
 
 \section{System Overview}
 \label{sec:overview}
 
-There are six components in the system as indicated in Figure~\ref{system_overview}. RUMIS finds the nonmonotonic rules in the following steps:
+There are six components in RUMIS as presented in Figure~\ref{system_overview} with arrows indicating the data flow from input to output. RUMIS mines the nonmonotonic rules from the original graph in the following steps:
 
 \begin{itemize}
-\item In pipeline 1, a KG $\cG$ as an input is passed to the system. First, $\cG$ is stored and indexed to the database by Component 1.
-\item In pipeline 2, Horn rules of the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} are mined by Component 2 using Database Indexing.
-\item In pipeline 3, normal and abnormal sets are found by Component 3.
-\item In pipeline 4, exception witness sets are found based on normal and abnormal sets in the previous step.
-\item In pipelines 5 and 6, exception candidates are ranked in Component 6 using a measure plugged by Component 5. RUMIS allocates a separate component for measure plugin to flexibly extend ranking criteria in the future.
-\item In pipeline 7, after being ranked, the best revision for each Horn rule is added to the output of RUMIS.
+\item In (1), a KG $\cG$ as an input is passed to RUMIS. It is then stored and indexed into the system by Component 1~\ref{data_indexing} which is exploited to speed up computation in the next steps.
+\item In (2), Horn rules are mined by Component 2 from facts indexed into RUMIS.
+\item In (3), normal and abnormal sets are found by Component 3 based on KG $\cG$ and mined Horn rules in the previous step.
+\item With normal and abnormal sets known for each Horn rule, (4) represents for finding exception witness sets in Component 4.
+\item In (5) and (6), exception candidates are ranked in Component 6 using a measure plugged by Component 5. RUMIS allocates a separate component for measure plugin to flexibly extend ranking criteria in the future.
+\item In (7), after being ranked, the best revision for each Horn rule is added to the output of RUMIS.
 \end{itemize}
 
 \begin{figure}[ht]
@@ -25,13 +25,17 @@ There are six components in the system as indicated in Figure~\ref{system_overvi
 
 \section{Implementation}
 
-In this section, the main components mentioned in Section~\ref{sec:overview} are described in details. To simplify the problem of \textit{language bias}, the implementation of RUMIS only take the following positive rule form into consideration:
+In this section, the main components mentioned in Section~\ref{sec:overview} are described in details. To simplify the problem of \textit{language bias}, the implementation of RUMIS only takes the following positive rule form into consideration:
 
-\begin{center}
-$r2: h(X, Z) \leftarrow p(X, Y), q(Y, Z)$
-\end{center}
+\begin{equation}
+r2: h(X, Z) \leftarrow p(X, Y), q(Y, Z)
+\label{form2}
+\end{equation}
+
+Where $h$, $p$, $q$ are binary predicates from KG $\cG$, these notations and the form~\ref{form2} ($r2$) are used in the rest of this thesis.
 
 \subsection{Data Indexing}
+\label{data_indexing}
 
 \begin{figure}[ht]
 \centering
@@ -40,7 +44,9 @@ $r2: h(X, Z) \leftarrow p(X, Y), q(Y, Z)$
 \label{data_indexing}
 \end{figure}
 
-Since the KG $\cG$ can be huge, it takes a long time to find instance and exception witness sets of a positive rule. To overcome this, data indexing is taken into consideration to speed up processing data. [may talk more about intuition of indexing in traditional search engine]. Figure~\ref{data_indexing} illustrates data indexed from part of KG in Figure~\ref{fig1.1}. In Figure~\ref{data_indexing}, based on the index, if predicate \textit{isMarriedTo} is given, we can find set of subject-object pairs corresponding to this relation, i.e., \textit{<Brad, Ann>} and \textit{<John, Kate>}. [can extend more with examples in the figure].
+Since the KG $\cG$ can be huge, it takes a long time to find (ab)normal instances and exception witness sets of a positive rule. To overcome this, data indexing is taken into consideration to speed up processing data. In a traditional search engine, terms such as words, n-grams are indexed into the system and their corresponding posting lists are a collection of documents containing them. The same intuition can be applied to relational setting in the current work. Indeed, RUMIS treats every fact as a document and the terms can be subjects, predicates, objects or some combinations of them.
+
+To be specific, Figure~\ref{data_indexing} illustrates data indexed from part of KG in Figure~\ref{fig1.1}. In the figure, based on the index, if predicate \textit{isMarriedTo} is given, we can find set of subject-object pairs corresponding to this relation, i.e., \textit{$<$Brad, Ann$>$} and \textit{$<$John, Kate$>$}. [can extend more with examples in the figure].
 
 Data Indexing provides the following functions that are exploited in the rest components:
 
@@ -50,6 +56,8 @@ Data Indexing provides the following functions that are exploited in the rest co
 \item \textit{getSubjectSet($\cG$, predicate, object):} This function is to return a set of subjects corresponding to given \textit{predicate, object} in KG $\cG$.
 \item \textit{getSubjectObjectSet($\cG$, predicate):} This function is to return a set of subject-object pairs corresponding to given \textit{predicate} in KG $\cG$.
 \end{itemize}
+
+[Explain how to add and remove indexes in data indexing component.]
 
 \subsection{Positive Rule Mining}
 
@@ -89,28 +97,6 @@ Sort $hpq$ according to deacreasing order of $absSupp[hpq]$\\
 \label{algo1}
 \end{algorithm}
 \DecMargin{1.5em}
-
-%\begin{algorithm}[H]
-%\DontPrintSemicolon
-%\SetAlgoLined
-%\KwResult{Write here the result}
-%\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-%\Input{Write here the input}
-%\Output{Write here the output}
-%\BlankLine
-% 
-%\While{While condition}{
-%    instructions\;
-%    \eIf{condition}{
-%        instructions1\;
-%        instructions2\;
-%    }{
-%        instructions3\;
-%    }
-%}
-% 
-%\caption{While loop with If/Else condition}
-%\end{algorithm}
 
 \subsection{Normal and Abnormal Set Mining}
 
@@ -200,9 +186,14 @@ To be easy to plugin and test another quality measure, the measure plugin is des
 
 \subsection{Exception Ranking}
 
-[ToDo: Describe in genaral PM and OPM ranking]
+Figure~\ref{pm_ranking} shows the communication between different components in partial materialization ranking. The communications are expressed by arrows in the figure.
 
-Figure~\ref{pm_ranking} shows an intuition for PM and OPM ranking.
+\begin{itemize}
+\item Arrow 1 shows that from a KG and a set of Horn rules, EWS Mining is executed to find exception candidates for each Horn rule.
+\item Arrow 2 shows that some rules with exceptions are used to infer new facts from the original KG.
+\item Arrow 4[???] shows that original KG with new predicted facts are used to rank exceptions for each Horn rule. The combination of step 2 and 4 describe the interaction of different rules, that is also the intuition of partial materialization.
+\item Arrow 3[???] is a process that exceptions are ranked by Component 5, the best exception is chosen for the revision of a rule.
+\end{itemize}
 
 \begin{figure}[ht]
 \centering
@@ -211,7 +202,13 @@ Figure~\ref{pm_ranking} shows an intuition for PM and OPM ranking.
 \label{pm_ranking}
 \end{figure}
 
-\textbf{PM Ranking.} [ToDo: Describe PM ranking]
+\textbf{PM Ranking.} PM ranking is executed in the following steps:
+
+\begin{itemize}
+\item From line 1 to 2, we clone an original graph $\cG$ to $\cG'$ and create empty nonmonotonic rule set.
+\item From line 3 to 5, for every Horn rule $r$, all facts inferred from $r$ and not from all exception candidates of $r$[should be defined in the background], its revisions are applied to $\cG$ to predict new facts. These facts are then added to $\cG'$ using data indexing component.
+\item For each Horn rule $r$, indexes of facts predicted by apply this rule to $\cG$ are removed from $\cG'$ in line 7. This step is to make sure that predicted facts of all other rules ($r$ excluded) are exploited to determine quality of $r$ (line 8). Thanks to this, the interaction between nonmonotonic rules are taken into consideration for the ranking. After that, the best revision of $r$ is added to the final result in line 9. Line 10 shows a step that undoes what is done in line 7, i.e., predicted facts of rule $r$ based on $\cG$ is added to $\cG'$ again. This guarantees in the next iteration can be processed similarly with a new rule.
+\end{itemize}
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -239,7 +236,12 @@ $R_{NM} \leftarrow \{\}$\\
 \end{algorithm}
 \DecMargin{1.5em}
 
-\textbf{OPM Ranking.} [ToDo: Describe OPM ranking]
+\textbf{OPM Ranking.} The OPM is processed as follows:
+
+\begin{itemize}
+\item From line 1 to 2, the process is executed the same in PM ranking. In line 3, all Horn rules are sorted in decreasing order of conviction measure.
+\item From line 4 to 8, for each Horn rule $r$, all facts inferred from previous rules with all exceptions based on $\cG$ are added to $\cG'$ and used to assess quality of $r$. Similar to PM ranking, the best revision is chosen for the final result.
+\end{itemize}
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]

@@ -19,8 +19,10 @@ public class MainCLI {
 
 	public static void main(String[] args) throws ParseException {
 //		String arg = " -e=pos -l=data/experiment/IMDB/training.data.txt ";
-//		String arg = " -e=neg -p=data/experiment/IMDB/patterns.txt -t=data/experiment/IMDB/training.data.txt -r=0";
-//		String arg = " -e=exp -f=data/experiment/IMDB -r=0";
+//		String arg = " -e=neg -p=data/experiment/IMDB/horn-rules.txt -l=data/experiment/IMDB/training.data.txt -r=0";
+		String arg = " -e=exp -f=data/experiment/IMDB -r=0 -s -d";
+
+		args = arg.split(" ");
 
 		Option helpOption = Option.builder("h").longOpt("help").required(false)
 				.desc("command line interface description.").build();
@@ -120,8 +122,8 @@ public class MainCLI {
 
 			Conductor.idealDataFileName = workingPath + "/ideal.data.txt";
 			Conductor.encodeFileName = workingPath + "/encode.txt";
-			Conductor.patternFileName = workingPath + "/patterns.txt";
-			Conductor.selectedPatternFileName = workingPath + "/selected.patterns.txt";
+			Conductor.patternFileName = workingPath + "/horn-rules.txt";
+			Conductor.selectedPatternFileName = workingPath + "/selected.horn-rules.txt";
 			Conductor.trainingDataFileName = workingPath + "/training.data.txt";
 			Conductor.trainingDataDlvFileName = dlvPath + "/training.data.kg";
 			Conductor.choosenRuleFileName = dlvPath + "/chosen.rules." + rankName + ".txt";

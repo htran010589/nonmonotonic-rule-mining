@@ -31,7 +31,7 @@ public class InstanceSetForm1Miner extends InstanceSetMiner {
 		int count = 0;
 		List<String> lines = TextFileReader.readLines(fileName);
 		for (String line : lines) {
-			String[] parts = line.split("\t");
+			String[] parts = line.split("(\\(X, Z\\) :- )|(\\(X, Y\\), )|(\\(Y, Z\\)\t)");
 			count++;
 			if (count > topRuleCount) break;
 			positiveRules.add(new PositiveRule(parts[0] + "\t" + parts[1] + "\t" + parts[2], PositiveRuleType.FORM2));
