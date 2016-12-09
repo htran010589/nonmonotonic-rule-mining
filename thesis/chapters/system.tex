@@ -46,29 +46,18 @@ Where $h$, $p$, $q$ are binary predicates from KG $\cG$, these notations and the
 
 Since the KG $\cG$ can be huge, it takes a long time to find (ab)normal instances and exception witness sets of a positive rule. To overcome this, data indexing is taken into consideration to speed up processing data. In a traditional search engine, terms such as words, n-grams are indexed into the system and their corresponding posting lists are a collection of documents containing them. The same intuition can be applied to relational setting in the current work. Indeed, RUMIS treats every fact as a document and the terms can be subjects, predicates, objects or some combinations of them.
 
-To be specific, Figure~\ref{data_indexing} illustrates data indexed from part of KG in Figure~\ref{fig1.1}. In the figure, based on the index, if predicate \textit{isMarriedTo} is given, we can find set of subject-object pairs corresponding to this relation, i.e., \textit{$<$Brad, Ann$>$} and \textit{$<$John, Kate$>$}. [can extend more with examples in the figure].
-
-Data Indexing provides the following functions that are exploited in the rest components:
+To be specific, Figure~\ref{data_indexing} illustrates data indexed from part of KG in Figure~\ref{fig1.1}. In the figure, based on the index, if predicate \textit{isMarriedTo} is given, we can find set of subject-object pairs corresponding to this relation, i.e., \textit{$<$Brad, Ann$>$} and \textit{$<$John, Kate$>$}. Besides, objects can be found if we have at hand their corresponding subjects and relations. For example, we can get ``Berlin" as an answer to the question: ``Where does Ann live" based on data indexing illustrated in the Figure~\ref{data_indexing}. In this example, the term is the combination of subjects and predicates. More formally, Data Indexing provides the following functions that are exploited in the rest components:
 
 \begin{itemize}
-\item \textit{getPredicateSubjectSet($\cG$, object):} This function is to return a set of predicate-subject pairs corresponding to a given \textit{object} in KG $\cG$.
-\item \textit{getPredicateSet($\cG$, subject, object):} This function is to return a set of predicates corresponding to given \textit{subject, object} entiries in KG $\cG$.
-\item \textit{getSubjectSet($\cG$, predicate, object):} This function is to return a set of subjects corresponding to given \textit{predicate, object} in KG $\cG$.
-\item \textit{getSubjectObjectSet($\cG$, predicate):} This function is to return a set of subject-object pairs corresponding to given \textit{predicate} in KG $\cG$.
+\item \textit{getPredicateSubjectSet($\cG$, object):} This function returns a set of predicate-subject pairs corresponding to a given \textit{object} in KG $\cG$.
+\item \textit{getPredicateSet($\cG$, subject, object):} A set of predicates corresponding to input \textit{subject, object} entities are found in this function.
+\item \textit{getSubjectSet($\cG$, predicate, object):} A set of subjects are an output for given \textit{predicate, object} based on this function.
+\item \textit{getSubjectObjectSet($\cG$, predicate):} This function is to find a set of subject-object pairs if we have \textit{predicate} at hand as a parameter.
 \end{itemize}
-
-[Explain how to add and remove indexes in data indexing component.]
 
 \subsection{Positive Rule Mining}
 
-Positive Rule Mining is to find Horn rules with the largest \textit{absolute support}. The way how this works is illustrated in Algorithm~\ref{algo1} with the following steps:
-
-\begin{itemize}
-\item First, in line 1, \textit{absSupp} is created with the aim to store absolute support of positive rules. More specifically, $absSupp[hpq]$ is the absolute support of rule \textit{r2}.
-\item Second, in line 2 and 3, for each triple \textit{$<$Y q Z$>$} from KG $\cG$, a set of pairs \textit{X, p} are found such that \textit{X p Y} is in $\cG$. Command in line 3 is executed using \textit{getPredicateSubjectSet} function in Data Indexing component.
-\item Third, from line 5 to 6, with \textit{X, Z} found in the previous step, RUMIS searchs for every relation $h$ such that \textit{$<$X h Z$>$} is in $\cG$. At this point, it is guaranteed that \textit{h(X, Z), p(X, Y), q(Y, Z)}. After that, in line 7, absolute support of the rule \textit{r2} is increased by $1$.
-\item Finally, all rules are sorted in decreasing order of absolute support.
-\end{itemize}
+Positive Rule Mining finds Horn rule $r2$ in the form~\ref{form2} with high \textit{absolute support}. The way how this works is illustrated in Algorithm~\ref{algo1} with the following steps. First, in line 1, \textit{absSupp} is created with the aim to store absolute support of positive rules. More specifically, $absSupp[hpq]$ is the absolute support of rule \textit{r2}. Second, for each triple \textit{$<$Y q Z$>$} from KG $\cG$, a set of pairs \textit{X, p} are found such that \textit{X p Y} is in $\cG$ (line 2 and 3). Command in line 3 is executed using \textit{getPredicateSubjectSet} function in Data Indexing component. Third, from line 5 to 6, with \textit{X, Z} found in the previous step, RUMIS searches for every relation $h$ s.t. \textit{$<$X h Z$>$} is in $\cG$. At this point, it is guaranteed that \textit{h(X, Z), p(X, Y), q(Y, Z)} holds true. After that, in line 7, absolute support of the rule \textit{r2} is increased by $1$. Finally, all rules are sorted in decreasing order of absolute support.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -76,7 +65,7 @@ Positive Rule Mining is to find Horn rules with the largest \textit{absolute sup
 \SetAlgoLined
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
 \Input{KG $\cG$}
-\Output{Set of positive rules with the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
+\Output{Set of positive rules with the same form as $r2$}
 \BlankLine
 $absSupp \leftarrow \{\}$\\
 \BlankLine
