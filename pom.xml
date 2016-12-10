@@ -2,11 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mpii.saarland.germany</groupId>
-	<artifactId>nonmonotonic-rule-mining</artifactId>
+	<groupId>mpii.saarland.germany</groupId>
 	<packaging>jar</packaging>
 
-	<name>nonmonotonic-rule-mining</name>
+	<name>rumis</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -38,6 +37,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>rumis</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -47,7 +47,29 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>mpii.saarland.germany.rulemining.nonmonotonicrule.MainCLI</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<version>1.0</version>
+	<artifactId>rumis</artifactId>
 </project>

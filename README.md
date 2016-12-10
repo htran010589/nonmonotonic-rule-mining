@@ -29,9 +29,9 @@ Users can choose some of the following options to get a suitable mode for RUMIS:
 
  -h,--help: This is the command line interface description.
 
- -l,--learn <arg>: This requires a learning graph file path in format 1.
+ -l,--learn <arg>: This requires a KG file path in format 1.
 
- -p,--pos <arg>: This requires an Horn rule file in format 2.
+ -p,--pos <arg>: This requires an Horn rule file path in format 2.
 
  -r,--rank <arg>	: This requires a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
 
@@ -52,11 +52,10 @@ Download Apache Maven 2.2.1 from https://maven.apache.org and install.
 Usage
 ------------
 
-Firat of all, please locate to the repository folder and set run.sh as executable file:
+Firat of all, please locate to the repository folder:
 
 ```
 $ cd nonmonotonic-rule-mining
-$ chmod a+x run-pattern-mining.sh
 ```
 
 ### Horn Rule Mining
@@ -64,7 +63,7 @@ $ chmod a+x run-pattern-mining.sh
 Please run the Horn rule mining with the following command:
 
 ```
-$ ./run.sh -e=pos -l=[path to knowledge graph file]
+$ java -jar rumis-1.0.jar -e=pos -l=[path to knowledge graph file]
 ```
 
 Note that current system only supports positive rules with format 2.
@@ -74,7 +73,7 @@ Note that current system only supports positive rules with format 2.
 Please download the repository and run the following command for executing IMDB Horn rule mining:
 
 ```
-$ ./run.sh -e=pos -l=data/experiment/IMDB/ideal.data.txt
+$ java -jar rumis-1.0.jar -e=pos -l=data/experiment/IMDB/ideal.data.txt
 ```
 
 ### Nonmonotonic Rule Mining
@@ -82,7 +81,7 @@ $ ./run.sh -e=pos -l=data/experiment/IMDB/ideal.data.txt
 Please run the nonmonotonic rule mining with the following command:
 
 ```
-$ ./run.sh -e=neg -p=[path to pattern file] -l=[path to knowledge graph file] -r=[ranking option]
+$ java -jar rumis-1.0.jar -e=neg -p=[path to pattern file] -l=[path to knowledge graph file] -r=[ranking option]
 ```
 
 #### Example:
@@ -90,7 +89,7 @@ $ ./run.sh -e=neg -p=[path to pattern file] -l=[path to knowledge graph file] -r
 Please download the repository and run the following command for executing IMDB nonmonotonic rule mining with OPM ranking:
 
 ```
-$ ./run.sh -e=neg -p=data/experiment/IMDB/patterns.txt -l=data/experiment/IMDB/training.data.txt -r=2
+$ java -jar rumis-1.0.jar -e=neg -p=data/experiment/IMDB/patterns.txt -l=data/experiment/IMDB/training.data.txt -r=2
 ```
 
 References
