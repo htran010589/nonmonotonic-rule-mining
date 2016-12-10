@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
+package mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,10 +8,10 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.rules.PositiveRule;
-import com.mpii.saarland.germany.rules.PositiveRuleType;
-import com.mpii.saarland.germany.utils.TextFileReader;
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.rules.PositiveRule;
+import mpii.saarland.germany.rules.PositiveRuleType;
+import mpii.saarland.germany.utils.TextFileReader;
 
 /**
  * 
@@ -31,7 +31,8 @@ public class InstanceSetForm1Miner extends InstanceSetMiner {
 		int count = 0;
 		List<String> lines = TextFileReader.readLines(fileName);
 		for (String line : lines) {
-			String[] parts = line.split("(\\(X, Z\\) :- )|(\\(X, Y\\), )|(\\(Y, Z\\)\t)");
+			line = line.split("\t")[0];
+			String[] parts = line.split("(\\(X, Z\\) :- )|(\\(X, Y\\), )|(\\(Y, Z\\))");
 			count++;
 			if (count > topRuleCount) break;
 			positiveRules.add(new PositiveRule(parts[0] + "\t" + parts[1] + "\t" + parts[2], PositiveRuleType.FORM2));

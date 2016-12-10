@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
+package mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 import java.io.File;
 
@@ -10,19 +10,17 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.mpii.saarland.germany.experiment.Conductor;
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.rulemining.patternmining.PatternForm1Miner;
-import com.mpii.saarland.germany.utils.TextFileReader;
+import mpii.saarland.germany.experiment.Conductor;
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.rulemining.patternmining.PatternForm1Miner;
+import mpii.saarland.germany.utils.TextFileReader;
 
 public class MainCLI {
 
 	public static void main(String[] args) throws ParseException {
 //		String arg = " -e=pos -l=data/experiment/IMDB/training.data.txt ";
 //		String arg = " -e=neg -p=data/experiment/IMDB/horn-rules.txt -l=data/experiment/IMDB/training.data.txt -r=0";
-		String arg = " -e=exp -f=data/experiment/IMDB -r=0 -s -d";
-
-		args = arg.split(" ");
+//		String arg = " -e=exp -f=data/experiment/IMDB -r=0 -s -d";
 
 		Option helpOption = Option.builder("h").longOpt("help").required(false)
 				.desc("command line interface description.").build();
@@ -32,10 +30,10 @@ public class MainCLI {
 				.build();
 
 		Option posOption = Option.builder("p").longOpt("pos").numberOfArgs(1).required(false).type(String.class)
-				.desc("this requires a tab-seperated file for positive rules.").build();
+				.desc("this requires a positive rule file path.").build();
 
 		Option trainOption = Option.builder("l").longOpt("learn").numberOfArgs(1).required(false).type(String.class)
-				.desc("this requires a learning graph file path in SPO format.").build();
+				.desc("this requires a knowledge graph (KG) file path to learn rules.").build();
 
 		Option idealOption = Option.builder("f").longOpt("folder").numberOfArgs(1).required(false).type(String.class)
 				.desc("this requires an experiment folder.").build();
@@ -47,7 +45,7 @@ public class MainCLI {
 				.desc("this flag is for sampling positive rules.").build();
 
 		Option dlvOption = Option.builder("d").longOpt("dlv").required(false)
-				.desc("this flag is to enable DLV in order to extend knowledge graph.").build();
+				.desc("this flag is to enable DLV in order to extend KG.").build();
 
 		Option topOption = Option.builder("t").longOpt("top").numberOfArgs(1).required(false).type(Number.class)
 				.desc("this requires number of positive rules with top absolute support.").build();

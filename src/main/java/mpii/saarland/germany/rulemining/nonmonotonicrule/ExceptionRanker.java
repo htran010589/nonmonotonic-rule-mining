@@ -1,5 +1,8 @@
-package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
+package mpii.saarland.germany.rulemining.nonmonotonicrule;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -8,12 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.rules.Exception;
-import com.mpii.saarland.germany.rules.ExceptionType;
-import com.mpii.saarland.germany.rules.NegativeRule;
-import com.mpii.saarland.germany.rules.PositiveRule;
-import com.mpii.saarland.germany.utils.TextFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.rules.Exception;
+import mpii.saarland.germany.rules.ExceptionType;
+import mpii.saarland.germany.rules.NegativeRule;
+import mpii.saarland.germany.rules.PositiveRule;
+import mpii.saarland.germany.utils.TextFileReader;
 
 /**
  * 
@@ -22,13 +28,17 @@ import com.mpii.saarland.germany.utils.TextFileReader;
  */
 public class ExceptionRanker {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ExceptionRanker.class);
+
 	private FactIndexer facts, newFacts;
 
 	private InstanceSetMiner form2Instances;
 
-	private List<NegativeRule> choosenNegativeRules;
+	private List<NegativeRule> chosenNegativeRules;
 
 	private Set<String> selectedPatterns;
+
+	private BufferedWriter ruleWriter;
 
 	public ExceptionRanker(String patternFileName, String selectedPatternFileName, FactIndexer facts, int topRuleCount) {
 		this.facts = facts;
@@ -37,8 +47,13 @@ public class ExceptionRanker {
 		form2Instances.loadPositiveRules(patternFileName, topRuleCount);
 		form2Instances.findInstances(facts);
 		form2Instances.findPositiveNegativeExamples(facts);
-		choosenNegativeRules = new ArrayList<>();
+		chosenNegativeRules = new ArrayList<>();
 		readSelectedPatterns(selectedPatternFileName);
+		try {
+			ruleWriter = new BufferedWriter(new FileWriter("revised-rules.txt"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void readSelectedPatterns(String fileName) {
@@ -119,7 +134,11 @@ public class ExceptionRanker {
 
 		// Print positive rule with statistics like standard conviction,
 		// confidence, ...
-		System.out.println(positiveRule.toStringWithStatistics());
+		try {
+			ruleWriter.write(positiveRule.toStringWithStatistics() + "\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		Set<Exception> exceptionCandidateSet = ExceptionMiner.getExceptionCandidateSet(positiveRule);
 		Map<Exception, Long> negativeExceptionBodyCount = new HashMap<>();
@@ -200,14 +219,22 @@ public class ExceptionRanker {
 		for (NegativeRule negativeRule : negativeRules) {
 			count++;
 			if (count > 10) break;
-			System.out.println(negativeRule.toStringWithStatistics());
+			try {
+				ruleWriter.write(negativeRule.toStringWithStatistics() + "\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		System.out.println();
+		try {
+			ruleWriter.write("\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// Select best revised rule.
 		if (selectedPatterns == null || (selectedPatterns != null && selectedPatterns.contains(positiveRule.getHead() + "\t" + positiveRule.getBody()))) {
 			if (!negativeRules.isEmpty()) {
-				choosenNegativeRules.add(negativeRules.get(0));
+				chosenNegativeRules.add(negativeRules.get(0));
 			}
 		}
 		return negativeRule2Statistics;
@@ -226,16 +253,24 @@ public class ExceptionRanker {
 		}
 
 		// Naive ranking is conducted.
-		System.out.println("Naive Ranking:");
+		try {
+			ruleWriter.write("Naive Ranking:\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Map<String, NegativeRule> negativeRule2Statistics = new HashMap<>();
 		for (PositiveRule rule : form2Instances.positiveRules) {
 			negativeRule2Statistics.putAll(recalculateConviction(rule, facts));
 		}
 
 		if (type == RankingType.OPM) {
-			System.out.println("OPM Ranking:");
+			try {
+				ruleWriter.write("OPM Ranking:\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			// Ordered partial materialization is conducted.
-			choosenNegativeRules.clear();
+			chosenNegativeRules.clear();
 			form2Instances.positiveRules.sort(
 					(PositiveRule r1, PositiveRule r2) -> new Double(r2.getConviction()).compareTo(r1.getConviction()));
 			for (PositiveRule rule : form2Instances.positiveRules) {
@@ -243,9 +278,13 @@ public class ExceptionRanker {
 				predict(rule, 1L);
 			}
 		} else if (type == RankingType.PM) {
-			System.out.println("PM Ranking:");
+			try {
+				ruleWriter.write("PM Ranking:\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			// Partial materialization is conducted.
-			choosenNegativeRules.clear();
+			chosenNegativeRules.clear();
 			for (PositiveRule rule : form2Instances.positiveRules) {
 				predict(rule, 1L);
 			}
@@ -257,25 +296,39 @@ public class ExceptionRanker {
 		}
 
 		if (type == RankingType.OPM || type == RankingType.PM) {
-			for (int i = 0; i < choosenNegativeRules.size(); ++i) {
+			for (int i = 0; i < chosenNegativeRules.size(); ++i) {
 				// Update statistics.
-				NegativeRule updatedRule = negativeRule2Statistics.get(choosenNegativeRules.get(i).toString());
-				choosenNegativeRules.set(i, updatedRule);
+				NegativeRule updatedRule = negativeRule2Statistics.get(chosenNegativeRules.get(i).toString());
+				chosenNegativeRules.set(i, updatedRule);
 			}
 		}
-		System.out.println("Choosen revised rules:");
-		for (NegativeRule revisedRule : choosenNegativeRules) {
-			System.out.println(revisedRule.toString());
+		try {
+			ruleWriter.write("Chosen revised rules:\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		for (NegativeRule revisedRule : chosenNegativeRules) {
+			try {
+				ruleWriter.write(revisedRule.toString() + "\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		Comparator<NegativeRule> sortByPositiveNegativeConviction = (NegativeRule r1,
 				NegativeRule r2) -> new Double(r2.getPositiveNegativeConviction())
 						.compareTo(r1.getPositiveNegativeConviction());
-		choosenNegativeRules.sort(sortByPositiveNegativeConviction);
+		chosenNegativeRules.sort(sortByPositiveNegativeConviction);
+		try {
+			ruleWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		LOG.info("Done with revised rule mining.");
 	}
 
-	public List<NegativeRule> getChoosenNegativeRules() {
-		return choosenNegativeRules;
+	public List<NegativeRule> getChosenNegativeRules() {
+		return chosenNegativeRules;
 	}
 
 }

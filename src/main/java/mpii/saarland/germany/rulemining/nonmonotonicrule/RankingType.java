@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
+package mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.utils;
+package mpii.saarland.germany.utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;

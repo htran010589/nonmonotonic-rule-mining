@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.indexing;
+package mpii.saarland.germany.indexing;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,7 +10,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mpii.saarland.germany.utils.Utils;
+import mpii.saarland.germany.utils.Utils;
 
 /**
  * 

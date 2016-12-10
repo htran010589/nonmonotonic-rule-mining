@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.experiment;
+package mpii.saarland.germany.experiment;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.utils.Utils;
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.utils.Utils;
 
 /**
  * 

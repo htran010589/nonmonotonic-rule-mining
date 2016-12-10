@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.utils;
+package mpii.saarland.germany.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

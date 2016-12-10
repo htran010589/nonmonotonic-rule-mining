@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.rules;
+package mpii.saarland.germany.rules;
 
 /**
  * 

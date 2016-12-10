@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
+package mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,9 +10,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mpii.saarland.germany.experiment.Conductor;
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.rules.PositiveRule;
+import mpii.saarland.germany.experiment.Conductor;
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.rules.PositiveRule;
 
 /**
  * 

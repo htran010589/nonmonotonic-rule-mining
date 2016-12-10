@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.experiment;
+package mpii.saarland.germany.experiment;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,13 +16,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker;
-import com.mpii.saarland.germany.rulemining.nonmonotonicrule.RankingType;
-import com.mpii.saarland.germany.rules.ExceptionType;
-import com.mpii.saarland.germany.rules.NegativeRule;
-import com.mpii.saarland.germany.utils.TextFileReader;
-import com.mpii.saarland.germany.utils.Utils;
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.rulemining.nonmonotonicrule.ExceptionRanker;
+import mpii.saarland.germany.rulemining.nonmonotonicrule.RankingType;
+import mpii.saarland.germany.rules.ExceptionType;
+import mpii.saarland.germany.rules.NegativeRule;
+import mpii.saarland.germany.utils.TextFileReader;
+import mpii.saarland.germany.utils.Utils;
 
 /**
  * 
@@ -200,7 +200,7 @@ public class Conductor {
 				Writer decodedRuleWriter = new BufferedWriter(
 						new FileWriter(Conductor.choosenRuleFileName + ruleType + topRuleCount + ".decode"));
 				double convictionSum = 0;
-				for (NegativeRule negativeRule : ranker.getChoosenNegativeRules()) {
+				for (NegativeRule negativeRule : ranker.getChosenNegativeRules()) {
 					count++;
 					if (count > topRuleCount) {
 						break;

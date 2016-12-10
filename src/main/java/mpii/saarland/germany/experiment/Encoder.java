@@ -1,4 +1,4 @@
-package com.mpii.saarland.germany.experiment;
+package mpii.saarland.germany.experiment;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mpii.saarland.germany.utils.TextFileReader;
+import mpii.saarland.germany.utils.TextFileReader;
 
 /**
  * 

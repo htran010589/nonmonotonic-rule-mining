@@ -1,18 +1,26 @@
-package com.mpii.saarland.germany.rulemining.patternmining;
+package mpii.saarland.germany.rulemining.patternmining;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.utils.Utils;
 
 /**
  * 
  * This class is to mine patterns of the form: h(X, Z) <- p(X, Y) ^ q(Y, Z)
  */
 public class PatternForm1Miner {
+
+	private static final Logger LOG = LoggerFactory.getLogger(PatternForm1Miner.class);
 
 	/**
 	 * If type = 0, we mine patterns based on #(X, Z), otherwise #(X, Y, Z).
@@ -21,7 +29,6 @@ public class PatternForm1Miner {
 		FactIndexer facts = new FactIndexer(factFileName);
 		Map<String, Long> pattern2Long = new HashMap<>();
 		Map<String, Set<String>> pattern2Pair = new HashMap<>();
-		int count = 0;
 		for (String fact : facts.getXpySet()) {
 			String[] parts = fact.split("\t");
 			String y = parts[0];
@@ -45,18 +52,22 @@ public class PatternForm1Miner {
 					Utils.addKeyLong(pattern2Long, h + "\t" + p + "\t" + q, 1);
 				}
 			}
-			count++;
-			if (count % 10000 == 0) {
-				System.out.print(".");
+		}
+		try {
+			BufferedWriter hornRuleWriter = new BufferedWriter(new FileWriter("horn-rules.txt"));
+			BufferedWriter hornRuleWithStatsWriter = new BufferedWriter(new FileWriter("horn-rules-stats.txt"));
+			List<String> topPatterns = Utils.getTopK(pattern2Long, pattern2Long.size());
+			for (String pattern : topPatterns) {
+				String[] parts = pattern.split("\t");
+				hornRuleWriter.write(parts[0] + "(X, Z) :- " + parts[1] + "(X, Y), " + parts[2] + "(Y, Z)\n");
+				hornRuleWithStatsWriter.write(parts[0] + "(X, Z) :- " + parts[1] + "(X, Y), " + parts[2] + "(Y, Z)\t" + parts[3] + "\n");
 			}
+			hornRuleWriter.close();
+			hornRuleWithStatsWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		System.out.println();
-		List<String> topPatterns = Utils.getTopK(pattern2Long, pattern2Long.size());
-		for (String pattern : topPatterns) {
-//			System.out.println(pattern);
-			String[] parts = pattern.split("\t");
-			System.out.println(parts[0] + "(X, Z) :- " + parts[1] + "(X, Y), " + parts[2] + "(Y, Z)\t" + parts[3]);
-		}
+		LOG.info("Done with Horn rule mining.");
 	}
 
 }

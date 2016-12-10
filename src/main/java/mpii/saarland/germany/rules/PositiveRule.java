@@ -1,7 +1,7 @@
-package com.mpii.saarland.germany.rules;
+package mpii.saarland.germany.rules;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.rulemining.nonmonotonicrule.InstanceSetMiner;
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.rulemining.nonmonotonicrule.InstanceSetMiner;
 
 /**
  * 

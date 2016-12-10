@@ -1,14 +1,14 @@
-package com.mpii.saarland.germany.rulemining.nonmonotonicrule;
+package mpii.saarland.germany.rulemining.nonmonotonicrule;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.mpii.saarland.germany.indexing.FactIndexer;
-import com.mpii.saarland.germany.rules.Exception;
-import com.mpii.saarland.germany.rules.ExceptionType;
-import com.mpii.saarland.germany.rules.PositiveRule;
+import mpii.saarland.germany.indexing.FactIndexer;
+import mpii.saarland.germany.rules.Exception;
+import mpii.saarland.germany.rules.ExceptionType;
+import mpii.saarland.germany.rules.PositiveRule;
 
 /**
  * 
