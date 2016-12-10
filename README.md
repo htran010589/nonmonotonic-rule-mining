@@ -14,7 +14,7 @@ The KG is presented in a tab seperated file containing triples in the format <su
 ### Horn Rule Format
 
 Each line in this file represents a positive rule of the form
-h(X, Z) :- p(X, Y), q(Y, Z). Rules are sorted in the decreasing order based on their absolute support [1]. You can see this format in the output of positive rule mining function below.
+h(X, Z) :- p(X, Y), q(Y, Z) (format 2). Rules are sorted in the decreasing order based on their absolute support [1]. You can see this format in the output of positive rule mining function below.
 
 ### Exception Ranking
 
