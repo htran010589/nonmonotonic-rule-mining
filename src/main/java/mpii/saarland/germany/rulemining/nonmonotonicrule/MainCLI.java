@@ -11,6 +11,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import mpii.saarland.germany.experiment.Conductor;
+import mpii.saarland.germany.experiment.Sampler;
 import mpii.saarland.germany.indexing.FactIndexer;
 import mpii.saarland.germany.rulemining.patternmining.PatternForm1Miner;
 import mpii.saarland.germany.utils.TextFileReader;
@@ -26,7 +27,7 @@ public class MainCLI {
 				.desc("command line interface description.").build();
 
 		Option exeOption = Option.builder("e").longOpt("exe").numberOfArgs(1).required(false).type(String.class)
-				.desc("this requires class for execution, i.e., pos, neg, exp for positve rule mining, nonmonotonic rule mining, experiment, resp.")
+				.desc("this requires class for execution, i.e., new, pos, neg, exp for creating new learning KG, positve rule mining, nonmonotonic rule mining, experiment, resp.")
 				.build();
 
 		Option posOption = Option.builder("p").longOpt("pos").numberOfArgs(1).required(false).type(String.class)
@@ -50,6 +51,9 @@ public class MainCLI {
 		Option topOption = Option.builder("t").longOpt("top").numberOfArgs(1).required(false).type(Number.class)
 				.desc("this requires number of positive rules with top absolute support.").build();
 
+		Option ratioOption = Option.builder("o").longOpt("ratio").numberOfArgs(1).required(false).type(Number.class)
+				.desc("this requires ratio of original facts over every predicate in a new learning KG.").build();
+
 		Options options = new Options();
 		options.addOption(helpOption);
 		options.addOption(exeOption);
@@ -60,6 +64,7 @@ public class MainCLI {
 		options.addOption(sampleOption);
 		options.addOption(topOption);
 		options.addOption(dlvOption);
+		options.addOption(ratioOption);
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine commandLine = parser.parse(options, args);
@@ -139,6 +144,11 @@ public class MainCLI {
 
 			Conductor.execute(RankingType.values()[rank]);
 			return;
+		}
+		if (execution.equals("new")) {
+			String idealFileName = commandLine.getOptionValue("learn");			
+			Double ratio = Double.parseDouble(commandLine.getOptionValue("ratio"));
+			Sampler.createLearningData(idealFileName, ratio);
 		}
 	}
 }

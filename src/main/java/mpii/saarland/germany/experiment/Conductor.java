@@ -31,8 +31,6 @@ import mpii.saarland.germany.utils.Utils;
  */
 public class Conductor {
 
-//	static final String[] RULE_TYPES = { ".pos.", ".neg.", ".neg.aux." };
-
 	static final String[] RULE_TYPES = { ".pos.", ".neg." };
 
 	public static int topRuleCount;
@@ -64,9 +62,9 @@ public class Conductor {
 	static void evaluate() {
 		idealFacts = new FactIndexer(idealDataFileName);
 		for (String predicate : idealFacts.getPSet()) {
-			System.out.println(predicate);
+			//System.out.println(predicate);
 		}
-		System.out.println("Number of predicates in ideal graph: " + idealFacts.getPSet().size());
+		//System.out.println("Number of predicates in ideal graph: " + idealFacts.getPSet().size());
 
 		for (int i = 0; i < 2; ++i) {
 			String extensionFileName = extensionPrefixFileName + RULE_TYPES[i] + topRuleCount;
@@ -142,16 +140,16 @@ public class Conductor {
 					Utils.addKeyLong(conflictPerPredicateCount, parts[1], 1L);
 				}
 			}
-			System.out.println("Already in the learning data (positive facts): " + inLearningPositiveFactCount);
-			System.out.println("Already in the learning data (negative facts): " + inLearningNegativeFactCount);
-			System.out.println("Total new predicted facts: " + (goodFactCount + needCheckFactCount));
-			System.out.println("Good predicted facts in ideal graph: " + goodFactCount);
-			System.out.println("Facts that need to check: " + needCheckFactCount);
-			System.out.println("Positive new facts: " + positiveNewFacts.size());
-			System.out.println("Negative new facts: " + negativeNewFacts.size());
-			System.out.println("Number of conflicts: " + conflictCount);
-			System.out.println("Done with file: " + fileName);
-			System.out.println();
+//			System.out.println("Already in the learning data (positive facts): " + inLearningPositiveFactCount);
+//			System.out.println("Already in the learning data (negative facts): " + inLearningNegativeFactCount);
+//			System.out.println("Total new predicted facts: " + (goodFactCount + needCheckFactCount));
+//			System.out.println("Good predicted facts in ideal graph: " + goodFactCount);
+//			System.out.println("Facts that need to check: " + needCheckFactCount);
+//			System.out.println("Positive new facts: " + positiveNewFacts.size());
+//			System.out.println("Negative new facts: " + negativeNewFacts.size());
+//			System.out.println("Number of conflicts: " + conflictCount);
+//			System.out.println("Done with file: " + fileName);
+//			System.out.println();
 			Set<String> predicates = new TreeSet<>();
 			predicates.addAll(goodFactPerPredicateCount.keySet());
 			predicates.addAll(needCheckFactPerPredicateCount.keySet());
@@ -189,7 +187,7 @@ public class Conductor {
 		ranker.rankRulesWithExceptions(type);
 
 		Conductor.time3 = new Date();
-		System.out.println("Done Exception Ranking with " + (Conductor.time3.getTime() - Conductor.time2.getTime()));
+		//System.out.println("Done Exception Ranking with " + (Conductor.time3.getTime() - Conductor.time2.getTime()));
 
 		// This is to convert rule set to DLV format.
 		try {
@@ -242,7 +240,7 @@ public class Conductor {
 				ruleWriter.close();
 				decodedRuleWriter.close();
 				System.out.println("Done with " + Conductor.choosenRuleFileName + ruleType + topRuleCount + " file");
-				System.out.println("Average conviction = " + (convictionSum / topRuleCount));
+				System.out.println("Average conviction: " + (convictionSum / topRuleCount));
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -269,7 +267,7 @@ public class Conductor {
 				System.out.println("Done with " + extensionFileName + " file");
 			}
 			Conductor.time4 = new Date();
-			System.out.println("Done with DLV in " + (Conductor.time4.getTime() - Conductor.time3.getTime()));
+			//System.out.println("Done with DLV in " + (Conductor.time4.getTime() - Conductor.time3.getTime()));
 		} catch (InterruptedException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {
