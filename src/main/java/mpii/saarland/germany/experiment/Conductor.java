@@ -85,7 +85,12 @@ public class Conductor {
 			int needCheckFactCount = 0;
 			Set<String> positiveNewFacts = new HashSet<>();
 			Set<String> negativeNewFacts = new HashSet<>();
-			System.out.println("Start evaluating file: " + fileName);
+//			System.out.println("Start evaluating file: " + fileName);
+			if (fileName.contains(".pos.")) {
+				System.out.println("With KG extended from positive rules:");
+			} else {
+				System.out.println("With KG extended from revised rules:");
+			}
 			String line = TextFileReader.readLines(fileName).get(2);
 			String[] facts = line.split(", ");
 			Map<String, Long> goodFactPerPredicateCount = new HashMap<>();
@@ -244,12 +249,16 @@ public class Conductor {
 				}
 				ruleWriter.close();
 				decodedRuleWriter.close();
-				System.out.println("Done with " + Conductor.chosenRuleFileName + ruleType + topRuleCount + " file");
-				System.out.println("Average conviction: " + (convictionSum / topRuleCount));
+				if (ruleType.equals(".pos.")) {
+					System.out.println("Average conviction of positive rules: " + (convictionSum / topRuleCount));
+				} else {
+					System.out.println("Average conviction of revised rules: " + (convictionSum / topRuleCount));
+				}
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+		System.out.println("-----");
 	}
 
 	static void runDlv() {
