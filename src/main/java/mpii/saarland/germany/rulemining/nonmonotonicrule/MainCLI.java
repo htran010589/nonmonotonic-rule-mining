@@ -19,9 +19,12 @@ import mpii.saarland.germany.utils.TextFileReader;
 public class MainCLI {
 
 	public static void main(String[] args) throws ParseException {
-//		String arg = " -e=pos -l=data/experiment/IMDB/training.data.txt ";
+//		String arg = "-exe=exp -f=data/experiment/IMDB/ -r=2 -t=100 -s";
+//		String arg = " -e=pos -l=data/sample.imdb.txt";
 //		String arg = " -e=neg -p=data/experiment/IMDB/horn-rules.txt -l=data/experiment/IMDB/training.data.txt -r=0";
-//		String arg = " -e=exp -f=data/experiment/IMDB -r=0 -s -d";
+//		String arg = "-exe=exp -f=data/sample.imdb.txt -r=2 -t=5 -d";
+
+//		args = arg.split(" ");
 
 		Option helpOption = Option.builder("h").longOpt("help").required(false)
 				.desc("command line interface description.").build();
@@ -129,7 +132,7 @@ public class MainCLI {
 			Conductor.selectedPatternFileName = workingPath + "/selected.horn-rules.txt";
 			Conductor.trainingDataFileName = workingPath + "/training.data.txt";
 			Conductor.trainingDataDlvFileName = dlvPath + "/training.data.kg";
-			Conductor.choosenRuleFileName = dlvPath + "/chosen.rules." + rankName + ".txt";
+			Conductor.chosenRuleFileName = dlvPath + "/chosen.rules." + rankName + ".txt";
 			Conductor.dlvBinaryFileName = workingPath + "/dlv.bin";
 			Conductor.extensionPrefixFileName = dlvPath + "/extension." + rankName + ".kg";
 
@@ -142,6 +145,11 @@ public class MainCLI {
 				Conductor.withDlv = 1;
 			}
 
+			Conductor.withSampledRules = false;
+			if (commandLine.hasOption("sample")) {
+				Conductor.withSampledRules = true;
+			}
+
 			Conductor.execute(RankingType.values()[rank]);
 			return;
 		}
@@ -149,6 +157,7 @@ public class MainCLI {
 			String idealFileName = commandLine.getOptionValue("learn");			
 			Double ratio = Double.parseDouble(commandLine.getOptionValue("ratio"));
 			Sampler.createLearningData(idealFileName, ratio);
+			return;
 		}
 	}
 }

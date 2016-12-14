@@ -62,7 +62,8 @@ public class ExceptionRanker {
 		if (lines == null) return;
 		selectedPatterns = new HashSet<>();
 		for (String line : lines) {
-			String[] parts = line.split("(\\(X, Z\\) :- )|(\\(X, Y\\), )|(\\(Y, Z\\)\t)");
+			line = line.split("\t")[0];
+			String[] parts = line.split("(\\(X, Z\\) :- )|(\\(X, Y\\), )|(\\(Y, Z\\))");
 			selectedPatterns.add(parts[0] + "\t" + parts[1] + "\t" + parts[2]);
 		}
 	}

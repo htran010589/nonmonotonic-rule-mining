@@ -159,6 +159,7 @@ $EWS$ $\leftarrow$ $EWS+$ $\setminus$ $EWS-$\\
 To be easy to plugin and test another rule quality criteria, the measure plugin is designed as a separate component. There are two main measures in the current implementation: confidence and conviction. While the former is a good choice for descriptive purpose, its predictive quality is not as good as that of the latter~\cite{ref46}. Since the main concern of this thesis is to revise Horn rules and subsequently predict accurate facts to expand the original KG, conviction is the main measure in RUMIS.
 
 \subsection{Exception Ranking}
+\label{intuition_er}
 
 Figure~\ref{pm_ranking} shows some arrows representing for the communications between different parts in (O)PM ranking. In general, the communications express the intuition for the ranking as follows.
 
@@ -176,7 +177,9 @@ Figure~\ref{pm_ranking} shows some arrows representing for the communications be
 \label{pm_ranking}
 \end{figure}
 
-\textbf{PM Ranking.} 
+\textit{Definition 1.[plan to move this definition to background section]} Safely predicted facts of $r$ w.r.t. KG $\cG$ are all new facts produced by $r$ and not by any revision of $r$ constructing by adding an exception candidate to the rule body. [Give an example, ...]
+
+\textbf{PM Ranking.} The Algorithm~\ref{bf_pm_ranking_algo} describes the intuition for PM ranking step by step. In line 1, a set of revised rules are initialized as an empty set. After that, for each positive rule $r$ in $R_H$, we clone original KG $\cG$ to a new one ($\cG'$), then all other rules in $R_H$ are exploited to generate their safely predicted facts which are subsequently indexed to $\cG'$ (line 2 to 6). In line 7 and 8, based on the new KG, exceptions of $r$ are ranked and the best revision is added to $R_{NM}$. Finally, we return $R_{NM}$ as a result for the algorithm.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -197,12 +200,12 @@ $R_{NM} \leftarrow \{\}$\\
 	Add $r'$ to $R_{NM}$\\
 }
 \Return $R_{NM}$\\
-\caption{OPM Ranking}
+\caption{PM Ranking}
 \label{bf_pm_ranking_algo}
 \end{algorithm}
 \DecMargin{1.5em}
 
-\textbf{OPM Ranking.} This function (Algorithm~\ref{opm_ranking_algo}) is similar to PM ranking, the only difference is the way how to select revisions to expand KG $\cG'$. In details, there are several steps in the algorithm as follows. From line 1 to 2, the process is executed in the same way as in PM ranking. All the Horn rules are then sorted in decreasing order of conviction measure (line 3). Similar to PM, for each Horn rule $r$ in $R_H$ (line 4), OPM ranking chooses the best revision of $r$ based on $G'$ for the final result (line 5 and 6). After that, in line 7, safely new facts are predicted to update KG $\cG'$.
+\textbf{OPM Ranking.} This function (Algorithm~\ref{opm_ranking_algo}) is similar to PM ranking, the major difference is the way how to select revisions to expand KG $\cG'$. In details, there are several steps in the algorithm as follows. From line 1 to 2, $\cG$ is cloned to $\cG'$ and $R_{NM}$ is created as an empty rule set. The line 1 reflects the contrast between Algorithm~\ref{bf_pm_ranking_algo} and~\ref{opm_ranking_algo} since the latter executes cloning only one time. In the next step, all the Horn rules are then sorted in decreasing order of conviction measure (line 3). Similar to PM, for each Horn rule $r$ in $R_H$ (line 4), OPM ranking chooses the best revision of $r$ based on $G'$ for the final result (line 5 and 6). After that, in line 7, safely new facts are predicted to update KG $\cG'$.
 
 Intuitively, all safely predicted facts from previous rules w.r.t. $\cG$ are added to $\cG'$ which is exploited to assess quality of $r$. In OPM ranking, the order of Horn rules regarding the conviction matters, i.e., the higher conviction quality of an Horn rule, the more important impact it plays on the other rules. In other words, OPM is more conservative than PM ranking, only safely predicted facts of better Horn rules may be taken into account to revise a particular one.
 

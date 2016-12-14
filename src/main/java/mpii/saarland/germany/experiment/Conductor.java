@@ -37,6 +37,8 @@ public class Conductor {
 
 	public static int withDlv;
 
+	public static boolean withSampledRules;
+
 	public static String idealDataFileName;
 
 	public static String encodeFileName;
@@ -49,7 +51,7 @@ public class Conductor {
 
 	public static String trainingDataDlvFileName;
 
-	public static String choosenRuleFileName;
+	public static String chosenRuleFileName;
 
 	public static String extensionPrefixFileName;
 
@@ -183,20 +185,23 @@ public class Conductor {
 	static void generateExceptions(RankingType type) {
 		learningFacts = Sampler.indexLearningData();
 		time1 = new Date();
+		if (!withSampledRules) {
+			selectedPatternFileName = null;
+		}
 		ExceptionRanker ranker = new ExceptionRanker(patternFileName, selectedPatternFileName, learningFacts, topRuleCount);
 		ranker.rankRulesWithExceptions(type);
 
 		Conductor.time3 = new Date();
 		//System.out.println("Done Exception Ranking with " + (Conductor.time3.getTime() - Conductor.time2.getTime()));
 
-		// This is to convert rule set to DLV format.
+		// This is to convert rule set to DLV format. todo here
 		try {
 			for (String ruleType : Conductor.RULE_TYPES) {
 				int count = 0;
 				Writer ruleWriter = new BufferedWriter(
-						new FileWriter(Conductor.choosenRuleFileName + ruleType + topRuleCount));
+						new FileWriter(Conductor.chosenRuleFileName + ruleType + topRuleCount));
 				Writer decodedRuleWriter = new BufferedWriter(
-						new FileWriter(Conductor.choosenRuleFileName + ruleType + topRuleCount + ".decode"));
+						new FileWriter(Conductor.chosenRuleFileName + ruleType + topRuleCount + ".decode"));
 				double convictionSum = 0;
 				for (NegativeRule negativeRule : ranker.getChosenNegativeRules()) {
 					count++;
@@ -239,7 +244,7 @@ public class Conductor {
 				}
 				ruleWriter.close();
 				decodedRuleWriter.close();
-				System.out.println("Done with " + Conductor.choosenRuleFileName + ruleType + topRuleCount + " file");
+				System.out.println("Done with " + Conductor.chosenRuleFileName + ruleType + topRuleCount + " file");
 				System.out.println("Average conviction: " + (convictionSum / topRuleCount));
 			}
 		} catch (IOException ex) {
@@ -248,10 +253,10 @@ public class Conductor {
 	}
 
 	static void runDlv() {
-		System.out.println("Start DLV");
+		//System.out.println("Start DLV");
 		try {
 			for (String ruleType : RULE_TYPES) {
-				String ruleFileName = choosenRuleFileName + ruleType + topRuleCount;
+				String ruleFileName = chosenRuleFileName + ruleType + topRuleCount;
 				String extensionFileName = extensionPrefixFileName + ruleType + topRuleCount;
 				String command = dlvBinaryFileName + " -nofacts " + trainingDataDlvFileName + " " + ruleFileName;
 				Writer dlvWriter = new BufferedWriter(new FileWriter(extensionFileName));
@@ -264,7 +269,7 @@ public class Conductor {
 				dlvExecutor.waitFor();
 				dlvExecutor.destroy();
 				dlvWriter.close();
-				System.out.println("Done with " + extensionFileName + " file");
+				//System.out.println("Done with " + extensionFileName + " file");
 			}
 			Conductor.time4 = new Date();
 			//System.out.println("Done with DLV in " + (Conductor.time4.getTime() - Conductor.time3.getTime()));
