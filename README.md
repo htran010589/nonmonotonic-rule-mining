@@ -27,7 +27,7 @@ DLV [2] is a system for extending KG given a set of Horn or nonmonotonic rules a
 RUMIS provides a function for creating a learning KG based on a predicate ratio. For example, given the KG and 0.8 as the ratio, then 80% facts of every binary predicate are retained in the learning KG. The original KG is called the approximated ideal one in [1].
 
 ### Working Folder
-Working folder is a location for experiment where we have learning, approximated ideal KGs in format 1 (training.data.txt and ideal.data.txt, resp.), positive rule and sampled positive rule files (horn-rules.txt and selected.horn-rules.txt, resp.) in format 2. Besides, DLV binary file [5] should be downloaded and renamed to dlv.bin in this folder. The selected.horn-rules.txt is only in the folder if we just want to revise some rules in this file.
+Working folder is a location for experiment where we have learning, approximated ideal KGs in format 1 (training.data.txt and ideal.data.txt, resp.), positive rule and sampled positive rule files (horn-rules.txt and selected.horn-rules.txt, resp.) in format 2. Besides, DLV binary file [3] should be downloaded and renamed to dlv.bin in this folder. The selected.horn-rules.txt is only in the folder if we just want to revise some rules in this file.
 
 ### Command Line Options
 
@@ -155,10 +155,6 @@ References
 ----------
 [1] Hai Dang Tran, Daria Stepanova, Mohamed H. Gad-Elrab, Francesca A. Lisi, Gerhard Weikum. Towards Non-monotonic Relational Learning from Knowledge Graphs. In 26th International Conference on Inductive Logic Programming (ILP-16), London, England, 2016.
 
-[2] DLV tool.
+[2] http://www.dlvsystem.com/html/DLV_User_Manual.html
 
-[3] DLV rule format.
-
-[4] DLV KG format.
-
-[5] DLV bin file.
+[3] http://www.dlvsystem.com/files/dlv.x86-64-linux-elf-static.bin
