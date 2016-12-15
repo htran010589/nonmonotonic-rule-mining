@@ -75,7 +75,7 @@ Please generate the learning data with the following command:
 $ java -jar rumis-1.0.jar -e=new -l=[path to KG file] -o=[ratio] 1>[training KG file path]
 ```
 
-### Example
+#### Example
 
 A learning KG of the IMDB sample dataset can be generated with predicate ratio being 80%:
 
