@@ -20,21 +20,38 @@ h(X, Z) :- p(X, Y), q(Y, Z) (format 2). Rules are sorted in the decreasing order
 
 Exceptions for each positive Horn rule are ranked based on a particular ranking criteria. There are three kinds of ranking: Naive, PM and OPM. For the their definitions, please refer to our paper in [1].
 
+### DLV Tool
+DLV [2] is a system for extending KG given a set of Horn or nonmonotonic rules at hand. RUMIS expolits DLV in its experiment function, i.e, a feature for evaluating result.
+
+### Predicate Ratio and Learning KG
+RUMIS provides a function for creating a learning KG based on a predicate ratio. For example, given the KG and 0.8 as the ratio, then 80% facts of every binary predicate are retained in the learning KG. The original KG is called the approximated ideal one in [1].
+
+### Working Folder
+Working folder is a location for experiment where we have learning, approximated ideal KGs in format 1 (training.data.txt and ideal.data.txt, resp.), positive rule and sampled positive rule files (horn-rules.txt and selected.horn-rules.txt, resp.) in format 2. Besides, DLV binary file [5] should be downloaded and renamed to dlv.bin in this folder. The selected.horn-rules.txt is only in the folder if we just want to revise some rules in this file.
+
 ### Command Line Options
 
 Users can choose some of the following options to get a suitable mode for RUMIS:
 
- -e,--exe <arg>: This requires a function for execution, i.e., pos and neg are corresponding to positve and nonmonotonic rule mining, resp.
+ -d: This flag is to enable DLV in order to extend KG.
 
- -h,--help: This is the command line interface description.
+ -e=[string]: This requires a function for execution, i.e., new, pos and neg are corresponding to creating a new learning KG, positve and nonmonotonic rule mining, resp.
 
- -l,--learn <arg>: This requires a KG file path in format 1.
+ -f=[string]: This requires an experiment folder path.
 
- -p,--pos <arg>: This requires an Horn rule file path in format 2.
+ -h: This is the command line interface description.
 
- -r,--rank <arg>: This requires a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
+ -l=[string]: This requires a KG file path in format 1.
 
- -t,--top <arg>: This requires number of positive rules with top absolute support.
+ -o=[double]: This requires ratio of original facts over every predicate in a new learning KG.
+
+ -p=[string]: This requires an Horn rule file path in format 2.
+
+ -r=[int]: This requires a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
+
+ -s: This flag is to enable sampling positive rules.
+
+ -t=[int]: This requires number of positive rules with top absolute support.
 
 Operating System and Required Softwares
 ------------
@@ -44,13 +61,29 @@ This tool is developed and currently tested in Linux, we may extend it to Window
 Usage
 ------------
 
-First of all, please locate to the repository folder:
+First of all, please download the repository and uncompress data/sample.imdb.txt.zip in the repository to get sample.imdb.txt file. In the next step, the repository folder should be located.
 
 ```
 $ cd nonmonotonic-rule-mining
 ```
 
-And then uncompress data/sample.imdb.txt.zip in the repository to get sample.imdb.txt file.
+### Generating Learning KG
+
+Please generate the learning data with the following command:
+
+```
+$ java -jar rumis-1.0.jar -e=new -l=[path to KG file] -o=[ratio] 1>[training KG file path]
+```
+
+### Example
+
+A learning KG of the IMDB sample dataset can be generated with predicate ratio being 80%:
+
+```
+$ java -jar rumis-1.0.jar -e=new -l=data/sample.imdb.txt -o=0.8 1>training.sample.imdb.txt
+```
+
+Then training.sample.imdb.txt file is the learning KG that we want to generate.
 
 ### Horn Rule Mining
 
@@ -104,6 +137,28 @@ If you just want to revise top 10 Horn rules, please use -t option:
 $ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2 -t=10
 ```
 
+### Experiment
+
+First of all, create the working folder with four files indicated above, and then run the following command for the experiment:
+
+```
+java -XX:-UseGCOverheadLimit -Xmx[max memory]G -jar rumis-1.0.jar -e=exp -f=[working folder] -r=[ranking] -t=[top positive rules] -d -s 1>experiment.txt
+```
+
+Where -XX, -Xmx, -t, -d, -s are optional. -XX and -Xmx are used when we want to allocate more memory for RUMIS, and, if the option -t is not used, all the rules in horn-rules.txt are revised. Besides, -s option should only be added to the command if we just want to care about revisions of some selected rules in selected.horn-rules.txt file.
+
+[for main result]
+
+The command outputs a file encode.txt and a DLV directory in the working folder. The former is a tab seperated file that maps from entities and predicates of ideal KG to their encoded IDs. The latter provides some files as follows. First, training.data.kg is the DLV format version of training.data.txt. Second, files extension.[naive | pm | opm].txt.[pos | neg].[number of top rules] describe KGs extended from learning data in DLV format. The terms pos, neg correspond to positive and revised rule set which is exploited to extend KG. For each of these, there are decode, needcheck, good, conflict extension files which present KG in format 1, facts not in the ideal KG, facts in the ideal KG and conflicts, resp [1].
+
 References
 ----------
 [1] Hai Dang Tran, Daria Stepanova, Mohamed H. Gad-Elrab, Francesca A. Lisi, Gerhard Weikum. Towards Non-monotonic Relational Learning from Knowledge Graphs. In 26th International Conference on Inductive Logic Programming (ILP-16), London, England, 2016.
+
+[2] DLV tool.
+
+[3] DLV rule format.
+
+[4] DLV KG format.
+
+[5] DLV bin file.

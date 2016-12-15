@@ -199,14 +199,14 @@ public class Conductor {
 		Conductor.time3 = new Date();
 		//System.out.println("Done Exception Ranking with " + (Conductor.time3.getTime() - Conductor.time2.getTime()));
 
-		// This is to convert rule set to DLV format. todo here
+		// This is to convert rule set to DLV format.
 		try {
 			for (String ruleType : Conductor.RULE_TYPES) {
 				int count = 0;
 				Writer ruleWriter = new BufferedWriter(
 						new FileWriter(Conductor.chosenRuleFileName + ruleType + topRuleCount));
-				Writer decodedRuleWriter = new BufferedWriter(
-						new FileWriter(Conductor.chosenRuleFileName + ruleType + topRuleCount + ".decode"));
+//				Writer decodedRuleWriter = new BufferedWriter(
+//						new FileWriter(Conductor.chosenRuleFileName + ruleType + topRuleCount + ".decode"));
 				double convictionSum = 0;
 				for (NegativeRule negativeRule : ranker.getChosenNegativeRules()) {
 					count++;
@@ -232,23 +232,23 @@ public class Conductor {
 					}
 					if (ruleType.equals(".neg.")) {
 						ruleWriter.write(positiveRule + ", not " + negation + "\n");
-						decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
+//						decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
 						double conviction = negativeRule.getStandardConviction();
 						convictionSum += conviction;
 					} else if (ruleType.equals(".pos.")) {
 						ruleWriter.write(positiveRule + ".\n");
-						decodedRuleWriter.write(decodedPositiveRule + ".\n");
+//						decodedRuleWriter.write(decodedPositiveRule + ".\n");
 						double conviction = negativeRule.getPositiveRule().getConviction();
 						convictionSum += conviction;
 					} else {
 						ruleWriter.write(positiveRule + ", not " + negation + "\n");
-						decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
+//						decodedRuleWriter.write(decodedPositiveRule + " ^ not " + decodedNegation + "\n");
 						ruleWriter.write("not_" + positiveRule + ", " + negation + "\n");
-						decodedRuleWriter.write("not_" + decodedPositiveRule + " ^ " + decodedNegation + "\n");
+//						decodedRuleWriter.write("not_" + decodedPositiveRule + " ^ " + decodedNegation + "\n");
 					}
 				}
 				ruleWriter.close();
-				decodedRuleWriter.close();
+//				decodedRuleWriter.close();
 				if (ruleType.equals(".pos.")) {
 					System.out.println("Average conviction of positive rules: " + (convictionSum / topRuleCount));
 				} else {
