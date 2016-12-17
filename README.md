@@ -9,7 +9,7 @@ RUMIS is a system for mining nonmonotonic rules from a knowledge graph (KG) unde
 
 ### Knowledge Graph Format
 
-The KG is presented in a tab seperated file containing triples in the format <subject predicate object> (format 1). You can see this format after uncompressing data/sample.imdb.txt.zip file in the repository.
+The KG is presented in a tab seperated file containing triples in the format &lt;subject&gt; &lt;predicate&gt; &lt;object&gt; (format 1). You can see this format after uncompressing data/sample.imdb.txt.zip file in the repository.
 
 ### Horn Rule Format
 
@@ -117,9 +117,9 @@ Revised rules can be seen from generated result file revised-rules.txt in the sa
 
 The file revised-rules.txt lists the revisions of Horn rules from horn-rules.txt with the ranking option being specified in the command. Two main sections are presented in revised-rules.txt, the first one describes exceptions ranked for each Horn rule and the second one lists final selected revisions. As regards the first section, Naive ranking subsection is always presented on top of the file, followed by [PM | OPM] one if [PM | OPM] is selected, resp.
 
-Every ranking subsection contains many parts separated by a blank line, each of them describes rules with exceptions. The first line of each part is a positive rule and its measure values with the format: <rule> <Conv> <Conf>. Conv and Conf are abbreviations of conviction and confidence measures, resp. Please refer [1] for definition of conviction and confidence measures.
+Every ranking subsection contains many parts separated by a blank line, each of them describes rules with exceptions. The first line of each part is a positive rule and its measure values with the format: &lt;rule&gt; &lt;Conv&gt; &lt;Conf&gt;. Conv and Conf are abbreviations of conviction and confidence measures, resp. Please refer [1] for definition of conviction and confidence measures.
 
-The rest of each above part is top 10 negated atoms for each Horn rule which are sorted according to the decreasing order of the positive-negative conviction (PosNegConv) of the corresponding revision achieved by inserting the negated atom to the rule [1]. If two revisions have the same positive-negative conviction, the one with higher conviction has a higer rank. The format for describing each negated atom with its measures is: &lt;not exception&gt; <PosNegConv> <Conv>.
+The rest of each above part is top 10 negated atoms for each Horn rule which are sorted according to the decreasing order of the positive-negative conviction (PosNegConv) of the corresponding revision achieved by inserting the negated atom to the rule [1]. If two revisions have the same positive-negative conviction, the one with higher conviction has a higer rank. The format for describing each negated atom with its measures is: &lt;not exception&gt; &lt;PosNegConv&gt; &lt;Conv&gt;.
 
 The second section of the revised-rules.txt lists chosen revisions for all the Horn rules. They are corresponding to the best exceptions of positive rules in the subsection of given ranking option.
 
@@ -147,7 +147,7 @@ java -XX:-UseGCOverheadLimit -Xmx[max memory]G -jar rumis-1.0.jar -e=exp -f=[wor
 
 Where -XX, -Xmx, -t, -d, -s are optional. -XX and -Xmx are used when we want to allocate more memory for RUMIS, and, if the option -t is not used, all the rules in horn-rules.txt are revised. Besides, -s option should only be added to the command if we just want to care about revisions of some selected rules in selected.horn-rules.txt file.
 
-The first two lines of the generated file experiment.txt present the average conviction of selected Horn rules and their final revisions. These statistics are described in the Table 1 in [1] with different number of top Horn rules. Besides, the rest two parts of the file show predicates extended from the learning KG for each positive and revised rules. Format of every tab separated line in each part is <relation> <inferred facts> <good facts> <other facts> where inferred facts means total number of predicted triples over the relation. Besides, good and other facts indicate quantity of inferred facts that are in and not in the ideal KG, resp.
+The first two lines of the generated file experiment.txt present the average conviction of selected Horn rules and their final revisions. These statistics are described in the Table 1 in [1] with different number of top Horn rules. Besides, the rest two parts of the file show predicates extended from the learning KG for each positive and revised rules. Format of every tab separated line in each part is &lt;relation&gt; &lt;inferred facts&gt; &lt;good facts&gt; &lt;other facts&gt; where inferred facts means total number of predicted triples over the relation. Besides, good and other facts indicate quantity of inferred facts that are in and not in the ideal KG, resp.
 
 The command outputs a file encode.txt and a DLV directory in the working folder. The former is a tab separated file that maps from entities and predicates of ideal KG to their encoded IDs. The latter provides some files as follows. First, training.data.kg is the DLV format version of training.data.txt. Second, files chosen.rules.[naive | pm | opm].txt.[pos | neg].[number of top rules] list chosen rules in encoded DLV format, i.e, DLV rule format s.t. predicated and exceptions are encoded. Third, files extension.[naive | pm | opm].txt.[pos | neg].[number of top rules] describe KGs extended from learning data in DLV format and corresponding rules. The terms pos, neg correspond to positive and revised rule sets which are exploited to extend KG. Finally, For each of these, there are decode, needcheck, good, conflict extension files which present KG in format 1, facts not in the ideal KG, facts in the ideal KG and conflicts, resp [1].
 
