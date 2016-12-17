@@ -139,7 +139,7 @@ $ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2 
 
 ### Experiment
 
-First of all, create the working folder indicated above, and then run the following command for the experiment:
+First of all, please create the working folder indicated above, and then run the following command for the experiment:
 
 ```
 java -XX:-UseGCOverheadLimit -Xmx[max memory]G -jar rumis-1.0.jar -e=exp -f=[working folder] -r=[ranking] -t=[top positive rules] -d -s 1>experiment.txt
@@ -153,7 +153,7 @@ The command outputs a file encode.txt and a DLV directory in the working folder.
 
 #### Example
 
-The working folder can be built by the following steps. First, please create a directory data/experiment/IMDB in the repository and rename sample.imdb.txt file to ideal.data.txt in the directory. Second, generate horn-rules.txt as an output of positive rule mining function and put it in the working folder. If only some positive rules need to be revised, we can list them in selected.horn-rules.txt of the same location. Finally, DLV binary file [3] should be downloaded to the directory.
+The working folder can be built by the following steps. First, please create a directory data/experiment/IMDB, rename sample.imdb.txt file to ideal.data.txt in the directory. Second, please create learning data as training.data.txt in the same location with ideal KG file. Third, one should generate horn-rules.txt as an output of positive rule mining function applied to the learning data and put it in the working folder. If only some positive rules need to be revised, we can list them in selected.horn-rules.txt of the same location. Finally, DLV binary file should be downloaded to the directory.
 
 The command that executes experiment with OPM ranking and top 10 positive rules (without DLV) is as follows.
 
