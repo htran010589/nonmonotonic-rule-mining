@@ -267,24 +267,40 @@ $R_{NM} \leftarrow \{\}$\\
 
 \section{Usage}
 
-RUMIS is developed and currently tested in Linux, besides, it can run on every machine that has Java 8 environment. In this chapter, command line interface of RUMIS is introduced, and after that, features of the system are described in details.
+RUMIS is developed and currently tested in Linux~\footnote{\url{https://github.com/htran010589/nonmonotonic-rule-mining}}, we may extend it to Windows in the future. Besides, Java 8 should be installed before running the tool and DLV~\footnote{\url{http://www.dlvsystem.com/html/DLV_User_Manual.html}} is necessary for conducting experiment. In this chapter, the setting and command line interface of RUMIS are introduced, after that, features of the system are described in details.
+
+\subsection{Setting}
+
+\textbf{DLV.} This tool is used to extend a KG given a set of Horn or nonmonotonic rules at hand. RUMIS exploits DLV in its experiment function, i.e, a RUMIS' feature for evaluating result.
+
+\textbf{Predicate Ratio and Learning KG.} RUMIS provides a function for creating a learning KG based on a predicate ratio. For example, given the KG and 0.8 as the ratio, then 80\% facts of every binary predicate are retained in the learning KG. The original KG is called the approximated ideal one.
+
+\textbf{Working Folder.} Working folder is a location for experiment where we have learning and approximated ideal KGs in SPO format (training.data.txt and ideal.data.txt, resp.), positive rule and sampled positive rule files (horn-rules.txt and selected.horn-rules.txt, resp.) in format~\ref{form2}. Besides, DLV binary file\footnote{\url{http://www.dlvsystem.com/files/dlv.x86-64-linux-elf-static.bin}} should be downloaded and renamed to dlv.bin in this folder. The selected.horn-rules.txt containing a subset of rules in horn-rules.txt, it is only necessary if we want to revise some rules in this file.
 
 \subsection{Command Line Options}
 
 Users can choose some of the following options to get a suitable mode for RUMIS:
 
 \begin{itemize}
-\item -e=[execution function]: This requires a main function for RUMIS, i.e., pos and neg are corresponding to positve and nonmonotonic rule mining, resp.
+\item -d: This flag is to enable DLV in order to extend KG.
+\item -e=[execution function]: This requires a string as a function for execution, i.e., new, pos and neg, exp are corresponding to creating a new learning KG, positve and nonmonotonic rule mining and conducting experiment, resp.
+\item -f=[working folder path]: This requires a string as an experiment folder path.
 \item -h: This is the command line interface description.
-\item -l=[KG file path]: This requires a KG file path to learn rules.
-\item -p=[positive rule file path]: This requires a path to a positive rule file containing set of Horn rules in the form~\ref{form2}.
-\item -r=[integer]: This requires an integer as a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
-\item -t=[integer]: This requires a number of top positive rules according to the absolute support.
+\item -l=[KG file path]: This requires a string as a KG file path in SPO format.
+\item -o=[predicate ratio]: This requires a percentage as a predicate ratio to create a new learning KG.
+\item -p=[Horn rule file path]: This requires a string as an Horn rule file path in format~\ref{form2}.
+\item -r=[ranking]: This requires an integer as a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
+\item -s: This flag is to enable sampling positive rules.
+\item -t=[number of top Horn rules]: This requires an integer as a number of positive rules with top absolute support.
 \end{itemize}
 
 \subsection{Usage Description}
 
-First of all, please download the repository\footnote{\url{https://github.com/htran010589/nonmonotonic-rule-mining}}, and then uncompress data/sample.imdb.txt.zip to get sample.imdb.txt file. There are two main features of RUMIS, Horn and nonmonotonic rule mining. In the rest of this section, these two features are described in details.
+First of all, please download the repository\footnote{\url{https://github.com/htran010589/nonmonotonic-rule-mining}}, and then uncompress data/sample.imdb.txt.zip to get sample.imdb.txt file. In the next step, the repository folder should be located: \textit{\$ cd nonmonotonic-rule-mining}. Now we finish the preparation, and ready to describe the main features of RUMIS in details.
+
+\textbf{Generating Learning KG.} Please generate the learning data in the format 1 with the following command: \textit{\$ java -jar rumis-1.0.jar -e=new -l=[path to KG file] -o=[ratio] 1>[training KG file path]}.
+
+\textit{Example.} A learning KG of the IMDB sample dataset can be generated with predicate ratio being 80\%: \textit{\$ java -jar rumis-1.0.jar -e=new -l=data/sample.imdb.txt -o=0.8 1>training.sample.imdb.txt}. Then training.sample.imdb.txt file is the learning KG that we want to generate.
 
 \textbf{Horn Rule Mining.} Please run the Horn rule mining with the following command: \textit{\$ java -jar rumis-1.0.jar -e=pos -l=[path to KG file]}. This will generate two files, horn-rules.txt for the positive rules and horn-rules-stats.txt with the presence of absolute support. Both rules in two files are sorted by decreasing order of the support measure.
 
@@ -301,3 +317,13 @@ The rest of each above part is top 10 negated atoms for each Horn rule which are
 The second section of the revised-rules.txt lists chosen revisions for all the Horn rules. They are corresponding to the best exceptions of positive rules in the subsection of given ranking option.
 
 \textit{Example.} Please run the following command for executing IMDB nonmonotonic rule mining with OPM ranking: \textit{\$ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2}. If you just want to revise top 10 Horn rules, please use -t option: \textit{\$ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2 -t=10}.
+
+\textbf{Experiment.} First of all, create the working folder indicated above, and then run the following command for the experiment: \textit{java -XX:-UseGCOverheadLimit -Xmx[max memory]G -jar rumis-1.0.jar -e=exp -f=[working folder] -r=[ranking] -t=[top positive rules] -d -s 1>experiment.txt} where \textit{-XX, -Xmx, -t, -d, -s} are optional. -XX and -Xmx are used when we want to allocate more memory for RUMIS, and, if the option -t is not used, all the rules in \textit{horn-rules.txt} are revised. Besides, \textit{-s} option should only be added to the command if we just want to care about revisions of some selected rules in \textit{selected.horn-rules.txt} file.
+
+The first two lines of the generated file \textit{experiment.txt} present the average conviction of selected Horn rules and their final revisions. These statistics are described in the Table 1 in the next chapter with different number of top Horn rules. Besides, the rest two parts of the file show predicates extended from the learning KG for each positive and revised rules. Format of every tab separated line in each part is <relation> <inferred facts> <good facts> <other facts> where inferred facts means total number of predicted triples over the relation. Besides, good and other facts indicate quantity of inferred facts that are in and not in the ideal KG, resp.
+
+The command outputs a file \textit{encode.txt} and a DLV directory in the working folder. The former is a tab separated file that maps from entities and predicates of ideal KG to their encoded IDs. The latter provides some files as follows. First, \textit{training.data.kg} is the DLV format version of \textit{training.data.txt}. Second, files \textit{chosen.rules.[naive | pm | opm].txt.[pos | neg].[number of top rules]} list chosen rules in encoded DLV format, i.e, DLV rule format s.t. predicated and exceptions are encoded. Third, files \textit{extension.[naive | pm | opm].txt.[pos | neg].[number of top rules]} describe KGs extended from learning data in DLV format and corresponding rules. The terms \textit{pos, neg} correspond to positive and revised rule sets which are exploited to extend KG. Finally, For each of these, there are \textit{decode, needcheck, good, conflict} extension files which present KG in SPO format, facts not in the ideal KG, facts in the ideal KG and conflicts, resp.
+
+\textit{Example.} The working folder can be built by the following steps. First, please create a directory \textit{data/experiment/IMDB} in the repository and rename \textit{sample.imdb.txt} file to \textit{ideal.data.txt} in the directory. Second, generate \textit{horn-rules.txt} as an output of positive rule mining function and put it in the working folder. If only some positive rules need to be revised, we can list them in \textit{selected.horn-rules.txt} of the same location. Finally, DLV binary file should be downloaded to the directory.
+
+The command that executes experiment with OPM ranking and top 10 positive rules (without DLV) is as follows. \textit{java -jar rumis-1.0.jar -e=exp -f=data/experiment/IMDB/ -r=2 -t=10 1>experiment.txt 2>log}. If we want to expand memory, enable DLV and selected rule option, the following command can be used. \textit{java -XX:-UseGCOverheadLimit -Xmx300G -jar rumis-1.0.jar -e=exp -f=data/experiment/IMDB/ -r=2 -t=10 -d -s 1>experiment.txt 2>log}.
