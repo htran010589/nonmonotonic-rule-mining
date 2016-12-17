@@ -117,10 +117,10 @@ public class Conductor {
 					positiveNewFacts.add(xpy);
 					if (idealFacts.checkXpy(xpy)) {
 						goodFactCount++;
-						goodFactWriter.write(xpy + "\n");
+						goodFactWriter.write("<" + x + ">\t<" +p + ">\t<" + y + ">\n");
 						Utils.addKeyLong(goodFactPerPredicateCount, p, 1L);
 					} else {
-						needCheckFactWriter.write(xpy + "\n");
+						needCheckFactWriter.write("<" + x + ">\t<" +p + ">\t<" + y + ">\n");
 						needCheckFactCount++;
 						Utils.addKeyLong(needCheckFactPerPredicateCount, p, 1L);
 					}
