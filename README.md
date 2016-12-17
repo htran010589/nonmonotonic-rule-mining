@@ -119,7 +119,7 @@ The file revised-rules.txt lists the revisions of Horn rules from horn-rules.txt
 
 Every ranking subsection contains many parts separated by a blank line, each of them describes rules with exceptions. The first line of each part is a positive rule and its measure values with the format: <rule> <Conv> <Conf>. Conv and Conf are abbreviations of conviction and confidence measures, resp. Please refer [1] for definition of conviction and confidence measures.
 
-The rest of each above part is top 10 negated atoms for each Horn rule which are sorted according to the decreasing order of the positive-negative conviction (PosNegConv) of the corresponding revision achieved by inserting the negated atom to the rule [1]. If two revisions have the same positive-negative conviction, the one with higher conviction has a higer rank. The format for describing each negated atom with its measures is: <not exception> <PosNegConv> <Conv>.
+The rest of each above part is top 10 negated atoms for each Horn rule which are sorted according to the decreasing order of the positive-negative conviction (PosNegConv) of the corresponding revision achieved by inserting the negated atom to the rule [1]. If two revisions have the same positive-negative conviction, the one with higher conviction has a higer rank. The format for describing each negated atom with its measures is: &lt;not exception&gt; <PosNegConv> <Conv>.
 
 The second section of the revised-rules.txt lists chosen revisions for all the Horn rules. They are corresponding to the best exceptions of positive rules in the subsection of given ranking option.
 
@@ -142,7 +142,7 @@ $ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2 
 First of all, please create the working folder indicated above, and then run the following command for the experiment:
 
 ```
-java -XX:-UseGCOverheadLimit -Xmx[max memory]G -jar rumis-1.0.jar -e=exp -f=[working folder] -r=[ranking] -t=[top positive rules] -d -s 1>experiment.txt
+java -XX:-UseGCOverheadLimit -Xmx[max memory]G -jar rumis-1.0.jar -e=exp -f=[working folder] -r=[ranking] -t=[top positive rules] -d -s 1>experiment.txt 2>log
 ```
 
 Where -XX, -Xmx, -t, -d, -s are optional. -XX and -Xmx are used when we want to allocate more memory for RUMIS, and, if the option -t is not used, all the rules in horn-rules.txt are revised. Besides, -s option should only be added to the command if we just want to care about revisions of some selected rules in selected.horn-rules.txt file.
