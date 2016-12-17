@@ -153,7 +153,7 @@ The command outputs a file encode.txt and a DLV directory in the working folder.
 
 #### Example
 
-The working folder can be built by the following steps. First, please create a directory data/experiment/IMDB, rename sample.imdb.txt file to ideal.data.txt in the directory. Second, please create learning data as training.data.txt in the same location with ideal KG file. Third, one should generate horn-rules.txt as an output of positive rule mining function applied to the learning data and put it in the working folder. If only some positive rules need to be revised, we can list them in selected.horn-rules.txt of the same location. Finally, DLV binary file should be downloaded to the directory.
+The working folder can be built as a directory data/experiment/IMDB that contains all of the following files. First, please rename sample.imdb.txt file to ideal.data.txt in the directory. Second, please sample the learning data of the ideal KG file and get training.data.txt. Third, one should generate horn-rules.txt as an output of positive rule mining function applied to the learning data. If only some positive rules need to be revised, we can list them in selected.horn-rules.txt. Finally, DLV binary file should be downloaded to the directory.
 
 The command that executes experiment with OPM ranking and top 10 positive rules (without DLV) is as follows.
 
