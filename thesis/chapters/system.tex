@@ -44,7 +44,7 @@ Where $h$, $p$, $q$ are binary predicates from KG $\cG$, these notations and the
 \label{data_indexing}
 \end{figure}
 
-Since the KG $\cG$ can be huge, it takes a long time to find (ab)normal instances and exception witness sets of a positive rule. To overcome this, data indexing is taken into consideration to speed up processing data. In a traditional search engine, terms such as words, n-grams are indexed into the system and their corresponding posting lists[cite?] are a collection of documents containing them. The same intuition can be applied to relational setting in the current work. Indeed, RUMIS treats every fact as a document and the terms can be subjects, predicates, objects or some combinations of them.
+Since the KG $\cG$ can be huge, it takes a long time to find (ab)normal instances and exception witness sets of a positive rule. To overcome this, data indexing is taken into consideration to speed up processing data. In a traditional search engine, terms such as words, n-grams are indexed into the system and their corresponding posting lists~\cite{ref47} are a collection of documents containing them. The same intuition can be applied to relational setting in the current work. Indeed, RUMIS treats every fact as a document and the terms can be subjects, predicates, objects or some combinations of them.
 
 To be specific, Figure~\ref{data_indexing} illustrates data indexed from part of KG in Figure~\ref{fig1.1}. In the figure, based on the index, if predicate \textit{isMarriedTo} is given, we can find set of subject-object pairs corresponding to this relation, i.e., \textit{$<$Brad, Ann$>$} and \textit{$<$John, Kate$>$}. Besides, objects can be found if we have at hand their corresponding subjects and relations. For example, we can get ``Berlin" as an answer to the question: ``Where does Ann live" based on data indexing illustrated in the Figure~\ref{data_indexing}. In this example, the term is the combination of subjects and predicates. More formally, Data Indexing provides the following functions that are exploited in the rest components:
 
@@ -179,7 +179,7 @@ Figure~\ref{pm_ranking} shows some arrows representing for the communications be
 
 \textit{Definition 1.[plan to move this definition to background section]} Safely predicted facts of $r$ w.r.t. KG $\cG$ are all new facts produced by $r$ and not by any revision of $r$ constructing by adding an exception candidate to the rule body. [Give an example, ...]
 
-\textbf{PM Ranking.} The Algorithm~\ref{bf_pm_ranking_algo} describes the intuition for PM ranking step by step. In line 1, a set of revised rules are initialized as an empty set. After that, for each positive rule $r$ in $R_H$, we clone original KG $\cG$ to a new one ($\cG'$), then all other rules in $R_H$ are exploited to generate their safely predicted facts which are subsequently indexed to $\cG'$ (line 2 to 6). In line 7 and 8, based on the new KG, exceptions of $r$ are ranked and the best revision is added to $R_{NM}$. Finally, we return $R_{NM}$ as a result for the algorithm.
+\textbf{PM Ranking.} The Algorithm~\ref{bf_pm_ranking_algo} describes the intuition for PM ranking step by step. In line 1, a set of revised rules are initialized as an empty set. After that, for each positive rule $r$ in $R_H$, we clone original KG $\cG$ to a new one ($\cG'$), then all other rules in $R_H$ are exploited to generate their safely predicted facts which are subsequently indexed to $\cG'$ (line 2 to 6). RUMIS is conservative in producing new facts since the system applies revisions to $\cG$ instead of $\cG'$ in every iteration. This eliminates the cases that wrong facts introduce many incorrect ones in the future process. Next, in line 7 and 8, based on the new KG, exceptions of $r$ are ranked and the best revision is added to $R_{NM}$. Finally, we return $R_{NM}$ as a result for the algorithm.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -234,9 +234,11 @@ Sort all rules in $R_H$ according to the decreasing order of conviction\\
 
 \section{Optimization}
 
-This function is executed in the Algorithm~\ref{pm_ranking_algo} with the following steps. In lines 1 and 2 of the algorithm, we clone an original graph $\cG$ to $\cG'$ and create empty nonmonotonic rule set $R_NM$. After that, from line 3 to 5, for every Horn rule $r$ in $R_H$, all new facts produced by $r$ and not by any revision of $r$ from $\cG$ (safely predicted facts of $r$ [should be defined in background section]) are added to $\cG'$ using Data Indexing component. In other words, all exceptions of $r$ are used to reduce the possibility of wrongly predicted facts. Besides, RUMIS is conservative in producing new facts since the system applies revisions to $\cG$ instead of $\cG'$ in every iteration. This eliminates the cases that wrong facts introduce many incorrect ones in the future process. 
+To accomplish the Algorithm~\ref{bf_pm_ranking_algo}, cloning KG $\cG$ and indexing safely predicted facts are executed $|R_H|$ and $|R_H|^2$ times, resp. Since the number of facts in $\cG$ and positive rules can be large, this algorithm takes long time to process, and thus, is not scalable. We need to optimize it s.t. cloning KG should not be called many times because copying from a KG to a new one is time consuming. Besides, accessing to Data Indexer should be restricted to speed up PM ranking. This is a motivation for introducing Algorithm~\ref{pm_ranking} as a refined algorithm for PM ranking which is implemented in the following steps.
 
-Now RUMIS is ready for PM ranking strategy, in line 7, for each Horn rule $r$, indexes of its safely predicted facts are removed from $\cG'$. This step is to make sure that safely predicted facts of all other rules ($r$ excluded) are exploited to determine quality of $r$ (line 8). Thanks to this, the interaction between nonmonotonic rules are taken into consideration for the ranking. After that, the best revision of $r$ is added to the final result in line 9. Line 10 shows a step that undoes what is done in line 7, i.e., safely predicted facts of rule $r$ based on $\cG$ is added to $\cG'$ again. This guarantees the same setting in the next iteration can be processed with a new rule.
+In lines 1 and 2 of the Algorithm~\ref{pm_ranking}, we clone an original graph $\cG$ to $\cG'$ and create empty nonmonotonic rule set $R_{NM}$. After that, from line 3 to 5, for every Horn rule $r$ in $R_H$, its safely predicted facts are added to $\cG'$ using Data Indexing component. 
+
+Now RUMIS is ready for refined PM ranking, in line 7, for each Horn rule $r$, indexes of its safely predicted facts are removed from $\cG'$. This step is to make sure that safely predicted facts of all other rules ($r$ excluded) are exploited to determine quality of $r$ (line 8). Thanks to this, the interaction between nonmonotonic rules are taken into consideration for the ranking. After that, the best revision of $r$ is added to the final result in line 9. Line 10 shows a step that undoes what is done in line 7, i.e., safely predicted facts of rule $r$ based on $\cG$ is added to $\cG'$ again. This guarantees the same setting in the next iteration can be processed with a new rule.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -264,6 +266,8 @@ $R_{NM} \leftarrow \{\}$\\
 \label{pm_ranking_algo}
 \end{algorithm}
 \DecMargin{1.5em}
+
+With the optimized algorithm, we only need $O(|R_H|)$ times for indexing new predicted facts and one time for cloning KG. This is a significant improvement compared with the original version. The difference can be clearly seen if the KG is large and we have a lot of rules to communicate each other.
 
 \section{Usage}
 
