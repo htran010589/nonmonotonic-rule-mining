@@ -1,4 +1,5 @@
 \chapter{RUMIS - Nonmonotonic Rule Mining System}\label{chap:system}
+\label{chap:system}
 
 RUMIS stands for Nonmonotonic Rule Mining System which is the main tool in the current work and is exploited to revise Horn rules under the OWA. This chapter describes in details the practical implementation of theory framework presented in Chapter~\ref{chap:frame} and uses background definitions in Chapter~\ref{chap:back}. Organization of the chapter is as follows, first, an overview of the RUMIS is discussed. Second, the implementations of main components in the system are presented. Finally, we talk about usage of the system.
 
@@ -25,14 +26,7 @@ There are six components in RUMIS as presented in Figure~\ref{system_overview} w
 
 \section{Implementation}
 
-In this section, the main components mentioned in Section~\ref{sec:overview} are described in details. To simplify the problem of \textit{language bias}, the implementation of RUMIS only takes the following positive rule form into consideration:
-
-\begin{equation}
-r2: h(X, Z) \leftarrow p(X, Y), q(Y, Z)
-\label{form2}
-\end{equation}
-
-Where $h$, $p$, $q$ are binary predicates from KG $\cG$, these notations and the form~\ref{form2} ($r2$) are used in the rest of this thesis.
+In this section, the main components mentioned in Section~\ref{sec:overview} are described in details.
 
 \subsection{Data Indexing}
 \label{data_indexing}
