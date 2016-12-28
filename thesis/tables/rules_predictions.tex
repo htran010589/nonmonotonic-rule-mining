@@ -1,36 +1,37 @@
-\begin{table*}[t]
-\centering
-\begin{tabularx}{\textwidth}{@{}lll*{6}{Y}@{}}
-\toprule
-\multirow{2}{*}{} & \multicolumn{1}{c}{\multirow{2}{*}{\textbf{Approach}}} & \multicolumn{1}{c}{\multirow{2}{*}{\textbf{Source}}} & \multicolumn{3}{c}{\textbf{Count@Top-K}} & \multicolumn{3}{c}{\textbf{Prec@Top-K}} \\
-\cmidrule(lr){4-6} \cmidrule(l){7-9}
-                  &                   &                               & \textbf{1}            & \textbf{2}           & \textbf{3}           & \textbf{1}          & \textbf{2}          & \textbf{3}   \\    
-                             
-                             \midrule
-\multirow{10}{*}{\texttt{Persons}}     & \multirow{4}{*}{Type-Aware} & First Name  & 8	& 10	& 12	& 87.50 	& 80.00 	& 66.67 	\\
-                             &                             & Last Name   & 14	& 17	& 19	& 92.86 	& 88.24 	& 78.95 	\\
-                             &                             & rdfs:label   & 156	& 288	& 383	& 79.49 	& 63.19 	& 57.44 	\\
-                             &                             & redirects   & 113	& 210	& 285	& 69.91 	& 57.62 	& 50.18 	\\
-                              \cmidrule{2-9}
-                             & \multirow{4}{*}{Combined}   & First Name  & 7	& 10	& 12	& 100.00 	& 90.00 	& 75.00 	\\
-                             &                             & Last Name   & 16	& 22	& 25	& 87.50 	& 81.82 	& 76.00 	\\
-                             &                             & rdfs:label   & 160	& 307	& 421	& 81.25 	& 64.82 	& 57.24 	\\
-                             &                             & redirects   & 108	& 210	& 288	& 67.59 	& 60.00 	& 54.51 	\\
-                             \cmidrule{2-9}
-                             & \multirow{2}{*}{Transliteration} & First Name  & 26	& 52	& 76	& 80.77 	& 61.54 	& 56.58 	\\
-                             &                             & Last Name   & 94	& 188	& 279	& 70.21 	& 63.83 	& 55.91 	\\
-                             \midrule
 
-\multirow{4}{*}{\texttt{Non-Persons}} & \multirow{2}{*}{Type-Aware} & rdfs:label   & 269	& 519	& 742	& 53.16 	& 43.16 	& 36.66 	\\
-                             &                             & redirects    & 191	& 370	& 526	& 45.55 	& 34.86 	& 30.99 	\\
-                             \cmidrule{2-9}
-                             & \multirow{2}{*}{Combined}   & rdfs:label   & 273	& 533	& 770	& 49.82 	& 41.84 	& 36.75 	\\
-                             &                             &  redirects & 195	& 378	& 539	& 46.67 	& 39.42 	& 34.69 	\\
-                              \midrule
-\texttt{Categories} & Categories & Categories  & 118	& 234	& 340	& 67.80 	& 52.99 	& 46.18 	\\
+% \begin{tabular}{c|l|llll|llll}
+% \hline
+%  \multirow{2}{*}{}              &   \multirow{2}{*}{\textbf{$\mi{head(r)}$}}   	& \multicolumn{4}{c|}{\textbf{predictions}} 						&  \multicolumn{4}{c}{\textbf{outside $\cG^i_{appr}$}}  				\\ \cline{3-10} 
+%          						&  									& $\cR_\mi{H}$  & $\cR_{N}$ & $\cR_{PM}$  		& $\cR_{OPM}$ &  $\cR_\mi{H}$     & $\cR_{\mi{N}}$ 	& $\cR_\mi{PM}$     & $\cR_{\mi{OPM}}$    \\ \hline
+% %\multirow{4}{*}{\rotatebox{90}{YAGO}}
+% & directed & 41079 & 39174 & 39174 & 39174  & 41021 & 39116 & 39116 & 39116 \\ %\cline{2-10}
+%  & gradFrom & 3519 & 3456 & 3456 & 3456  & 3363 & 3300 & 3300 & 3300 \\ %\cline{2-10}
+%  & citizenOf & 3407 & 2883 & 2883 & 2883  & 3360 & 2836 & 2836 & 2836 \\ %\cline{2-10}
+%  & bornIn & 110283 & 108317 & 109846 & 108317 & 109572 & 107607 & 109137 & 107607 \\ \hline\hline %\cline{1-10}
+% %\multirow{4}{*}{\rotatebox{90}{IMDB}} 
+% & actIn & 1231 & 1214 & 1230 & 1214 & 1148 & 1131 & 1147 & 1131 \\ %\cline{2-10}
+%  & genre & 629 & 609 & 618 & 609  & 493 & 477 & 482 & 477 \\% \cline{2-10}
+%  & hasLang & 173 & 102 & 125 & 102 & 163 & 92 & 115 & 92 \\ %\cline{2-10}
+%  & prodIn & 2489 & 2256 & 2327 & 2327 & 2488 & 2255 & 2326 & 2326 \\ \cline{1-10}
+% \end{tabular}
+\footnotesize{
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|llll|llll|lll|}
+\hline
+  \multirow{2}{*}{\textbf{predicate}}   	& \multicolumn{4}{c|}{\textbf{predictions}} 	&  \multicolumn{4}{c|}{\textbf{outside $\cG^i_{appr}$}} &  \multicolumn{3}{c|}{\textbf{corr. removed,{\%}}}  				\\ \cline{2-12} 
+ 		& $\cR_\mi{H}$  & $\cR_{\mi{N}}$ & $\cR_{\mi{PM}}$  		& $\cR_{\mi{OPM}}$ &  $\cR_\mi{H}$     & $\cR_{\mi{N}}$ 	& $\cR_\mi{PM}$     & $\cR_{\mi{OPM}}$  & $\cR_{\mi{N}}$ 	& $\cR_\mi{PM}$     & $\cR_{\mi{OPM}}$   \\ \hline
 
-\bottomrule
-\end{tabularx}
-\caption[shorten caption]{full caption}
-\label{table:translation-eval}
-\end{table*}
+%\multirow{4}{*}{\rotatebox{90}{IMDB}} 
+ $\mi{{I}{:}{actedIn}}$ & 1231 & 1214 & 1230 & 1214 & 1148 & 1131 & 1147 & 1131 &90 & 100 & 90\\ %\cline{2-10}
+ $\mi{{I}{:}{genre}}$ & 629 & 609 & 618 & 609  & 493 & 477 & 482 & 477 &50 & 20 & 50\\% \cline{2-10}
+ $\mi{{I}{:}{hasLang}}$ & 173 & 102 & 125 & 102 & 163 & 92 & 115 & 92 &  60 & 100 & 60\\ %\cline{2-10}
+ $\mi{{I}{:}{prodIn}}$ & 2489 & 2256 & 2327 & 2327 & 2488 & 2255 & 2326 & 2326 & 10 & 10 & 30 \\ \cline{10-12}
+ &  &  &  &  &  &  &  &  	& 52.50  & 45.16   & \textbf{57.75}  \\
+\hline 
+$\mi{{Y}{:}{direct}}$ & 41079 & 39174 & 39174 & 39174  & 41021 & 39116 & 39116 & 39116 & 100 & 100 & 100   \\
+ $\mi{{Y}{:}{grFrom}}$ & 3519 & 3456 & 3456 & 3456  & 3363 & 3300 & 3300 & 3300 & 100 & 100 & 70 \\ 
+ $\mi{{Y}{:}{citizOf}}$ & 3407 & 2883 & 2883 & 2883  & 3360 & 2836 & 2836 & 2836 & 50 & 50 & 70 \\ 
+ $\mi{{Y}{:}{bornIn}}$ & 110283 & 108317 & 109846 & 108317 & 109572 & 107607 & 109137 & 107607 &90& 90 & 100 \\ \cline{10-12}  
+ &  &  &  &  &  &  &  &  	& 85  & 85   & 85 \\
+ \hline 
+ \end{tabular}}}
