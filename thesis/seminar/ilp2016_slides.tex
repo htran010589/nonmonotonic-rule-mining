@@ -229,10 +229,9 @@ positioning,fit,calc,decorations.text, automata%
    \large{}\\
  }
 
-\author[shortname]{\underline{Hai Dang Tran\inst{1}}, Daria Stepanova\inst{1}, Mohamed Gad Elrab\inst{1},\\ Francesca A. Lisi\inst{2}, Gerhard Weikum\inst{1}
-}
-\institute[shortinst]{\inst{1} Max Planck Institute for Informatics, Saarbr\"{u}cken, Germany \and %
-                      \inst{2} Universit\`{a} degli Studi di Bari ``Aldo Moro", Bari, Italy}
+\author[shortname]{Hai Dang Tran\\Advisor: Daria Stepanova\\Supervisor: Gerhard Weikum}
+\institute[shortinst]{Max Planck Institute for Informatics, Saarbr\"{u}cken, Germany} %\and %
+%                      \inst{2} Universit\`{a} degli Studi di Bari ``Aldo Moro", Bari, Italy}
 
 
 
@@ -240,7 +239,8 @@ positioning,fit,calc,decorations.text, automata%
 \titlegraphic{
   \centering
 
- \includegraphics[height=1cm]{logo_mpi_430} \\\includegraphics[height=2.3cm]{logo_bari}
+ \includegraphics[height=1cm]{logo_mpi_430}
+ %\\\includegraphics[height=2.3cm]{logo_bari}
 
  \large{}
 }
@@ -728,129 +728,102 @@ Finding global optimum solution for QHTR is impracticable
 \end{frame}
 
 \section{Experiments}
-\begin{frame}\frametitle{Preliminary Experiments}
+\begin{frame}\frametitle{Experiments}
 \begin{itemize}
-\item \bl{$\cG^i_{\mi{appr}}$}: IMDB (movie) KG\footnote{\url{http://imdb.com}}: $\approx$ 600.000 facts, $\approx$ 40 relations
-\begin{itemize}
-\item[] E.g., $\gr{\mi{directedBy}}$, $\gr{\mi{actedIn}}$
-\end{itemize}
+\item \bl{$\cG^i_{\mi{appr}}$}: IMDB~\footnote{\url{http://imdb.com}}: 583 thousand triples, 38 predicates and YAGO: 20.7 million triples, 38 predicates
+
 \medskip
 
-\item \bl{$\cG$}: random. rem. 20\% from $\cG^i_{\mi{appr}}$ for every relation
+\item \bl{$\cG$}: delete 20\% facts over each binary predicate from $\cG^i_{\mi{appr}}$
 \medskip
 
-\item \bl{$\cR_H$}: $\mi{h(X,Y)\leftarrow p(X,Z),q(Z,Y)}$ mine from $\cG$
+\item \bl{$\cR_H$}: explore Horn rules $\mi{h(X,Z)\leftarrow p(X,Y),q(Y,Z)}$ from $\cG$
 \medskip
 
-\item \bl{Exception types}: $\mi{e_1(X),e_2(Y),e_3(X,Y)}$
+\item \bl{Three kinds of exception}: $\mi{e_1(X),e_2(Z),e_3(X,Z)}$
 \medskip
 
-\item \bl{OPM} ranker, predictions are computed by \bl{answer set solver} dlv\footnote{\url{http://dlvsystem.com}}
-%\item $\bl{\mi{rm}}$ measure: $\mi{conv(r)=\dfrac{1-supp(r)}{1-conf(r)}}$
+\item \bl{PM, OPM} ranking, dlv\footnote{\url{http://dlvsystem.com}} is used to extend KGs
 \end{itemize}
 
-% \alt<6->{\begin{picture}(0.5,0.5)\put(93,-53){\includegraphics[width=0.45\textwidth]{exp_nm_negl}}\end{picture}}{\alt<5->{\begin{picture}(0.5,0.5)\put(93,-53){\includegraphics[width=0.45\textwidth]{exp_nm_gi}}\end{picture}}{\alt<4->{\begin{picture}(0.5,0.5)\put(93,-53){\includegraphics[width=0.45\textwidth]{exp_horn_gi}}\end{picture}}{\alt<3->{\begin{picture}(0.5,0.5)\put(93,-53){\includegraphics[width=0.45\textwidth]{exp_nm_all}}\end{picture}}{\begin{picture}(0.5,0.5)\put(93,-53){\includegraphics[width=0.45\textwidth]{exp_horn_all}}\end{picture}
-% }}}}}
 \end{frame}
 
+\begin{frame}\frametitle{Experiments}
 
-\begin{frame}\frametitle{Preliminary Experiments}
-\only<1>{\vspace{-1.4cm}}
+\begin{table}[ht]
 \centering
-\begin{table}[]
-\scriptsize
-\begin{tabular}{|r|r|r|r|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\multirow{3}{*}{\textbf{k}}} & \multicolumn{2}{c|}{\multirow{2}{*}{\textbf{avg. conv.}}}            & \multicolumn{1}{c|}{\multirow{2}{*}{\textbf{confl.}}} & \multicolumn{6}{c|}{\textbf{number of predictions}}                                                                                                                                                                                                           \\ \cline{5-10} 
-\multicolumn{1}{|c|}{}                            & \multicolumn{2}{c|}{}                                                & \multicolumn{1}{c|}{}                                 & \multicolumn{2}{c|}{\textbf{$\cR_{\mi{H}}$}}                                           & \multicolumn{2}{c|}{\textbf{$\cR_{\mi{NM}}$}}                                          & \multicolumn{2}{c|}{\textbf{$\cR_{\mi{H}}$ not $\cR_{\mi{NM}}$}}                                                        \\ \cline{2-10} 
-\multicolumn{1}{|c|}{}                            & \multicolumn{1}{c|}{\textbf{$\cR_{\mi{H}}$}} & \multicolumn{1}{c|}{\textbf{$\cR_{\mi{NM}}$}} & \multicolumn{1}{c|}{\textbf{$\cR_{\mi{NM}}$}}                     & \multicolumn{1}{c|}{\textbf{all}} & \multicolumn{1}{c|}{\textbf{in $\cG_{\mi{appr}}^i$}} & \multicolumn{1}{c|}{\textbf{all}} & \multicolumn{1}{c|}{\textbf{in $\cG_{\mi{appr}}^i$}} & \multicolumn{1}{c|}{\textbf{false} $\checkmark$} & \multicolumn{1}{c|}{\textbf{in $\cG_{\mi{appr}}^i$}} \\ \hline
-5                                                 & 4.08                             & 6.16                              & 0.28                                                  & 345                               & 161                                    & 331                               & \hilightbl{156}                                    & \hilightgray{0}                                                  & \hilightgreen{14}                                             \\
-10                                                & 2.91                             & 4.21                              & 0.08                                                  & 2178                              & 456                                    & 2118                              & \hilightbl{450}                                    & \hilightgray{27}                                                 & \hilightgreen{33}                                             \\
-15                                                & 2.5                              & 3.42                              & 0.09                                                  & 3482                              & 629                                    & 3348                              & \hilightbl{622}                                    & \hilightgray{86}                                                 & \hilightgreen{48}                                             \\
-20                                                & 2.29                             & 3.0                               & 0.13                                                  & 5278                              & 848                                    & 5046                              & \hilightbl{835}                                    & \hilightgray{157}                                               & \hilightgreen{75}                                            
-\\ \hline
-\end{tabular}
-\smallskip
-
-\caption{Top $k$ rule revision results}
-
+\footnotesize
+\renewcommand*{\arraystretch}{1.07}
+\centering
+\input{../tables/rules_quality}
+\caption{The Average Quality of the Top Positive and Nonmonotonic Rules}
+\label{tab:rules_quality}
 \end{table}
 
-\alt<2>{ \textbf{\bl{Examples of revised rules:}}\bigskip
-
- \begin{tabular}{l}
- {\footnotesize
-        %\multirow{6}{*}{YAGO $\begin{cases} \\ \\ \end{cases}$}
-        $\gr{r_1:  \mi{writtenBy(X, Z)}  \leftarrow
-        \mi{hasPredecessor(X, Y)},\mi{writtenBy(Y, Z)},}$ \alert{$ \textbf{not}$  $\mi{is\_American\_film(X)} $}}\\        
-       {\footnotesize 
-$\gr{r_2:  \mi{actedIn(X, Z)}  \leftarrow
-        \mi{isMarriedTo(X, Y)},\mi{directed(Y, Z)},}$ \alert{$ \textbf{not}$  $\mi{is\_silent\_film\_actor(X)} $}} \\
-    
- \end{tabular}            
-  }{\begin{picture}(0.5,0.5)\put(-83,-75){\includegraphics[width=0.56\textwidth]{big_pic_exp}}\end{picture}}
-
 \end{frame}
 
-% \begin{frame}\frametitle{Preliminary Experiments}
-% \vspace{-1.7cm}
-% \begin{table}[t]
-% \centering
-% \footnotesize
-% \renewcommand*{\arraystretch}{1.07}
-% \begin{tabular}{|r|r|r|r|r|r|r|r|r|}
-% \hline
-% \multicolumn{1}{|c|}{\multirow{3}{*}{\,\bf{$k$}\,}} & \multicolumn{2}{c|}{\multirow{2}{*}{\bf{avg. conv.}}}    & \multicolumn{1}{c|}{\multirow{2}{*}{\bf{confl.}}} & \multicolumn{5}{c|}{\bf{number of predictions}}                                                                                                            \\ \cline{5-9} 
-% \multicolumn{1}{|c|}{}                         & \multicolumn{2}{c|}{}                               & \multicolumn{1}{c|}{}                        & \multicolumn{2}{c|}{\bf{all}}                            & \multicolumn{2}{c|}{\bf{in $\cG^i_{\mi{appr}}$}}                     & \multicolumn{1}{c|}{\bf{corr.$|$inc. negl.}} \\ \cline{2-9} 
-% \multicolumn{1}{|c|}{}                         & \multicolumn{1}{c|}{\;$\cR_{\mi{H}}$\;} & \multicolumn{1}{c|}{\;$\cR_{\mi{NM}}$\;} & \multicolumn{1}{c|}{\;$\cR_{\mi{NM}}$\;}                      & \multicolumn{1}{c|}{\;$\cR_{\mi{H}}$\;} & \multicolumn{1}{c|}{\;$\cR_{\mi{NM}}$\;} & \multicolumn{1}{c|}{\;$\cR_{\mi{H}}$\;} & \multicolumn{1}{c|}{\;$\cR_{\mi{NM}}$\;} & \multicolumn{1}{c|}{\;$\cR_{\mi{NM}}$\;}         \\ \hline \hline
-% 5                                              & 4.08                      & 6.16                    & 0.28                                         & 345                       & 331                     & 161                       & \alt<2->{156}{\hilightbl{156}}                     &  \alt<2>{\hilightbl{0}$|$\hilightred{14}}{0$|$14}                             \\ 
-% 10                                             & 2.91                      & 4.21                    & 0.08                                         & 2178                      & 2118                    & 456                       & \alt<2->{450}{\hilightbl{450}}                     &  \alt<2>{\hilightbl{27}$|$\hilightred{33}}{27$|$33}                              \\ 
-% 15                                             & 2.5                       & 3.42                    & 0.09                                         & 3482                      & 3348                    & 629                       & \alt<2->{622}{\hilightbl{622}}                     &  \alt<2>{\hilightbl{86}$|$\hilightred{48}}{86$|$48}                              \\ 
-% 20                                             & 2.29                      & 3.0                     & 0.13                                         & 5278                      & 5046                    & 848                       & \alt<2->{835}{\hilightbl{835}}                     &             \alt<2>{\hilightbl{157}$|$\hilightred{75}}{157$|$75}                  \\ \hline
-% \end{tabular}
-% \medskip
-% %\caption{Rule revision results}
-% %\label{tab:predicton_results}
-% \end{table}
-% \alt<3>{ Examples of revised rules:\bigskip
+\begin{frame}\frametitle{Experiments}
 
-%  \begin{tabular}{l}
-%  {\footnotesize
-%         %\multirow{6}{*}{YAGO $\begin{cases} \\ \\ \end{cases}$}
-%         $\gr{r_1:  \mi{writtenBy(X, Z)}  \leftarrow
-%         \mi{hasPredecessor(X, Y)},\mi{writtenBy(Y, Z)},}$ \alert{$ \textbf{not}$  $\mi{american\_film(X)} $}}\\        
-%        {\footnotesize 
-% $\gr{r_2:  \mi{actedIn(X, Z)}  \leftarrow
-%         \mi{isMarriedTo(X, Y)},\mi{directed(Y, Z)},}$ \alert{$ \textbf{not}$  $\mi{silent\_film\_actor(X)} $}} \\
-    
-%  \end{tabular}            
-%   }{\alt<2>{\begin{picture}(0.5,0.5)\put(93,-83){\includegraphics[width=0.5\textwidth]{corr_inc_negl}}\end{picture}}{\begin{picture}(0.5,0.5)\put(93,-83){\includegraphics[width=0.5\textwidth]{corr_pred}}\end{picture}}}
-% \end{frame}
+\vspace*{-1.\baselineskip}
+\begin{table}[ht]
+\centering
+\input{../tables/rules_predictions}
+\vspace*{-.7\baselineskip}
+\caption{New Facts Predicted by the Rulesets for IMDB (\textit{I}) and YAGO (\textit{Y})}
+\label{tab:prediction_res}
+\vspace*{-1.7\baselineskip}
+\end{table}
+\only<1>{
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.45\textwidth]{../figures/big_pic_exp}
+%\caption{The Ideal, Available and Extended KGs.}
+\label{fig:venn}
+\end{figure}
+}
+\only<2>{
+\begin{figure}[t]
+    \centering
+   
+    \bigskip
+    \begin{tabular}{l}
+ {\scriptsize
+        $\mi{r_1: writtenBy(X, Z)}  \leftarrow
+        \mi{hasPredecessor(X, Y)},\mi{writtenBy(Y, Z)},$ $ \textbf{not}$  $\mi{american\_film(X)} $}\\        
+       {\scriptsize 
+$\mi{r_2:  actedIn(X, Z)}  \leftarrow
+        \mi{isMarriedTo(X, Y)},\mi{directed(Y, Z)},$ $ \textbf{not}$  $\mi{silent\_film\_actor(X)} $} \\
+          {\scriptsize 
+$\mi{r_3:  isPoliticianOf(X, Z)}  \leftarrow
+        \mi{hasChild(X, Y)}{,}\mi{isPoliticianOf(Y, Z)}{,}$$ \textbf{not}$  $\mi{vicepresidentOfMexico(X)} $} \\
+ \end{tabular}            
+	\vspace*{-.7\baselineskip}
+    \caption{Examples of the Revised Rules}
+ \label{fig:examplerules}
+ \vspace{-.4cm}
+\end{figure}
 
+}
+
+\end{frame}
 
 \begin{frame} \frametitle{Summary}
 \textbf{\bl{Contributions:}}
 \begin{itemize}
-\item Quality-based Horn theory revision framework under OWA
-\item Approach for computing and ranking exceptions based on partial materialization
-\item Preliminary experiments on a real-world KG
+\item Theory revision framework for KG completion problem
+\item Rule revision exploits partial materialization
+\item RUMIS implementation in Java
+\item Experiments with IMDB and YAGO
 \end{itemize}
 \bigskip
 \bigskip
 
 \textbf{\bl{Further Work:}}
 \begin{itemize}
-\item Evidence for and against exceptions from text corpora
-\item Partial completeness 
-\item Causality of rules, probabilities
-\item More complex rules, e.g. with existentials
+\item Service for data indexing
+\item Enable more Horn rule forms
 \end{itemize}
 \end{frame}
-
-% \begin{frame}\frametitle{Rule Revision with Web-based Fact-checking}
-% \begin{picture}(0.5,0.5)\put(6,-125){\includegraphics[width=0.95\textwidth]{appr}}\end{picture}
-% \end{frame}
-\appendix
 
 \section{Additional Material}
 \begin{frame}[plain,allowframebreaks,allowdisplaybreaks]
