@@ -35,26 +35,13 @@ To overcome the above obstacles, exploratory data mining solution is a suitable 
 
 \section{Goals}
 
-We conduct a research in this thesis with the aim to:
-
-\begin{itemize}
-\item Propose a theory to explore interesting and informative nonmonotonic rules.
-\item Build an efficient system in terms of run time to generate exceptions from a large collections of facts.
-\item Use this tool to verify experimental results and support the theory.
-\end{itemize}
+We conduct a research in this thesis with the aim to, (i) propose a theory to explore interesting and informative nonmonotonic rules, (ii) build an efficient system in terms of run time to generate exceptions from a large collections of facts, (iii) use this tool to verify experimental results and support the theory.
 
 \section{Contributions}
 
-This thesis is an extension of the work where KGs are in their natural form~\cite{ref12}. More specifically, we want to mine rules with exceptions from a set of relational facts in KGs treated under OWA. The knowledge completion problem is transformed to \textit{theory revision} one, in which \textit{nonmonotonic rules} are explored given an original KG and Horn rules. The positive rules can be found by using off-the-shell tools for association rule learning. Besides, we expect that the quality of revised rules is better than that of original positive ones with respect to conviction measure[cite???]. There are four steps in our system as follows:
+This thesis is an extension of the work where KGs are in their natural form~\cite{ref12}. More specifically, we want to mine rules with exceptions from a set of relational facts in KGs treated under OWA. The knowledge completion problem is transformed to \textit{theory revision} one, in which \textit{nonmonotonic rules} are explored given an original KG and Horn rules. The positive rules can be found by using off-the-shell tools for association rule learning. Besides, we expect that the quality of revised rules is better than that of original positive ones with respect to conviction measure~\cite{ref48}.
 
-\begin{itemize}
-\item First, for each positive rule, we try to find normal and abnormal sets, that is, set of instances that follow and do not follow a given rule, respectively.
-\item Second, we mine exception witness sets, that is, set of unary or binary relations that can eliminate abnormal instances. For example, \textit{Researcher} is an exception example for the rule $r1$ based on the KG in Figure~\ref{fig1.1}.
-\item Third, we add exceptions to the Horn rules in the form of a single negated atom and define a measure to assess the quality of the obtained revisions. The interaction between revised rules is taken into consideration in our approach by an importantly novel concept of \textit{partial materialization}.
-\item Finally, exceptions are ranked based on the proposed measures and the best revision of a particular rule is expected to have both descriptive and predictive qualities.
-\end{itemize}
-
-The contributions of this thesis are four-fold:
+There are four steps in our system as follows. First, for each positive rule, we try to find normal and abnormal sets, that is, set of instances that follow and do not follow a given rule, respectively. Second, we mine exception witness sets, that is, set of unary or binary relations that can eliminate abnormal instances. For example, \textit{Researcher} is an exception example for the rule $r1$ based on the KG in Figure~\ref{fig1.1}. Third, we add exceptions to the Horn rules in the form of a single negated atom and define a measure to assess the quality of the obtained revisions. The interaction between revised rules is taken into consideration in our approach by an importantly novel concept of \textit{partial materialization}. Finally, exceptions are ranked based on the proposed measures and the best revision of a particular rule is expected to have both descriptive and predictive qualities. The contributions of this thesis are four-fold:
 
 \begin{itemize}
 \item We introduce a framework to revise and improve quality of positive rules.

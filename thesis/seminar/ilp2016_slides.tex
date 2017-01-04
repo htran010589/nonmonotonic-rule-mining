@@ -230,8 +230,8 @@ positioning,fit,calc,decorations.text, automata%
  }
 
 \author[shortname]{Hai Dang Tran\\Advisor: Daria Stepanova\\Supervisor: Gerhard Weikum}
-\institute[shortinst]{Max Planck Institute for Informatics, Saarbr\"{u}cken, Germany} %\and %
-%                      \inst{2} Universit\`{a} degli Studi di Bari ``Aldo Moro", Bari, Italy}
+\institute[shortinst]{Max Planck Institute for Informatics\\
+                      Saarland University, Saarbr\"{u}cken, Germany}
 
 
 
@@ -239,8 +239,7 @@ positioning,fit,calc,decorations.text, automata%
 \titlegraphic{
   \centering
 
- \includegraphics[height=1cm]{logo_mpi_430}
- %\\\includegraphics[height=2.3cm]{logo_bari}
+ \includegraphics[height=1cm]{logo_mpi_430} \hspace{1cm} \includegraphics[height=1.cm]{saarland_logo}
 
  \large{}
 }
@@ -314,7 +313,7 @@ positioning,fit,calc,decorations.text, automata%
 
 \alt<3->{
 \begin{picture}(0.5,0.5)\put(43,-43){\includegraphics[width=0.75\textwidth]{kg_2}}\end{picture}
-}{\alt<2->{\begin{picture}(0.5,0.5)\put(43,-43){\includegraphics[width=0.75\textwidth]{kg_1_5}}\end{picture}}{\begin{picture}(0.5,0.5)\put(43,-42){\includegraphics[width=0.75\textwidth]{kg_1}}\end{picture}}}
+}{\alt<2->{\begin{picture}(0.5,0.5)\put(43,-43){\includegraphics[width=0.75\textwidth]{kg_1_5}}\end{picture}}{\begin{picture}(0.5,0.5)\put(43,-43){\includegraphics[width=0.75\textwidth]{kg_1}}\end{picture}}}
 \begin{center}
 \bigskip
 \bigskip
@@ -354,7 +353,7 @@ positioning,fit,calc,decorations.text, automata%
 \item Nonmonotonic revision \alert{$\cR_{\mi{NM}}$} mined from \gr{$\cR_H$} based on $\cG$, such that 
 \only<1>{\smallskip 
 
-its predictive power is improved~\cite{rumis}}
+the predictive power is improved~\cite{rumis}}
 
 \only<3->{\normalsize{\begin{itemize}
 
@@ -369,7 +368,7 @@ its predictive power is improved~\cite{rumis}}
 
 \only<1>{
 \begin{picture}(0.5,0.5)\put(153,45){
-\includegraphics[width=0.55\textwidth]{big_pic}}
+\includegraphics[width=0.5\textwidth]{big_pic}}
 \end{picture}}
 
 \only<2>{\vspace{-5.5cm}
@@ -380,8 +379,8 @@ its predictive power is improved~\cite{rumis}}
              \begin{array}{@{\,}l@{~~}l@{}}
                \mi{\gr{r1:\,livesIn(X,Z) \leftarrow isMarriedTo(X,Y),livesIn(Y,Z),}} \\ \mi{\alert{\naf\ Researcher(X)}}\\
               \visible<2->{\mi{r1^{aux}:\,not\_livesIn(X,Z) \leftarrow isMarriedTo(X,Y),livesIn(Y,Z),} \\ \mi{Researcher(X)}\\}
-              \mi{\gr{r2:\,livesIn(X,Z)\leftarrow workIn(X,Z),}\alert{\naf\ crossBorderWorker(X)}}\\
-              \visible<2->{\mi{r2^{aux}:\,not\_livesIn(X,Z)}\leftarrow workIn(X,Z),crossBorderWorker(X)}
+              \mi{\gr{r2:\,livesIn(X,Z)\leftarrow workIn(X,Z),}\alert{\naf\ Artist(X)}}\\
+              \visible<2->{\mi{r2^{aux}:\,not\_livesIn(X,Z)}\leftarrow workIn(X,Z),Artist(X)}
              \end{array}\right\}$\bigskip
 
 possibly generate conflicting predictions $\{\gr{\mi{livesIn(a,b)},\mi{not\_livesIn(a,b)}}\}$~\cite{rumis} \bigskip
@@ -397,6 +396,9 @@ possibly generate conflicting predictions $\{\gr{\mi{livesIn(a,b)},\mi{not\_live
 \begin{frame}\frametitle{Related Work}
 \begin{itemize}
 \item \textbf{\bl{Statistics-based Approaches}}
+\begin{itemize}
+\item Hidden features~\cite{rescal}
+\end{itemize}
 \medskip
 
 \item \textbf{\bl{Logic-based Approaches}}
@@ -409,6 +411,9 @@ possibly generate conflicting predictions $\{\gr{\mi{livesIn(a,b)},\mi{not\_live
 
 
 \item \textbf{\bl{Text-based Approaches}}
+\begin{itemize}
+\item External methods~\cite{match}
+\end{itemize}
 \medskip
 
 \end{itemize}
@@ -553,7 +558,7 @@ We develop a nonmonotonic \textbf{RU}le \textbf{MI}ning \textbf{S}ystem in the r
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[page=1,width=.75\textwidth]{system_overview.pdf}
+	\includegraphics[page=1,width=.85\textwidth]{system_overview.pdf}
 	\caption{Components of RUMIS}
 \end{figure}
 
@@ -568,7 +573,7 @@ We develop a nonmonotonic \textbf{RU}le \textbf{MI}ning \textbf{S}ystem in the r
 \begin{itemize}
 	\item Inverted indexing from term to document in IR systems
   	\item In this problem, a triple is a document
-  	\item Find corresponding predicates given subject, object
+  	\item Find corresponding predicates given subject, object, ...
 \end{itemize}
 
 \begin{figure}[h]
@@ -598,11 +603,11 @@ We develop a nonmonotonic \textbf{RU}le \textbf{MI}ning \textbf{S}ystem in the r
 \begin{frame}{Instance Set Computation}
 
 \smallskip
-Consider the rule \textcolor{darkgreen}{\textit{livesIn(X,Z) $\leftarrow$ isMarriedTo(X,Y),livesIn(Y,Z)}}
+Consider the rule $r$: \textcolor{darkgreen}{\textit{livesIn(X,Z) $\leftarrow$ isMarriedTo(X,Y),livesIn(Y,Z)}}
 
 \smallskip
 \only<1>{
-Its normal set is \textit{$\langle$Brad, Berlin$\rangle$}, \textit{$\langle$John, Chicago$\rangle$}, \textit{$\langle$Sue, Beijin$\rangle$}
+Its normal set $NS(r)$ is \textit{$\langle$Brad, Berlin$\rangle$}, \textit{$\langle$John, Chicago$\rangle$}, \textit{$\langle$Sue, Beijin$\rangle$}
 
 \smallskip
 
@@ -614,7 +619,7 @@ Its normal set is \textit{$\langle$Brad, Berlin$\rangle$}, \textit{$\langle$John
 }
 
 \only<2>{
-Its abnormal set is \textit{$\langle$Alice, Berlin$\rangle$}, \textit{$\langle$Dave, Chicago$\rangle$}, \textit{$\langle$Lucy, Beijin$\rangle$}
+Its abnormal set $ABS(r)$ is \textit{$\langle$Alice, Berlin$\rangle$}, \textit{$\langle$Dave, Chicago$\rangle$}, \textit{$\langle$Lucy, Beijin$\rangle$}
 
 \smallskip
 
@@ -635,11 +640,11 @@ Its abnormal set is \textit{$\langle$Alice, Berlin$\rangle$}, \textit{$\langle$D
 \smallskip
 \textbf{Goal:} Find (ab)normal sets exploiting Data Indexer
 \begin{itemize}
-	\item Traverse all substitutions for $X$.
-	\item Find list of $Y$ from $pX$ based on indexing.
-	\item Find list of $Z$ from $qY$ based on indexing.
-	\item Check \textit{$\langle$X h Z$\rangle$} in the graph or not.
-	\item Classify \textit{$\langle$X Z$\rangle$} into $NS(r)$ and $ABS(r)$.
+	\item Traverse all substitutions for $X$
+	\item Find list of $Y$ from $pX$ based on indexing
+	\item Find list of $Z$ from $qY$ based on indexing
+	\item Check \textit{$\langle$X h Z$\rangle$} in the graph or not
+	\item Classify \textit{$\langle$X Z$\rangle$} into $NS(r)$ and $ABS(r)$
 \end{itemize}
 
 \end{frame}
@@ -668,7 +673,7 @@ Its abnormal set is \textit{$\langle$Alice, Berlin$\rangle$}, \textit{$\langle$D
 
 % \end{frame}
 \begin{frame}\frametitle{Exception Search}
-\begin{picture}(0.5,0.5)\put(55,-195){\includegraphics[width=0.65\textwidth]{kg_advanced_col}}
+\begin{picture}(0.5,0.5)\put(55,-185){\includegraphics[width=0.65\textwidth]{kg_advanced_col}}
 \end{picture}
 \bigskip
 \bigskip
@@ -690,6 +695,7 @@ Its abnormal set is \textit{$\langle$Alice, Berlin$\rangle$}, \textit{$\langle$D
 
 
 \centerline{\textcolor{darkgreen}{\textit{r: \textit{livesIn(X,Z)} $\leftarrow$ isMarriedTo(X, Y), livesIn(Y, Z), not Researcher(X)}}}
+\centerline{\cite{rumis}}
 
 \end{frame}
 
@@ -704,7 +710,7 @@ $\gr{\mi{r1} \dotsc \dotsc \dotsc} \{\alert{\underline{\mathbf{e_1}},e_2,e_3, \d
 \end{center}
 \bigskip
 \begin{beamerboxesrounded}[upper=uppercolred,lower=lowercolred,shadow=true]{}
-Finding global optimum solution for QHTR is impracticable
+We propose a local optimum solution for QHTR~\cite{rumis}
 \end{beamerboxesrounded}
 \begin{itemize}
 \item \bl{Naive ranking:} among all revisions of $r\in \cR_{H}$, $r'$ having the largest $\mi{conv}(r,\cG)$ is chosen
@@ -730,7 +736,7 @@ Finding global optimum solution for QHTR is impracticable
 \section{Experiments}
 \begin{frame}\frametitle{Experiments}
 \begin{itemize}
-\item \bl{$\cG^i_{\mi{appr}}$}: IMDB~\footnote{\url{http://imdb.com}}: 583 thousand triples, 38 predicates and YAGO: 20.7 million triples, 38 predicates
+\item \bl{$\cG^i_{\mi{appr}}$}: IMDB~\footnote{\url{http://imdb.com}}: 583 thousand triples, 112 thousand entities, 38 predicates and YAGO: 20.7 million triples, 1.8 million entities, 38 predicates
 
 \medskip
 
@@ -759,6 +765,7 @@ Finding global optimum solution for QHTR is impracticable
 \caption{The Average Quality of the Top Positive and Nonmonotonic Rules}
 \label{tab:rules_quality}
 \end{table}
+\centerline{\cite{rumis}}
 
 \end{frame}
 
@@ -773,6 +780,7 @@ Finding global optimum solution for QHTR is impracticable
 \label{tab:prediction_res}
 \vspace*{-1.7\baselineskip}
 \end{table}
+
 \only<1>{
 \begin{figure}[ht]
 \centering
@@ -781,11 +789,15 @@ Finding global optimum solution for QHTR is impracticable
 \label{fig:venn}
 \end{figure}
 }
+
 \only<2>{
 \begin{figure}[t]
     \centering
    
     \bigskip
+    \bigskip
+    \bigskip
+    \smallskip
     \begin{tabular}{l}
  {\scriptsize
         $\mi{r_1: writtenBy(X, Z)}  \leftarrow
@@ -805,6 +817,8 @@ $\mi{r_3:  isPoliticianOf(X, Z)}  \leftarrow
 
 }
 
+\centerline{\cite{rumis}}
+
 \end{frame}
 
 \begin{frame} \frametitle{Summary}
@@ -820,12 +834,12 @@ $\mi{r_3:  isPoliticianOf(X, Z)}  \leftarrow
 
 \textbf{\bl{Further Work:}}
 \begin{itemize}
-\item Service for data indexing
-\item Enable more Horn rule forms
+\item More kinds of exceptions
+\item More Horn rule forms
 \end{itemize}
 \end{frame}
 
-\section{Additional Material}
+%\section{Additional Material}
 \begin{frame}[plain,allowframebreaks,allowdisplaybreaks]
   \frametitle{References}
   \bibliographystyle{named}
