@@ -9,7 +9,7 @@ These days witness the development of information extraction methods, which are 
 KGs are normally incomplete due to automatic construction. Hence, they should be processed under the Open World Assumption (OWA). The \textit{knowledge completion problem} (also known as \textit{link prediction}) plays an important role in improving the quality of KGs. To achieve this, rule learning approaches~\cite{ref39, ref10} are used to create rules which can infer new potentially missing facts. However, the existing methods only pay attention to positive rules, which do not take exceptions (negated atoms) into consideration and may therefore infer wrong facts. For instance, a rule:
 
 \begin{equation}
-r1: livesIn(Y,Z) \leftarrow isMarriedTo(X,Y), livesIn(X,Z)
+r1: livesIn(X,Z) \leftarrow isMarriedTo(X,Y), livesIn(Y,Z)
 \end{equation}
 \label{rule1}
 

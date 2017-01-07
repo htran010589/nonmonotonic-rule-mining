@@ -171,8 +171,6 @@ Figure~\ref{pm_ranking} shows some arrows representing for the communications be
 \label{pm_ranking}
 \end{figure}
 
-\textit{Definition 1.[plan to move this definition to background section]} Safely predicted facts of $r$ w.r.t. KG $\cG$ are all new facts produced by $r$ and not by any revision of $r$ constructing by adding an exception candidate to the rule body. [Give an example, ...]
-
 \textbf{PM Ranking.} The Algorithm~\ref{bf_pm_ranking_algo} describes the intuition for PM ranking step by step. In line 1, a set of revised rules are initialized as an empty set. After that, for each positive rule $r$ in $R_H$, we clone original KG $\cG$ to a new one ($\cG'$), then all other rules in $R_H$ are exploited to generate their safely predicted facts which are subsequently indexed to $\cG'$ (line 2 to 6). RUMIS is conservative in producing new facts since the system applies revisions to $\cG$ instead of $\cG'$ in every iteration. This eliminates the cases that wrong facts introduce many incorrect ones in the future process. Next, in line 7 and 8, based on the new KG, exceptions of $r$ are ranked and the best revision is added to $R_{NM}$. Finally, we return $R_{NM}$ as a result for the algorithm.
 
 \IncMargin{1.5em}
