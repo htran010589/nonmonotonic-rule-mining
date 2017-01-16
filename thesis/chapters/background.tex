@@ -38,7 +38,7 @@ We can achieve the ground instantiation $Gr(P)$ of $P$ as a result of replacing 
 
 \section{Association Rule Mining in Relational Setting}
 
-Association rule mining explores frequent patterns from the data and subsequently cast these patterns to rules. Applying association rules to the relational setting has been attracting research interests of both ILP[cite] and in KG[cite] scientists. In the following description, typical rule measure concepts of association rule mining are adapted to the current work in relational setting.
+Association rule mining explores frequent patterns from the data and subsequently cast these patterns to rules. Applying association rules to the relational setting has been attracting research interests of both ILP~\cite{ref52} and KG~\cite{ref10} scientists. In the following description, typical rule measure concepts of association rule mining are adapted to the current work in relational setting.
 
 First of all, to simplify the problem of \textit{language bias}, our research only takes the following positive rule form into consideration:
 
@@ -61,7 +61,7 @@ supp(h(X,Y),\cG)=\dfrac{\#(X,Y):h(X,Y)\in \cG}{(\#X:\exists Y\;h(X,Y)\in \cG)\ti
 \end{definition}
 
 \begin{definition}
-$conf(r,\cG)$ denoteds confidence of rule $r$ w.r.t. $\cG$:
+$conf(r,\cG)$ denotes the confidence of rule $r$ w.r.t. $\cG$:
 \begin{equation}
 conf(r,\cG)=\dfrac{(\#(X, Z):\exists Y\;h(X,Z),p(X,Y),q(Y,Z)\in \cG)}{(\#(X,Z):\exists Y\;p(X,Y),q(Y,Z)\in \cG)}
 \end{equation}
@@ -73,6 +73,8 @@ The conviction of rule $r$ w.r.t. $\cG$ is defined as:
 \mi{conv(r, \cG)= \dfrac{1 - supp(h(X,Y), \cG)}{1 - conf(r, \cG)}}
 \end{equation}
 \end{definition}
+
+In this research, the conviction measure~\cite{ref48} is exploited because it is guaranteed to have high predictive power~\cite{ref46}. Applying these definitions to the KG in Figure~\ref{fig1.1}, we gain some statistics as follows.
 
 \begin{example}
 Given a KG $\cG$ in Figure~\ref{fig1.1} and a rule $r1$ in the form~\ref{rule1}, there are three ways to substitute variables in $r1$ based on $\cG$. Thus, the absolute support of $r1$ w.r.t. $\cG$ is $3$. Besides, the \textit{relative head support} of predicates \textit{livesIn} and \textit{hasFriend} are $\mi{supp(livesIn(X,Z)), \cG}{=}\dfrac{9}{8 \times 4}{\approx} 0.3$ and  $\mi{supp(hasFriend(X,Z)), \cG}{=}\dfrac{1}{1 \times 1}{=} 1.0$, resp. The confidence of rule $r1$ is $conf(r1, \cG) {=} \dfrac{2}{5} {=} 0.4$, thus, the conviction measure can be found as $conv(r1, \cG) {=} \dfrac{1-0.3}{1 - 0.4} {=} \dfrac{7}{6} {=} 1.17$
