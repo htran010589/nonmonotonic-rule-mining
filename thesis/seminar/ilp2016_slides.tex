@@ -288,7 +288,7 @@ positioning,fit,calc,decorations.text, automata%
 \end{frame}
 
 \begin{frame}\frametitle{Motivation}
-\centerline{\alt<3->{\bl{In this thesis:} revision rule mining under \alert{OWA}}{\bl{Complete} KGs with \bl{positive rule} mining \cite{amie}}}
+\centerline{\alt<3->{\bl{In this thesis:} revision rule mining under \alert{OWA}}{\bl{Complete} KGs with \bl{positive (Horn) rule} mining \cite{amie}}}
  \bigskip
  \bigskip
  \bigskip
@@ -379,11 +379,11 @@ positioning,fit,calc,decorations.text, automata%
 \begin{beamerboxesrounded}[upper=uppercolgreen,lower=lowercolgreen,shadow=true]{Conflict is a constraint for a revision set with auxiliary rules}\bigskip
 
 \small{
-${\alert{\cR^{\mi{aux}}_{\mi{NM}}}}{\alert{\cR_{\mi{NM}}}}=\left\{
+$\left\{
             \renewcommand{\arraystretch}{1.1}
              \begin{array}{@{\,}l@{~~}l@{}}
-               \mi{\gr{r1:\,livesIn(X,Z) \leftarrow isMarriedTo(X,Y),livesIn(Y,Z),}} \\ \mi{\alert{\naf\ Researcher(X)}}\\
-              \mi{r1^{aux}:\,not\_livesIn(X,Z) \leftarrow isMarriedTo(X,Y),livesIn(Y,Z),} \\ \mi{Researcher(X)}\\
+               \mi{\gr{r1:\,livesIn(X,Z) \leftarrow isMarriedTo(X,Y),livesIn(Y,Z),}} \mi{\alert{\naf\ Res(X)}}\\
+              \mi{r1^{aux}:\,not\_livesIn(X,Z) \leftarrow isMarriedTo(X,Y),livesIn(Y,Z),} \mi{Res(X)}\\
               \mi{\gr{r2:\,livesIn(X,Z)\leftarrow workIn(X,Z),}\alert{\naf\ Artist(X)}}\\
               \mi{r2^{aux}:\,not\_livesIn(X,Z)}\leftarrow workIn(X,Z),Artist(X)
              \end{array}\right\}$
@@ -516,18 +516,18 @@ possibly generate conflicting predictions $\{\gr{\mi{livesIn(a,b)},\mi{not\_live
 \medskip
 \bigskip
 
-\item \textbf{\bl{Logic-based Approaches}}
+\item \textbf{\bl{Text-based Approaches}}
 \begin{itemize}
-\item ILP systems: ALEPH, QuickFOIL~\cite{quickfoil}
-\item Relational learning systems: WARMR~\cite{warmr}, AMIE(+)~\cite{amie}, RDF2Rules~\cite{rdf2rules}
-\item Nonmonotonic rule mining system~\cite{iswc2016}
+\item External methods~\cite{match}
 \end{itemize}
 \medskip
 \bigskip
 
-\item \textbf{\bl{Text-based Approaches}}
+\item \textbf{\bl{Logic-based Approaches}}
 \begin{itemize}
-\item External methods~\cite{match}
+\item ILP systems: ALEPH, QuickFOIL~\cite{quickfoil}
+\item Relational learning systems: AMIE(+)~\cite{amie}
+\item Nonmonotonic rule mining system~\cite{iswc2016}
 \end{itemize}
 \medskip
 
@@ -928,7 +928,7 @@ We propose a local optimum solution for QHTR
 \footnotesize
 \renewcommand*{\arraystretch}{1.07}
 \centering
-\input{../tables/rules_quality}
+\input{tables/rules_quality}
 \caption{The Average Quality of the Top Positive and Nonmonotonic Rules}
 \label{tab:rules_quality}
 \end{table}
@@ -945,7 +945,7 @@ We propose a local optimum solution for QHTR
 %\vspace*{-1.\baselineskip}
 \begin{table}[ht]
 \centering
-\input{../tables/rules_predictions}
+\input{tables/rules_predictions}
 \vspace*{-.7\baselineskip}
 \caption{New Facts Predicted by the Rulesets for IMDB (\textit{I}) and YAGO (\textit{Y})}
 \label{tab:prediction_res}
