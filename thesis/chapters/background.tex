@@ -40,42 +40,33 @@ We can achieve the ground instantiation $Gr(P)$ of $P$ as a result of replacing 
 
 Association rule mining explores frequent patterns from the data and subsequently cast these patterns to rules. Applying association rules to the relational setting has been attracting research interests of both ILP~\cite{ref52} and KG~\cite{ref10} scientists. In the following description, typical rule measure concepts of association rule mining are adapted to the current work in relational setting.
 
-First of all, to simplify the problem of \textit{language bias}, our research only takes the following positive rule form into consideration:
-
-\begin{equation}
-r2: h(X, Z) \leftarrow p(X, Y), q(Y, Z)
-\label{form2}
+A \emph{conjunctive query} $Q$ w.r.t $\cG$ is denoted as $Q(\vec{X}):-p_1(\vec{X_1}),\dotsc,p_m(\vec{X_m})$. The body (i.e., right part) of the query is a list of positive or negative atoms over $\cG$. Meanwhile, the head (i.e., left part) is a tuple of variables in the right part. The \emph{answer} of $Q$ w.r.t $\cG$ is defined as a set $Q(\cG):=\{$substitutions $\theta$ of $\vec{X}$: $p_i(\vec{X_i}\theta) \in \cG$ with $i \in [m]\}$. Based on \cite{ref53}, the \emph{(absolute) support} of a conjunctive query $Q$ w.r.t the KG $\cG$ is the cardinality of the set $Q(\cG)$. For instance, the query
+\begin{equation}\mi{Q(X,Y,Z):-isMarriedTo(X,Y),\, }\mi{livesIn(Y,Z)}
 \end{equation}
+has the absolute support $6$ w.r.t $\cG$ in Figure~\ref{fig1.1} because there are $6$ substitutions for triple $\langle X, Y, Z \rangle$ that fulfill \textit{isMarriedTo(X,Y), livesIn(Y,Z)} w.r.t $\cG$.
 
-Where $h$, $p$, $q$ are binary predicates from KG $\cG$, these notations and the form~\ref{form2} ($r2$) are used in the rest of this thesis.
+An \emph{association rule} has a format $Q_1 => Q_2$, where $Q_1$ and $Q_2$ are conjunctive queries and all atoms in the boby of$Q_1$ also appear in that of $Q_2$. To be specific, from the $Q(X,Y,Z)$ in the above example and
+\begin{equation}Q'(X,Y,Z):-\mi{isMarriedTo(X,Y),\,livesIn(X,Z),\,} \mi{livesIn(Y,Z)}
+\end{equation} the association rule $Q => Q'$ can be built.
 
-\begin{definition}
-\textit{Absolute support} of a rule $r$ w.r.t. a KG $\cG$ is the number of substitutions $(X/a, Y/b, Z/c)$ s.t. $h(a, c), p(a, b)$ and $q(b, c)$ hold true in $\cG$.
-\end{definition}
+In the current work, association rules are exploited with the aim to predict new facts, hence, they should be translated into logical format. More specifically, we can convert association rule $Q_1=>Q_2$ to the logical one $Q_2\backslash Q_1 \leftarrow Q_1$, in which $Q_2 \backslash Q_1$ is the set of atoms which are in $Q_2$ but not in $Q_1$. For example, it can be seen that the above rule $Q=>Q'$ can be transformed to $\mi{r1}$ in Section~\ref{chap:intro}.
 
-\begin{definition}
-The \textit{relative head support} of predicate $h$ w.r.t. $\cG$ can be calculate by the following formula:
-\begin{equation}
-supp(h(X,Y),\cG)=\dfrac{\#(X,Y):h(X,Y)\in \cG}{(\#X:\exists Y\;h(X,Y)\in \cG)\times(\#Y:\exists X\;h(X,Y)\in \cG)}
-\end{equation}
-\end{definition}
-
-\begin{definition}
-$conf(r,\cG)$ denotes the confidence of rule $r$ w.r.t. $\cG$:
-\begin{equation}
-conf(r,\cG)=\dfrac{(\#(X, Z):\exists Y\;h(X,Z),p(X,Y),q(Y,Z)\in \cG)}{(\#(X,Z):\exists Y\;p(X,Y),q(Y,Z)\in \cG)}
-\end{equation}
-\end{definition}
-
-\begin{definition}
-The conviction of rule $r$ w.r.t. $\cG$ is defined as:
+In this research, the conviction measure~\cite{ref48} is exploited because it is guaranteed to have high predictive power~\cite{ref46}. Hence, this measure is useful for KG completion introduced in Chapter~\ref{chap:frame}. With the rule $r:\;\mi{H\leftarrow B, \naf\ E}$, where $H=\mi{h(X,Y)}$ and $B,E$ contain a set of variables $\vec{Z}\supseteq X,Y$, we can find the \emph{conviction} by the following formula:
+\vspace{-.26cm}
 \begin{equation}
 \mi{conv(r, \cG)= \dfrac{1 - supp(h(X,Y), \cG)}{1 - conf(r, \cG)}}
 \end{equation}
-\end{definition}
-
-In this research, the conviction measure~\cite{ref48} is exploited because it is guaranteed to have high predictive power~\cite{ref46}. Applying these definitions to the KG in Figure~\ref{fig1.1}, we gain some statistics as follows.
+in which $\mi{supp(h(X,Y),\cG)}$ stands for \textit{relative support} of the head $\mi{h(X,Y)}$, it is calculated as:
+\vspace{-.28cm}
+\begin{equation}
+supp(h(X,Y),\cG)=\dfrac{\#(X,Y):h(X,Y)\in \cG}{(\#X:\exists Y\;h(X,Y)\in \cG)*(\#Y:\exists X\;h(X,Y)\in \cG)}
+\end{equation}
+besides, $\mi{conf}$ denotes the confidence of $r$:
+\begin{equation}
+\mi{conf(r,\cG)=\dfrac{\#(X,Y): H \in \cG, \exists \vec{Z}\;B\in \cG,E \not \in \cG}{\#(X,Y):\exists \vec{Z}\; B\in \cG, E \not \in \cG}}
+\end{equation}
+\vspace{-.3cm}
 
 \begin{example}
-Given a KG $\cG$ in Figure~\ref{fig1.1} and a rule $r1$ in the form~\ref{rule1}, there are three ways to substitute variables in $r1$ based on $\cG$. Thus, the absolute support of $r1$ w.r.t. $\cG$ is $3$. Besides, the \textit{relative head support} of predicates \textit{livesIn} and \textit{hasFriend} are $\mi{supp(livesIn(X,Z)), \cG}{=}\dfrac{9}{8 \times 4}{\approx} 0.3$ and  $\mi{supp(hasFriend(X,Z)), \cG}{=}\dfrac{1}{1 \times 1}{=} 1.0$, resp. The confidence of rule $r1$ is $conf(r1, \cG) {=} \dfrac{2}{5} {=} 0.4$, thus, the conviction measure can be found as $conv(r1, \cG) {=} \dfrac{1-0.3}{1 - 0.4} {=} \dfrac{7}{6} {=} 1.17$
+Applying these definitions to the KG in Figure~\ref{fig1.1}, we gain some statistics as follows. Given a KG $\cG$ in Figure~\ref{fig1.1} and a rule $r1$ in the form~\ref{rule1}, there are three ways to substitute variables in $r1$ based on $\cG$. Thus, the absolute support of $r1$ w.r.t. $\cG$ is $3$. Besides, the \textit{relative head support} of predicates \textit{livesIn} and \textit{hasFriend} are $\mi{supp(livesIn(X,Z)), \cG}{=}\dfrac{9}{8 \times 4}{\approx} 0.3$ and  $\mi{supp(hasFriend(X,Z)), \cG}{=}\dfrac{1}{1 \times 1}{=} 1.0$, resp. The confidence of rule $r1$ is $conf(r1, \cG) {=} \dfrac{2}{5} {=} 0.4$, thus, the conviction measure can be found as $conv(r1, \cG) {=} \dfrac{1-0.3}{1 - 0.4} {=} \dfrac{7}{6} {=} 1.17$
 \end{example}
