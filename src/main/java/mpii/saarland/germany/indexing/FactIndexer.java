@@ -143,6 +143,7 @@ public class FactIndexer {
 
 	public void indexFacts(String fileName) {
 		LOG.info("Start loading facts");
+		int count = 0;
 		BufferedReader factReader = null;
 		try {
 			factReader = new BufferedReader(new FileReader(fileName));
@@ -151,6 +152,10 @@ public class FactIndexer {
 				line = line.substring(1, line.length() - 1);
 				String[] parts = line.split(">\t<");
 				indexFact(parts, 1L);
+				count++;
+				if (count % 1000000 == 0) {
+					LOG.info("Indexed " + count + " facts");
+				}
 			}
 		} catch (IOException ex) {
 			LOG.error(ex.getMessage());
