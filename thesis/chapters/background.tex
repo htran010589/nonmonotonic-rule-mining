@@ -1,25 +1,25 @@
 \chapter{Background}
 \label{chap:back}
 
-In this chapter, we introduce some preliminary knowledge for the rest of the thesis with the following organization. First, nonmonotonic logic and answer set programs are presented. Second, we address some definitions of association rule mining in relational setting such as \textit{head support, absolute support, confidence} and \textit{conviction}. These definitions are exploited to described the main work in Chapter~\ref{chap:frame} and~\ref{chap:system}.
+In this chapter, we introduce some preliminary knowledge for the rest of the thesis with the following organization. First, nonmonotonic logic programs under semantics answer set and KG completion problem are presented. Second, we address some definitions of association rule mining in relational setting such as \textit{head support, absolute support, confidence} and \textit{conviction}. These definitions are exploited in the main part of this work (Chapter~\ref{chap:frame} and~\ref{chap:system}).
 
 \section{Nonmonotonic Logic Program}
 
-In the current work, typical definitions of logic programs~\cite{ref49} are used in the context of answer set programming. Formally, \textit{nonmonotonic logic program P} is a rule set where each rule has the form:
+In the current work, we rely on the standard definitions of logic programs~\cite{ref49}. Formally, \textit{nonmonotonic logic program P} is a rule set where each rule has the form:
 
 \begin{equation}
 r: H \leftarrow B, not E
 \end{equation}
 \label{rule3}
 
-In details, $H$ stands for \textit{head(r)} which is a head of the rule $r$, it is also a first-order predicate in the format \textit{a(\textbf{X})}. Besides, $B, not E$ are lists of predicates in conjunctive format: \textit{b$_1$(\textbf{Y}$_1$), b$_2$(\textbf{Y}$_2$), ..., b$_k$(\textbf{Y}$_k$)} and \textit{not b$_{k+1}$(\textbf{Y}$_{k+1}$), b$_{k+2}$(\textbf{Y}$_{k+2}$), ..., b$_n$(\textbf{Y}$_n$)}, resp. $B$ and $not E$ can be used as the short form of $body^+(r)$ and $body^-(r)$, resp. In addition, \textit{negation as failure (NAF), default negation} are other names for the latter. In case $body^-(r) = \emptyset$, then $r$ is a positive Horn rule. \textit{\textbf{X, Y$_{1}$, Y$_{2}$, ..., Y$_{n}$}} are tuples of arguments, i.e., variables and constants where their sizes are the arity of relations \textit{a, b$_1$, b$_2$, ..., b$_n$}, resp. The signature of the program $P$ is denoted as $\Sigma_{P} = \langle$\textbf{P}$, \cC\rangle$ in which \textbf{P}, $\cC$ are sets of relations and constants in $P$, resp.
+In details, $H$ stands for \textit{head(r)} which is a head of the rule $r$, i.e., a first-order atom in the format \textit{a(\textbf{X})}. Besides, $B, not E$ is a conjunction: \textit{b$_1$(\textbf{Y}$_1$), b$_2$(\textbf{Y}$_2$), ..., b$_k$(\textbf{Y}$_k$)} and \textit{not b$_{k+1}$(\textbf{Y}$_{k+1}$), b$_{k+2}$(\textbf{Y}$_{k+2}$), ..., b$_n$(\textbf{Y}$_n$)}, resp. $B$ and $not E$ are used as the short form of $body^+(r)$ and $body^-(r)$, resp. The latter is referred to \textit{negation as failure (NAF), default negation}. In case $body^-(r) = \emptyset$, $r$ is a positive (Horn) rule. \textit{\textbf{X, Y$_{1}$, Y$_{2}$, ..., Y$_{n}$}} are tuples of arguments, i.e., variables and/or constants and their sizes are the arity of \textit{a, b$_1$, b$_2$, ..., b$_n$}, resp. The signature of the program $P$ is denoted as $\Sigma_{P} = \langle$\textbf{P}$, \cC\rangle$ where \textbf{P}, $\cC$ are sets of relations and constants in $P$, resp.
 
-The logic program $P$ is \textit{ground} if it does not contain any variable, i.e., only constants and predicates appear in each rule $r$. In case $P$ is not ground, $Gr(P)$ is ground instantiation of $P$ which is achieved by replacing variables by constants in all possibilities. The \textit{Herbrand Universe HU(P)} is the set of constants $\cC$ and \textit{Herbrand Base HB(P)} contains any possible ground atoms constructed by predicates, constants in \textbf{P} and $\cC$, resp. Any subset of $HB(P)$ is an \textit{Herbrand Interpretation} of program $P$. An interpretation $I$ is a model for a rule $r$ if for every possible substitutions that $body^+(r), body^-(r)$ hold true, $head(r)$ is also true w.r.t. $I$. $I$ is defined as a model for a program $P$ if it is the model for all rules in $P$. In addition, $MM(P)$ stands for a set-inclusion minimal models for $P$.
+A logic program $P$ is \textit{ground} if it does not contain any variables, i.e., only constants and predicates appear in each rule $r$. For a non ground program $P$, $Gr(P)$ is a ground instantiation of $P$ which is obtained by replacing variables with constants in all possible ways. The \textit{Herbrand Universe HU(P)} of $P$ is the set of constants $\cC$ appearing in program $P$ and \textit{Herbrand Base HB(P)} contains all possible ground atoms constructed by predicates in $P$ and constants in $\cC$, resp. Any subset of $HB(P)$ is a \textit{Herbrand Interpretation} of a program $P$. An interpretation $I$ is a model of a rule $r$ if for every possible substitution of variables $body^+(r), body^-(r)$ hold true, $head(r)$ is also true w.r.t. $I$. $I$ is defined as a model for a program $P$ if it is the model for all rules in $P$. In addition, $MM(P)$ denotes a set of a subset-inclusion minimal model of $P$.
 
-An \textit{answer set} $I$ of $P$ is an herbrand interpretation of $P$ and $I \in MM(P^I)$. Here, $P^I$ denotes the Gelfond-Lifschitz (GL) reduct~\cite{ref50} of $P$ which is generated by deleting any rule $r$ s.t. $body^-(r)$ intersects with $I$ and then removing all NAFs in the rest rules. By $AS(P)$ we define the set of answer sets for $P$.
+An \textit{answer set} $I$ of $P$ is a Herbrand interpretation of $P$ s.t. $I \in MM(P^I)$. Here, $P^I$ denotes the Gelfond-Lifschitz (GL) reduct~\cite{ref50} of $P$ which is generated by deleting any rule $r$ s.t. $body^-(r)$ intersects with $I$ and then removing all NAFs in the rest of the rules. $AS(P)$ stands for the set of all answer sets for $P$.
 
 \begin{example}\label{ex:as}
-To be specific, let us consider the following nonmonotonic program as an example:\\
+Consider the following nonmonotonic program as an example:\\
 {\small \leftline{$P = \left\{
             \renewcommand{\arraystretch}{1.1}
             \begin{array}{@{\,}l@{~~}l@{}}
@@ -32,20 +32,32 @@ To be specific, let us consider the following nonmonotonic program as an example
 {\smallskip
 
 \noindent            
-We can achieve the ground instantiation $Gr(P)$ of $P$ as a result of replacing $X,Y,Z$ with $\mi{brad, \,ann}$ and $\mi{berlin}$ , resp. Consider an interpretation $I=\{${\small\textit{isMarriedTo(brad,ann),livesIn\\(ann,berlin), livesIn(brad,berlin)}}$\}$, based on the above definition, the GL-reduct $P^I$ of $P$ consists of a clause \textit{livesIn(ann,berlin) $\leftarrow$ livesIn(brad,berlin),isMarriedTo(brad,ann)} and the ground terms (1), (2). Since $I$ is a minimal model of $P^I$, by the definition, $I \in AS(P)$.}\qed
+We obtain the ground instantiation $Gr(P)$ of $P$ by replacing $X,Y,Z$ with $\mi{brad, \,ann}$ and $\mi{berlin}$, resp. Consider the interpretation $I=\{${\small\textit{isMarriedTo(brad,ann), livesIn\\(ann,berlin), livesIn(brad,berlin)}}$\}$. Based on the above definition, the GL-reduct $P^I$ of $P$ consists of a rule \textit{livesIn(ann,berlin) $\leftarrow$ livesIn(brad,berlin), isMarriedTo(brad,ann)} and the ground terms (1), (2). Since $I$ is a minimal model of $P^I$, by definition, we have that $I \in AS(P)$.}\qed
 \end{example}
 
+\section{Knowledge Graph Completion}
+
+In this section, we provide a definition of KG completion based on the above concept of Answer Set Programming. The factual representation of a KG $\cG$ is the set of triples over the signature $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, in which $\mathbf{C}$, $\mathbf{R}$ and $\mathcal{C}$ denote the sets of unary predicates, binary predicates and constants, resp. By $G^i$, we denote a KG that consists every correct triple with predicates and constants of $\Sigma_{\cG^a}$ that holds true in the the real world. Based on~\cite{ref51}, the gap between the \emph{available graph} $\cG^a$ and $\cG^i$ is defined as follows.
+
+\begin{definition}[Incomplete data source] A pair $G = (\cG^a, \cG^i)$ of two KGs is defined as an incomplete data source, in which $\cG^a\subseteq \cG^i$ and $\Sigma_{\cG^a}=\Sigma_{\cG^i}$.
+\end{definition}
+
+We aim to learn a nonmonotonic rule set $\cR$ from the $\cG^a$ s.t. a good approximation of $\cG^i$ is a result of applying $\cR$ to $\cG^a$, i.e., corresponds to the calculation of $AS(\cR \cup \cG)$. Now the definition of KG completion is ready to be presented as follows:
+
+\begin{definition}[Rule-based KG completion]\label{def:graphcompl}
+Given a factual representation of a KG $\cG$ over the signature $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\cC}$, a set of rules $\cR$ are mined from $\cG$ with the signature. After that, the \emph{completion of $\cG$ \wrt\ $\cR$} is defined as a graph $\cG_{\cR}$ created by any answer set in $AS(\cR \cup \cG)$.
+\end{definition}
 
 \section{Association Rule Mining in Relational Setting}
 
-Association rule mining explores frequent patterns from the data and subsequently cast these patterns to rules. Applying association rules to the relational setting has been attracting research interests of both ILP~\cite{ref52} and KG~\cite{ref10} scientists. In the following description, typical rule measure concepts of association rule mining are adapted to the current work in relational setting.
+Association rule mining explores frequent patterns from the data and subsequently cast these patterns into rules. Originally, association rules were studied in the market basket context, where interesting relations between products from transaction database of customer purchases were extracted, e.g., \textit{\{onions, potatoes\} $=>$ \{burger}\}~\cite{ref54}. Recently, association rule learning methods were extended to relational settings, which attracts research interests of both ILP~\cite{ref52} and KG~\cite{ref10} scientists. In the following description, we present typical rule measures for association rules in the relational setting.
 
 A \emph{conjunctive query} $Q$ w.r.t $\cG$ is denoted as $Q(\vec{X}):-p_1(\vec{X_1}),\dotsc,p_m(\vec{X_m})$. The body (i.e., right part) of the query is a list of positive or negative atoms over $\cG$. Meanwhile, the head (i.e., left part) is a tuple of variables in the right part. The \emph{answer} of $Q$ w.r.t $\cG$ is defined as a set $Q(\cG):=\{$substitutions $\theta$ of $\vec{X}$: $p_i(\vec{X_i}\theta) \in \cG$ with $i \in [m]\}$. Based on \cite{ref53}, the \emph{(absolute) support} of a conjunctive query $Q$ w.r.t the KG $\cG$ is the cardinality of the set $Q(\cG)$. For instance, the query
 \begin{equation}\mi{Q(X,Y,Z):-isMarriedTo(X,Y),\, }\mi{livesIn(Y,Z)}
 \end{equation}
 has the absolute support $6$ w.r.t $\cG$ in Figure~\ref{fig1.1} because there are $6$ substitutions for triple $\langle X, Y, Z \rangle$ that fulfill \textit{isMarriedTo(X,Y), livesIn(Y,Z)} w.r.t $\cG$.
 
-An \emph{association rule} has a format $Q_1 => Q_2$, where $Q_1$ and $Q_2$ are conjunctive queries and all atoms in the boby of$Q_1$ also appear in that of $Q_2$. To be specific, from the $Q(X,Y,Z)$ in the above example and
+An \emph{association rule} has a format $Q_1 => Q_2$, where $Q_1$ and $Q_2$ are conjunctive queries and all atoms in the body of $Q_1$ also appear in that of $Q_2$. To be specific, from the $Q(X,Y,Z)$ in the above example and
 \begin{equation}Q'(X,Y,Z):-\mi{isMarriedTo(X,Y),\,livesIn(X,Z),\,} \mi{livesIn(Y,Z)}
 \end{equation} the association rule $Q => Q'$ can be built.
 
@@ -61,7 +73,7 @@ in which $\mi{supp(h(X,Y),\cG)}$ stands for \textit{relative support} of the hea
 \begin{equation}
 supp(h(X,Y),\cG)=\dfrac{\#(X,Y):h(X,Y)\in \cG}{(\#X:\exists Y\;h(X,Y)\in \cG)*(\#Y:\exists X\;h(X,Y)\in \cG)}
 \end{equation}
-besides, $\mi{conf}$ denotes the confidence of $r$:
+besides, $\mi{conf}$ denotes the \textit{confidence} of $r$:
 \begin{equation}
 \mi{conf(r,\cG)=\dfrac{\#(X,Y): H \in \cG, \exists \vec{Z}\;B\in \cG,E \not \in \cG}{\#(X,Y):\exists \vec{Z}\; B\in \cG, E \not \in \cG}}
 \end{equation}

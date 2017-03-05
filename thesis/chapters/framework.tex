@@ -5,18 +5,7 @@ This chapter discusses the theoretical framework for learning nonmonotonic rules
 
 \section{Problem Statement}
 
-This section formally presents the problem statement and the main goal of the thesis. The factual representation of a KG $\cG$ is the set of triples over the signature $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, in which $\mathbf{C}$, $\mathbf{R}$ and $\mathcal{C}$ denote the sets of unary predicates, binary predicates and constants, resp. By $G^i$, we denote a KG that consists every correct triple with predicates and constants of $\Sigma_{\cG^a}$ that holds true in the the real world. Based on~\cite{ref51}, the gap between the \emph{available graph} $\cG^a$ and $\cG^i$ is defined as follows.
-
-\begin{definition}[Incomplete data source] A pair $G = (\cG^a, \cG^i)$ of two KGs is defined as an incomplete data source, in which $\cG^a\subseteq \cG^i$ and $\Sigma_{\cG^a}=\Sigma_{\cG^i}$.
-\end{definition}
-
-We aim to learn a nonmonotonic rule set $\cR$ from the $\cG^a$ s.t. a good approximation of $\cG^i$ is a result of applying $\cR$ to $\cG^a$, i.e., corresponds to the calculation of $AS(\cR \cup \cG)$.
-
-\begin{definition}[Rule-based KG completion]\label{def:graphcompl}
-Given a factual representation of a KG $\cG$ over the signature $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\cC}$, a set of rules $\cR$ are mined from $\cG$ with the signature. After that, the \emph{completion of $\cG$ \wrt\ $\cR$} is defined as a graph $\cG_{\cR}$ created by any answer set in $AS(\cR \cup \cG)$.
-\end{definition}
-
-Assume that $\cG^i$ is an ideal completion of $\cG^a$, i.e., a KG that contains every true fact over the signature $\Sigma_{\cG^a}$. As input, we are given an available incomplete KG $\cG^a$ and a set $\cR_H$ of positive rules mined from $\cG^a$. Our aim is to insert NAFs (exceptions) to the positive rules to obtain a nonmonotonic ruleset $\cR_{\mi{NM}}$ s.t. the difference between $\cG^a_{\cR_{\mi{NM}}}$ and $\cG^i$ is minimized. The $\cR_{\mi{NM}}$ is a good choice for the rule revision of $\cR_\mi{H}$ if it deletes many false predicted facts from $\cR_H$, and still retains many true ones from $\cR_H$.
+This section formally presents the problem statement and the main goal of the thesis. Assume that $\cG^i$ is an ideal completion of the available KG $\cG$, i.e., a KG that contains every true fact over the signature $\Sigma_{\cG}$. As input, we are given an available incomplete KG $\cG$ and a set $\cR_H$ of positive rules mined from $\cG$. Our aim is to insert NAFs (exceptions) to the positive rules to obtain a nonmonotonic ruleset $\cR_{\mi{NM}}$ s.t. the difference between $\cG_{\cR_{\mi{NM}}}$ and $\cG^i$ is minimized. The $\cR_{\mi{NM}}$ is a good choice for the rule revision of $\cR_\mi{H}$ if it deletes many false predicted facts from $\cR_H$, and still retains many true ones from $\cR_H$.
 
 Obviously, $\cG^i$ is \emph{unavailable}, hence the truthfulness of predictions cannot be estimated. Consequently, standard ILP measures that rely on CWA cannot be exploited in our work to assess how good a rule revision is. To tackle this issue, we propose to use measures from association rule mining in the previous chapter. Based on our theory framework, a ruleset revision is good if its total rule measure is as high as possible, and the inserted NAFs are not over-fitting the KG, i.e., they are relevant exceptions instead of noise.
 
@@ -29,7 +18,7 @@ q_{\mi{rm}}(\cR,\cG)=\dfrac{\sum_{r\in \cR}rm(r,\cG)}{|\cR|}.
 where $rm$ is a rule measure exploited in our work. On the contrary, $q_{conflict}$ calculates the quantity of conflicting facts predicted by applying the rules in $R$ to $\cG$. To find $q_{conflict}$, an additional auxiliary rules $R_{aux}$ which consists of each revised rule $r \in \cR$ and its corresponding auxiliary rule $r^{\mi{aux}}$, built by removing $\naf$ from $body^-(r)$, and subsequently substituting the head predicate $\mi{h}$ of $r$ by a dummy predicate $\mi{not\_h}$. The newly created predicate $\mi{not\_h}$ intuitively corresponds to the negation of $h$. The formula of $q_{conflict}$ is then defined as follows.
 
 \begin{equation}
-\mi{q_{conflict}(\cR,\cG)=\sum_{p\in pred(\cR)} \dfrac{|\{ \vec{c}\,|\,p(\vec{c}),not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}{|\{ \vec{c}\,|\,not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}}
+q_{conflict}(\cR,\cG)=\sum_{p\in pred(\cR)} \dfrac{|\{ \vec{c}\,|\,p(\vec{c}),not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}{|\{ \vec{c}\,|\,not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}
 \label{eq:conflict},
 \end{equation}
 
@@ -37,9 +26,7 @@ in which $\mi{pred(\cR)}$ is the set of relations occurring in $\cR$, and $\vec{
 
 \begin{example}
 
-nhieu bug lam.
-
-The occurrence of the unary relation $\mi{researcher}$ is necessary to improve the quality of $\mi{r1}$ based on standard association rule measure in Figure~\ref{fig1.1}. Indeed, thanks to this, the revision can remove two wrong facts predicted by $r1$, i.e., $\mi{bornIn(Dave,Chicago)}$ and $\mi{bornIn(Alice,Berlin)}$. Nonetheless, the addition of a new nonmonotonic rule to the revision set may break this as in the following example. After $\mi{bornIn(Alice,Berlin)}$ being predicted by $r2:\; livesIn(X,Y)\leftarrow workIn(X,Y),\naf\ Artist(X)$, one more substitution $X/clara$, $Y/dave,Z/chicago$ fulfills $r1$ and the reverse is true for its revision. In other words, the impact of the exception $\mi{researcher}$ is weakened.
+The occurrence of the unary relation $\mi{researcher}$ is necessary to improve the quality of $\mi{r1}$ based on standard association rule measures in Figure~\ref{fig1.1}. Indeed, thanks to this, the revision may explain why $\mi{livesIn(Dave,Chicago)}$ and $\mi{livesIn(Alice,Berlin)}$ do not appear in the figure, and hence, is fulfilled by two more substitutions in the corresponding red triangles. However, the addition of a new nonmonotonic rule to the revision set may break this. For instance, after $\mi{livesIn(Alice,Berlin)}$ is predicted by $r2:\; livesIn(X,Y)\leftarrow workIn(X,Y),\naf\ Artist(X)$, not two but only one red triangle satisfies the revision of $r1$ in the figure. In other words, the impact of the exception $\mi{researcher}$ is weakened.
 \end{example}
 
 Now we are ready to present our revision framework based on the above quality functions.
@@ -51,22 +38,22 @@ Given a KG $\cG$ over the signature $\Sigma$, the quality functions $\mi{q_{rm}}
 Discussing the solutions to the QHTR problem, the concepts of $r$-(ab)normal substitutions and Exception Witness Sets (EWSs) are introduced in the rest of this section.
 
 \begin{definition}[$r$-(ab)normal substitutions]\label{sec:rulelearn}
-Given a KG $\cG$, let $\mi{r}$ and $\cV$ be a positive rule learned from $\cG$ and a variable set appearing in $r$, resp. We have the following notations:
+Given a KG $\cG$, let $\mi{r}$ and $\cV$ be a positive rule learned from $\cG$ and a variable set appearing in $r$, resp. Consider substitutions $\theta,\theta':\cV \rightarrow \cC$, we have the following notations:
 
 \begin{itemize}
-\item The $\mi{r}$-normal set of substitutions are defined as $\mi{NS(r, \cG)=\{\theta\, |\, head(r)\theta,body(r)\theta \subseteq \cG\}}$ in which $\theta,\theta':\cV \rightarrow \cC$.
+\item The $\mi{r}$-normal set of substitutions are defined as $\mi{NS(r, \cG)=\{\theta\, |\, head(r)\theta,body(r)\theta \subseteq \cG\}}$.
 \item By contrast, the $\mi{r}$-abnormal set of substitutions are $\mi{ABS(r, \cG){=}\{\theta'\, |\, body(r)\theta'}$\\ $\mi{{\subseteq} \cG\,{,}\,head(r)\theta' {\not \in} \cG\}}$.
 \end{itemize}
 \end{definition}
 
 \begin{example}\label{ex:abns}
-In Figure~\ref{fig1.1} the blue and red triangles indicate the $\mi{NS(r1,\cG)}$ and $\mi{ABS(r1,\cG)}$, resp. More specifically, the normal set is given as $\mi{NS(r1,\cG)}=\{\mi{\theta_1,\theta_2,\theta_3}\}$ with $\theta_1,\theta_2,\theta_3$ being $\{\mi{X/Alice,Y/Bob,Z/Berlin}\}$, $\{\mi{X/Dave,Y/Clara,Z/Chicago}\}$ and $\{\mi{X/Sue,Y/Li,Z/Beijin}\}$, resp. Meanwhile, the abnormal set ... (cai nay can phai them vao)
+In Figure~\ref{fig1.1} the blue and red triangles indicate the $\mi{NS(r1,\cG)}$ and $\mi{ABS(r1,\cG)}$, resp. More specifically, the normal set is given as $\mi{NS(r1,\cG)}=\{\mi{\theta_1,\theta_2,\theta_3}\}$ with $\theta_1,\theta_2,\theta_3$ being $\{\mi{X/Alice,Y/Bob,Z/Berlin}\}$, $\{\mi{X/Dave,Y/Clara,Z/Chicago}\}$ and $\{\mi{X/Sue,Y/Li,Z/Beijin}\}$, resp. Meanwhile, the abnormal set ... (CAI NAY CAN THEM VAO)
 \end{example}
 
 The intuition is that given the ideal KG $\cG^i$, the $r$-(ab)normal substitutions correspond to the ground rules which are satisfied (resp. not satisfied) in $\cG^i$, resp. Observe that, due to the incompleteness of the data under the OWA, $r$-abnormal substitutions are not guaranteed to be $r$-abnormal of the ideal graph. To differentiate the ``incorrectly'' and ``correctly'' detected substitutions in the $r$-abnormal set, the definition of \emph{exception witness sets} ($\mi{EWS}$) is introduced as follows.
 
 \begin{definition}[Exception Witness Set] \label{def:ews}
-Given a KG $\cG$ and a rule $r$ extracted from it, let $\cV$ be a set of all variables appearing in $\mi{r}$. Let $\vec{X}$ be a variable subset of $\cV$ and, let $\mi{EWS+, EWS-}$ be sets of predicates $\mi{EWS^+}=\{e: \exists \theta \in \mi{ABS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$ and $\mi{EWS^-}=\{e: \exists \theta \in \mi{NS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$. Exception witness set of $r$ \wrt\ $\cG$ and $\vec{X}$ is a set difference $\mi{EWS(r,\cG,\vec{X})}=EWS^+ \setminus EWS^-$. In other words, it is a set of relations covering some substitutions in $ABS(r, \cG)$ but none in $NS(r, \cG)$.
+Given a KG $\cG$ and a rule $r$ extracted from it, let $\cV$ be a set of all variables appearing in $\mi{r}$. Let $\vec{X}$ be a variable subset of $\cV$ and, let $\mi{EWS+, EWS-}$ be sets of predicates $\mi{EWS^+}=\{e: \exists \theta \in \mi{ABS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$ and $\mi{EWS^-}=\{e: \exists \theta \in \mi{NS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$. Exception witness set of $r$ \wrt\ $\cG$ and $\vec{X}$ is a set difference $EWS(r,\cG,\vec{X})=EWS^+ \setminus EWS^-$. In other words, it is a set of relations covering some substitutions in $ABS(r, \cG)$ but none in $NS(r, \cG)$.
 \end{definition}
 
 \begin{example}
@@ -76,9 +63,7 @@ Consider the rule $r1$, the KG $\cG$ in Figure~\ref{fig1.1} and $\cV = \{X\}$. B
 In case binary exceptions appear in the rules, generally the cardinality of $\mi{EWS}$s can be large. Indeed, for a rule with $n$ distinct variables, there can be up to $n^2$ elements in $\mi{EWS}$s. In addition, a good rule revision may have many exceptions in its body, thus can have exponentially many solutions for our QHTR problem. To address this issue, in the current work, we consider only with a single negated atom. Handling exception combination can be a direction for future work.
 
 \begin{definition}[Safely Predicted Facts] \label{def:spf}
-Cai nay chua chinh lai.
-
-Given a KG $\cG$ and a rule $r$ explored from it, safely predicted facts of $r$ w.r.t. KG $\cG$ are an intersection of new fact sets produced by $r$ and every revision of $r$ constructing by adding an exception candidate to the rule body.
+Given a KG $\cG$ and a positive rule $r$ explored from it, safely predicted facts of $r$ w.r.t. $\cG$ is $\cG_{r'} \setminus \cG$ where $r'$ is constructed from $r$ by adding all NAFs of $r$ to its body at once.
 \end{definition}
 
 \begin{example}
@@ -100,7 +85,7 @@ PHAN NAY THI XEM LAI PAPER BAN MOI NHAT
 
 \smallskip
 
-\noindent \textbf{Steps 4.} For each rule, its revision candidates are ranked and the best one is added to the final result $\cR_{\mi{NM}}$. Since the KG $\cG$ and $\mi{EWS}$s can be very large, the search space for $\cR_{\mi{NM}}$ is huge, and subsequently, searching for the globally optimal result is not feasible in practice. Hence, we propose to gradually construct $\cR_{\mi{NM}}$ by finding the locally optimal revision $r_i^{j}$ for each rule $r_i \in \cR_{H}$. To this end, we propose three ranking strategies such as Naive, PM, OPM. While the first one processes the rules independently, the other ones exploit a novel concept of \emph{partial materialization}. More specifically, the core idea of this concept is to assess the quality of potential rule revisions not [CAI DEO GI THE] to $\cG$, but [CAI DEO GI THE] its expansion with new facts predicted by $\cR'$ [CAI DEO GI THE]. This approach enables communication among the rules, and thus, are different from the setting of Naive ranking [CAI CAU NAY CAN SUA LAI]. We now describe each ranking in details.
+\noindent \textbf{Steps 4.} For each rule, its revision candidates are ranked and the best one is added to the final result $\cR_{\mi{NM}}$. Since the KG $\cG$ and $\mi{EWS}$s can be very large, the search space for $\cR_{\mi{NM}}$ is huge, and subsequently, searching for the globally optimal result is not feasible in practice. Hence, we propose to gradually construct $\cR_{\mi{NM}}$ by finding the locally optimal revision $r_i^{j}$ for each rule $r_i \in \cR_{H}$. To this end, we propose three ranking strategies such as Naive, PM, OPM. While the first one processes the rules independently, the other ones exploit a novel concept of \emph{partial materialization}. More specifically, the core idea of this concept is to assess the quality of potential rule revisions not w.r.t. $\cG$, but w.r.t. $\cG_{\cR'}$. This approach enables communication among the rules which differs from the Naive ranking. We now describe each ranking in details.
 
 The \textbf{Naive (N)} ranking strategy does not take the cross-talk between the rules into the consideration. For each rule $r_i$ in $R_H$, it selects the optimal revised rule $\mi{r^j_i}$ only according to the chosen measure $rm$, i.e., the revision should have the highest $\mi{rm(r^j_{i},\cG)}$ value to be in solution set. Hence, the revision $R_{NM}$ obtained by applying the Naive ranking satisfies only (i) of Definition~\ref{def:qhtr}. However, it does not take the second criteria into account at all, and hence may produce noisy revision sets that overfit the data.
 
@@ -110,6 +95,6 @@ The \textbf{Partial Materialization (PM)} ranking strategy selects the optimal r
 score(r^j_i,\cG)=\dfrac{\mi{rm(r^j_i,\cG_{\cR'})+rm({r^j_i}^{aux},\cG_{\cR'})}}{2}
 \end{equation}
 
-where $\cR'$ contains rules $r_l'$ generated from each $r_l$ in $\cR_H\backslash r_i$ by inserting all exceptions of $r_l$ into the $body(r_l)$ at once. In other words, for every $r_i$, $\cG_{\cR'}$ contains facts from $\cG$ and \textit{safe predictions} of all rules other than $r_i$. By injecting all into every rule [NHO CAU NAY NE], we lower the possibility of wrong predictions.
+where $\cR'$ contains rules $r_l'$ generated from each $r_l$ in $\cR_H\backslash r_i$ by inserting all exceptions of $r_l$ into the $body(r_l)$ at once. In other words, for every $r_i$, $\cG_{\cR'}$ contains facts from $\cG$ and \textit{safe predictions} of all rules other than $r_i$. By injecting all into every rule, we lower the possibility of wrong predictions. [EXAMPLE???]
 
-The \textbf{Ordered Partial Materialization (OPM)} ranking strategy is analogous to \textbf{\emph{PM}}, but here the word ``Ordered" means that the chosen ruleset $\cR'$ consists of merely rules $r_l'$ where the corresponding $r_l$ is processed before the current rule $r_i$. In other words, in this strategy the rule order in $R_H$ matters, and is determined by some positive rule measure such as \textit{confidence} or \textit{conviction}. [DOAN NAY NHO XEM LAI VAI COMMENTS CO CO GIAO]
+The \textbf{Ordered Partial Materialization (OPM)} ranking strategy is analogous to \textbf{\emph{PM}}, but here the word ``Ordered" means that the chosen ruleset $\cR'$ consists of merely rules $r_l'$ where the corresponding $r_l$ is revised before the current rule $r_i$. In other words, in this strategy the rule order in $R_H$ matters, and is determined by some positive rule measure such as \textit{confidence} or \textit{conviction}. [EXAMPLE???]
