@@ -12,7 +12,7 @@ r: H \leftarrow B, not E
 \end{equation}
 \label{rule3}
 
-In details, $H$ stands for \textit{head(r)} which is a head of the rule $r$, i.e., a first-order atom in the format \textit{a(\textbf{X})}. Besides, $B, not E$ is a conjunction: \textit{b$_1$(\textbf{Y}$_1$), b$_2$(\textbf{Y}$_2$), ..., b$_k$(\textbf{Y}$_k$)} and \textit{not b$_{k+1}$(\textbf{Y}$_{k+1}$), b$_{k+2}$(\textbf{Y}$_{k+2}$), ..., b$_n$(\textbf{Y}$_n$)}, resp. $B$ and $not E$ are used as the short form of $body^+(r)$ and $body^-(r)$, resp. The latter is referred to \textit{negation as failure (NAF), default negation}. In case $body^-(r) = \emptyset$, $r$ is a positive (Horn) rule. \textit{\textbf{X, Y$_{1}$, Y$_{2}$, ..., Y$_{n}$}} are tuples of arguments, i.e., variables and/or constants and their sizes are the arity of \textit{a, b$_1$, b$_2$, ..., b$_n$}, resp. The signature of the program $P$ is denoted as $\Sigma_{P} = \langle$\textbf{P}$, \cC\rangle$ where \textbf{P}, $\cC$ are sets of relations and constants in $P$, resp.
+In details, $H$ stands for \textit{head(r)} which is a head of the rule $r$, i.e., a first-order atom in the format \textit{a(\textbf{X})}. Besides, $\mi{B, not E}$ is a conjunction: \textit{b$_1$(\textbf{Y}$_1$), b$_2$(\textbf{Y}$_2$), ..., b$_k$(\textbf{Y}$_k$)} and \textit{not b$_{k+1}$(\textbf{Y}$_{k+1}$), b$_{k+2}$(\textbf{Y}$_{k+2}$), ..., b$_n$(\textbf{Y}$_n$)}, resp. $B$ and $not E$ are used as the short form of $body^+(r)$ and $body^-(r)$, resp. The latter is referred to \textit{negation as failure (NAF) or default negation}. In case $body^-(r) = \emptyset$, $r$ is a positive (Horn) rule. \textit{\textbf{X, Y$_{1}$, Y$_{2}$, ..., Y$_{n}$}} are tuples of arguments, i.e., variables and/or constants and their sizes are the arity of \textit{a, b$_1$, b$_2$, ..., b$_n$}, resp. The signature of the program $P$ is denoted as $\Sigma_{P} = \langle$\textbf{P}$, \cC\rangle$ where \textbf{P}, $\cC$ are sets of relations and constants in $P$, resp.
 
 A logic program $P$ is \textit{ground} if it does not contain any variables, i.e., only constants and predicates appear in each rule $r$. For a non ground program $P$, $Gr(P)$ is a ground instantiation of $P$ which is obtained by replacing variables with constants in all possible ways. The \textit{Herbrand Universe HU(P)} of $P$ is the set of constants $\cC$ appearing in program $P$ and \textit{Herbrand Base HB(P)} contains all possible ground atoms constructed by predicates in $P$ and constants in $\cC$, resp. Any subset of $HB(P)$ is a \textit{Herbrand Interpretation} of a program $P$. An interpretation $I$ is a model of a rule $r$ if for every possible substitution of variables $body^+(r), body^-(r)$ hold true, $head(r)$ is also true w.r.t. $I$. $I$ is defined as a model for a program $P$ if it is the model for all rules in $P$. In addition, $MM(P)$ denotes a set of a subset-inclusion minimal model of $P$.
 
@@ -27,7 +27,7 @@ Consider the following nonmonotonic program as an example:\\
               \mbox{(3) } \mi{livesIn(Y,Z)\leftarrow isMarriedTo(X,Y),livesIn(X,Z),  \naf\ researcher(Y)}\\
             \end{array}%
             \!\right\}$}}
-            
+
 \normalsize
 {\smallskip
 
@@ -37,7 +37,7 @@ We obtain the ground instantiation $Gr(P)$ of $P$ by replacing $X,Y,Z$ with $\mi
 
 \section{Knowledge Graph Completion}
 
-In this section, we provide a definition of KG completion based on the above concept of Answer Set Programming. The factual representation of a KG $\cG$ is the set of triples over the signature $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, in which $\mathbf{C}$, $\mathbf{R}$ and $\mathcal{C}$ denote the sets of unary predicates, binary predicates and constants, resp. By $G^i$, we denote a KG that consists every correct triple with predicates and constants of $\Sigma_{\cG^a}$ that holds true in the the real world. Based on~\cite{ref51}, the gap between the \emph{available graph} $\cG^a$ and $\cG^i$ is defined as follows.
+In this section, we provide a definition of KG completion based on the above concept of Answer Set Programming. The factual representation of a KG $\cG$ is the set of triples over the signature $\Sigma_{\cG}=\tuple{\mathbf{C},\mathbf{R},\mathcal{C}}$, in which $\mathbf{C}$, $\mathbf{R}$ and $\mathcal{C}$ denote the sets of unary predicates, binary predicates and constants, resp. By $\cG^i$, we denote a KG that consists every correct triple with predicates and constants of $\Sigma_{\cG^a}$ that holds true in the the real world. Based on~\cite{ref51}, the gap between the \emph{available graph} $\cG^a$ and $\cG^i$ is defined as follows.
 
 \begin{definition}[Incomplete data source] A pair $G = (\cG^a, \cG^i)$ of two KGs is defined as an incomplete data source, in which $\cG^a\subseteq \cG^i$ and $\Sigma_{\cG^a}=\Sigma_{\cG^i}$.
 \end{definition}
@@ -75,7 +75,7 @@ supp(h(X,Y),\cG)=\dfrac{\#(X,Y):h(X,Y)\in \cG}{(\#X:\exists Y\;h(X,Y)\in \cG)*(\
 \end{equation}
 besides, $\mi{conf}$ denotes the \textit{confidence} of $r$:
 \begin{equation}
-\mi{conf(r,\cG)=\dfrac{\#(X,Y): H \in \cG, \exists \vec{Z}\;B\in \cG,E \not \in \cG}{\#(X,Y):\exists \vec{Z}\; B\in \cG, E \not \in \cG}}
+conf(r,\cG)=\dfrac{\#(X,Y): H \in \cG, \exists \vec{Z}\;B\in \cG,E \not \in \cG}{\#(X,Y):\exists \vec{Z}\; B\in \cG, E \not \in \cG}
 \end{equation}
 \vspace{-.3cm}
 

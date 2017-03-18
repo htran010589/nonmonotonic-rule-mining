@@ -73,6 +73,7 @@ public class Sampler {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+		System.out.println("Done with indexing training KG.");
 		return learningFacts;
 	}
 

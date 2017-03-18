@@ -40,6 +40,7 @@ public class Encoder {
 	}
 
 	static void encode() {
+		System.out.println("Start with encoding entities and predicates.");
 		entity2Id = new HashMap<String, String>();
 		entityCount = typeCount = predicateCount = 0;
 		List<String> lines = TextFileReader.readLines(Conductor.idealDataFileName);
@@ -80,6 +81,7 @@ public class Encoder {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+		System.out.println("Done with encoding entities and predicates.");
 	}
 
 	static void loadEncode() {
@@ -91,6 +93,7 @@ public class Encoder {
 			entity2Id.put(parts[0], parts[1]);
 			id2Entity.put(parts[1], parts[0]);
 		}
+		System.out.println("Done with load encoding.");
 	}
 
 	static void decodeDlvOutput() {
@@ -144,6 +147,7 @@ public class Encoder {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		System.out.println("Done with creating training KG in DLV format.");
 	}
 
 }
