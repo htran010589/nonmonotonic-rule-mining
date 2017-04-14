@@ -7,7 +7,7 @@ In this chapter, the evaluation result of the current work is presented after ru
 
 \textbf{Dataset.} To measure the quality of rules and their predictions, the occurrence of ideal graph $\cG^i$, i.e. the ideal KG containing all true facts from real world, is necessary. Nonetheless, achieving $\cG^i$ is infeasible and impracticable. Hence, some KG $\cG^i_{\mi{appr}}$ with a large number of true facts can be exploited as an approximated version for $\cG^i$. Besides, the learning KG $\cG$ is created by deleting 20\% of the triples over every binary relation, and retaining all unary facts in $\cG^i_{\mi{appr}}$. It is guaranteed that there is no isolated vertex, i.e the node which does not connect to any other nodes in $\cG$. In our experiment, YAGO3~\cite{ref28}, part of Wikidata~\footnote{\url{https://www.wikidata.org}} and IMDB~\footnote{\url{http://people.mpi-inf.mpg.de/~gadelrab/downloads/ILP2016}} datasets are used as the ideal KGs. YAGO3 covers a variety of domains and contains roughly 1.8 million entities, 38 predicates, and 20.7 million triples. Meanwhile, IMDB only focus on movie content collected from the IMDB website~\footnote{\url{http://imdb.com}}, there are 112 thousand entities, 38 predicates and 583 thousand triples in this KG.
 
-Besides, 1 million facts with 238 thousand entities and 443 predicates are sampled from Wikidata for the approximated ideal KG by the following way. In details, thanks to randomly choosing facts in the format \textit{$<$subject$>$ $<$memberOf$>$ $<$object$>$} where \textit{$<$object$>$} is in the list of manually chosen popular football clubs, famous footballers and coaches (seeding set) are sampled from Wikidata. After that, all the entities that can be visited from any node in the seeding set (chosen entities) are collected for the ideal KG. These chosen entities and all possible links between them in the original Wikidata are sampled for the smaller scale. This new KG is expected to have specific domain where facts are related to football and sports.
+Besides, 1 million facts with 238 thousand entities and 443 predicates are sampled from Wikidata for the approximated ideal KG by the following way. In details, thanks to randomly choosing facts in the format \textit{$<$subject$>$ $<$memberOf$>$ $<$object$>$} where \textit{$<$object$>$} is in the list of manually chosen popular football clubs, famous footballers and coaches (seeding set) are sampled from Wikidata. After that, all the entities that can be visited from any node in the seeding set (chosen entities) by following paths (one or more consecutive links/edges/predicates in the original Wikidata KG) are collected for the ideal KG. These chosen entities and all possible links between them in the original Wikidata KG are sampled for the smaller scale. This new KG is expected to have specific domain where facts are related to football and sports.
 
 Figure~\ref{fig:venn} indicates the ideal, approximated and available KGs used in the current work. Besides, the extension KGs $\cG_{\cR_{\mi{H}}}$, $\cG_{\cR_{\mi{NM}}}$ obtained by resp. applying $\cR_H$ and its revision $\cR_{NM}$ to $\cG$ can be seen in the figure. The RUMIS aims to tackle the KG completion problem by narrowing the difference between the $\cG_{\cR_{\mi{NM}}}$ and $ \cG^i$.
 
@@ -22,7 +22,7 @@ Figure~\ref{fig:venn} indicates the ideal, approximated and available KGs used i
 
 \section{Ruleset Quality}
 
-For every row in the Table~\ref{tab:rules_quality}, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ from the preparation step. Then the \textit{average conviction} of the rules and their revisions are found for YAGO and IMDB by using RUMIS. It can be seen that the quality of the positive rulesets is always improved in terms of the average conviction thanks to the revision process. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision levels, the enhancement ratio between positive rules and their revisions steps up and reaches the peak of $10\%$ for top-60 Wikidata rules. That means with low quality Horn rules, the introduction of negated atoms significantly boost up their precision.
+For every row in the Table~\ref{tab:rules_quality}, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ from the preparation step. Then the \textit{average conviction} of the rules and their revisions are found for YAGO, IMDB and sampled Wikidata by using RUMIS. It can be seen that the quality of the positive rulesets is always improved in terms of the average conviction thanks to the revision process. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision levels, the enhancement ratio between positive rules and their revisions steps up and reaches the peak of $10\%$ for top-60 Wikidata rules. That means with low quality Horn rules, the introduction of negated atoms significantly boost up their precision.
 
 \begin{table}[ht]
 \centering
@@ -47,7 +47,7 @@ quantity of new predictions, i.e. predicted facts not included in $\cG$ and the 
 \centering
 \input{tables/rules_predictions}
 \smallskip
-\caption{New Facts Predicted by the Rulesets for IMDB (\textit{I}) and YAGO (\textit{Y}).}
+\caption{New Facts Predicted by the Rulesets for IMDB (\textit{I}), YAGO (\textit{Y}) and Wikidata (\textit{W}).}
 \label{tab:prediction_res}
 %\vspace*{-1.7\baselineskip}
 \end{table}
@@ -61,6 +61,8 @@ Since the size of difference sets between KGs extended by applying $\cR_H$ and i
 \section{Running Times}
 
 RUMIS mines 100 positive rules and their $\mi{EWS}$s from IMDB and YAGO in 7 and 68 seconds, resp. The mean number of exceptions for each positive rule is 1600 for the former and 10900 for the latter. With IMDB, the exceptions for Naive, PM and OPM strategies are ranked within 9, 62 and 24 seconds, resp. Meanwhile in YAGO, these numbers are 45, 177 and 112 seconds with the same ranking function. As regards the step of applying final revisions to the KG $\cG$, the DLV tool finishes after 8 and 310 seconds with IMDB and YAGO, resp.
+
+As regards sampled Wikidata, 300 Horn rules and their EWSs are explored in 20 and 173 seconds, resp. The exceptions are ranked in resp. 1.5, 115 and 31 minutes by Naive, Pm, OPM methods and training KG is extended in 3 minutes by using DLV in average.
 
 \begin{figure}[t]
     \centering
