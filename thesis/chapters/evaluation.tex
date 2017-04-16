@@ -13,7 +13,7 @@ Figure~\ref{fig:venn} indicates the ideal, approximated and available KGs used i
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.45\textwidth]{figures/big_pic_exp}
+\includegraphics[width=0.55\textwidth]{figures/big_pic_exp}
 \caption{The Ideal, Available and Extended KGs.}
 \label{fig:venn}
 \end{figure}
@@ -22,19 +22,49 @@ Figure~\ref{fig:venn} indicates the ideal, approximated and available KGs used i
 
 \section{Ruleset Quality}
 
-For every row in the Table~\ref{tab:rules_quality}, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ from the preparation step. Then the \textit{average conviction} of the rules and their revisions are found for YAGO, IMDB and sampled Wikidata by using RUMIS. It can be seen that the quality of the positive rulesets is always improved in terms of the average conviction thanks to the revision process. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision levels, the enhancement ratio between positive rules and their revisions steps up and reaches the peak of $10\%$ for top-60 Wikidata rules. That means with low quality Horn rules, the introduction of negated atoms significantly boost up their precision.
+For every row in the Table~\ref{tab:rules_quality1} and~\ref{tab:rules_quality2}, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ from the preparation step. Then the \textit{average conviction} of the rules and their revisions are found for YAGO, IMDB and sampled Wikidata by using RUMIS. It can be seen that the quality of the positive rulesets is always improved in terms of the average conviction thanks to the revision process. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision levels, the enhancement ratio between positive rules and their revisions steps up and reaches the peak of $7\%$, $10\%$ for top-100 IMDB and top-30 Wikidata rules, resp. That means with low quality Horn rules, the introduction of negated atoms significantly boost up their precision.
 
 \begin{table}[ht]
 \centering
 \footnotesize
 \renewcommand*{\arraystretch}{1.07}
 \centering
-\input{tables/rules_quality}
+\input{tables/rules_quality_yago_imdb}
 \smallskip
-\caption{The Average Quality of the Top Positive and Nonmonotonic Rules.}
-\label{tab:rules_quality}
+\caption{The Average Quality of the Top Positive and Nonmonotonic Rules for YAGO, IMDB.}
+\label{tab:rules_quality1}
 %\vspace*{-1.7\baselineskip}
 \end{table}
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\renewcommand*{\arraystretch}{1.07}
+\centering
+\input{tables/rules_quality_wikidata}
+\smallskip
+\caption{The Average Quality of the Top Positive and Nonmonotonic Rules for Sample Wikidata.}
+\label{tab:rules_quality2}
+%\vspace*{-1.7\baselineskip}
+\end{table}
+
+The enhancement ratio trend between revisions of three ranking methods against top positive rules can be clearly seen in Figure~\ref{fig_1_5_yago} for YAGO and Figure~\ref{fig_1_5_imdb} for IMDB. The statistics in these two figures are generated from Table~\ref{tab:rules_quality_yago_imdb} where with each ranking method, the improvement rates for different number of top rules are calculated. It can be seen from the figures that the rate has an uptrend, in general the more low quality Horn rules are added to the top ruleset, the higher the improvement rate is. As in the theory framework indicates, the Naive ranking is always the best in terms of the rule quality, results in the highest rates in the both following pictures.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/table_1_5_yago.jpeg}
+\caption{The Average Quality Improvement Rate (\%) against Positive Rules in YAGO.}
+\label{fig_1_5_yago}
+\end{figure}
+
+With IMDB dataset, the results of Naive and OPM ranking are approximately the same, it is good to see that the quality of OPM revisions are the best while minimizing number of conflicts is still taken into consideration for this method. Especially with top 100 rules, the discrepancy rate reaches the peak of more than 7\% improvement which is significantly larger than the statistics with the same data.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/table_1_5_imdb.jpeg}
+\caption{The Average Quality Improvement Rate (\%) against Positive Rules in IMDB.}
+\label{fig_1_5_imdb}
+\end{figure}
 
 \section{Prediction Quality}
 
