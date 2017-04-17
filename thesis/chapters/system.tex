@@ -118,7 +118,7 @@ $YZSet \leftarrow getSubjectObjectSet(\cG, q)$\\
 
 \subsection{Exception Witness Set Mining}
 
-We now describe the algorithm for exception witness set construction. Given a KG and a positive rule, this component computes all unary and binary exception candidates. To simplify the presentation, Algorithm~\ref{algo3} focuses only on computing binary exceptions, analogously, unary ones can be mined. More specifically, our goal is to find exceptions of the form \textit{e(X, Z)}, they are then inserted to the body of $r2$ to get its revised rule \textit{h(X, Z) :- p(X, Y), q(Y, Z), not e(X, Z)}. Algorithm~\ref{algo3} processes as follows, first, normal and abnormal instance sets are found in line 1 and 2 following Algorithm~\ref{algo2}. Then the variables $EWS+$ and $EWS-$ which store a set of relations between \textit{$<$X Z$>$} in the abnormal and normal sets resp. are created (line 3 and 4). Second, for every pair \textit{$<$X Z$>$} in the abnormal set, all relations between them are added to the $EWS+$ (line 5 to 8). After that, a similar procedure is applied to $EWS-$ from line 9 to 12. Finally, exception witness set $EWS$ is constructed as the difference between $EWS+$ and $EWS-$ (line 13), which is the output of the algorithm in line 14.
+We now describe the algorithm for exception witness set construction. Given a KG and a positive rule, this component computes all unary and binary exception candidates. To simplify the presentation, Algorithm~\ref{algo3} focuses only on computing binary exceptions, analogously, unary ones can be mined. More specifically, our goal is to find exceptions of the form \textit{e(X, Z)}, they are then inserted to the body of $r2$ to get its revised rule \textit{h(X, Z) :- p(X, Y), q(Y, Z), not e(X, Z)}. Algorithm~\ref{algo3} processes as follows, first, normal and abnormal instance sets are found in line 1 and 2 following Algorithm~\ref{algo2}. Then the variables $EWS^+$ and $EWS^-$ which store a set of relations between \textit{$<$X Z$>$} in the abnormal and normal sets resp. are created (line 3 and 4). Second, for every pair \textit{$<$X Z$>$} in the abnormal set, all relations between them are added to the $EWS^+$ (line 5 to 8). After that, a similar procedure is applied to $EWS^-$ from line 9 to 12. Finally, exception witness set $EWS$ is constructed as the difference between $EWS^+$ and $EWS^-$ (line 13), which is the output of the algorithm in line 14.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -130,18 +130,18 @@ We now describe the algorithm for exception witness set construction. Given a KG
 \BlankLine
 $NS \leftarrow getNormalSet(\cG, h, p, q)$\\
 $ABS \leftarrow getAbnormalSet(\cG, h, p, q)$\\
-$EWS+ \leftarrow \{\}$\\
-$EWS- \leftarrow \{\}$\\
+$EWS^+ \leftarrow \{\}$\\
+$EWS^- \leftarrow \{\}$\\
 \BlankLine
 \ForEach{Pair $XZ$ in $ABS$} {
 	$pSet \leftarrow getPredicateSet(\cG, X, Z)$\\
-	$EWS+$ $\leftarrow$ $EWS+$ $\cup$ $pSet$\\
+	$EWS^+$ $\leftarrow$ $EWS^+$ $\cup$ $pSet$\\
 }
 \ForEach{Pair $XZ$ in $NS$} {
 	$pSet \leftarrow getPredicateSet(\cG, X, Z)$\\
-	$EWS-$ $\leftarrow$ $EWS-$ $\cup$ $pSet$\\
+	$EWS^-$ $\leftarrow$ $EWS^-$ $\cup$ $pSet$\\
 }
-$EWS$ $\leftarrow$ $EWS+$ $\setminus$ $EWS-$\\
+$EWS$ $\leftarrow$ $EWS^+$ $\setminus$ $EWS^-$\\
 \Return $EWS$\\
 \caption{Exception Witness Set Mining}
 \label{algo3}
@@ -264,8 +264,8 @@ With the optimized algorithm, we only need $O(|R_H|)$ times for indexing new pre
 RUMIS~\footnote{\url{https://github.com/htran010589/nonmonotonic-rule-mining}} is developed and currently tested in Linux, we may extend it to Windows in the future. The system requires the installation of Java 8 as well as the DLV~\footnote{\url{http://www.dlvsystem.com/html/DLV_User_Manual.html}} tool for conducting experiment. There are four main features in RUMIS as follows:
 
 \begin{itemize}
-\item \textit{Training data generation:} Given the ideal KG, the training KG can be chosen automatically where 20\% facts of each predicate are removed.
-\item \textit{Horn rule mining:} With the training KG, a list of Horn rules can be learned with the introduced format in Algprithm~\ref{algo1}.
+\item \textit{Training data generation:} Given the ideal KG, the training KG can be chosen automatically where 20\% facts of each binary predicate are removed.
+\item \textit{Horn rule mining:} With the training KG, a list of Horn rules can be learned with the introduced format in Algorithm~\ref{algo1}.
 \item \textit{Non-monotonic rule mining:} Based on the training KG, exceptions for each positive rule are ranked and the best one is chosen to generate the revision.
 \item \textit{Automatic experiment:} With these two above KGs, the experiment can be executed to measure the quality of revision sets and predict new facts from training data.
 \end{itemize}
