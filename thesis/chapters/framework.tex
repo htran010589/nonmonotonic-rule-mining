@@ -1,66 +1,67 @@
 \chapter{A Theory Revision Framework for Rule-based KG Completion}
 \label{chap:frame}
 
-This chapter discusses the theoretical framework for learning nonmonotonic rules. First, the problem statement is formally defined with the concepts of theory revision and KG completion. Second, we propose our main methodology for tackling this problem. The theoretical developments that we present are realized within the RUMIS system described in Chapter~\ref{chap:system}.
+This chapter discusses the theoretical framework for learning nonmonotonic rules from KGs. First, the problem statement is formally defined with the introduction of concepts of theory revision and KG completion. Second, we propose our methodology for tackling this problem. The theoretical developments that we present are realized within the RUMIS system described in Chapter~\ref{chap:system}.
 
 \section{Problem Statement}
 
-This section formally presents the problem statement and the main goal of the thesis. Assume that $\cG^i$ is an ideal completion of the available KG $\cG$, i.e., a KG that contains every true fact over the signature $\Sigma_{\cG}$. As input, we are given an available incomplete KG $\cG$ and a set $\cR_H$ of positive rules mined from $\cG$. Our aim is to insert NAFs (exceptions) to the positive rules to obtain a nonmonotonic ruleset $\cR_{\mi{NM}}$ s.t. the difference between $\cG_{\cR_{\mi{NM}}}$ and $\cG^i$ is minimized. The $\cR_{\mi{NM}}$ is a good choice for the rule revision of $\cR_\mi{H}$ if it deletes many incorrectly predicted facts from $\cR_H$, and still retains many true ones from $\cR_H$.
+This section formally presents the problem statement and the main goal of the thesis. Assume that $\cG^i$ is an ideal completion of the available KG $\cG$, i.e., a KG that contains every true fact over the signature $\Sigma_{\cG}$. As input, we are given an available incomplete KG $\cG$ and a set $\cR_H$ of positive rules mined from $\cG$. Our aim is to insert NAF atoms (exceptions) to the positive rules to obtain a nonmonotonic ruleset $\cR_{\mi{NM}}$ s.t. the difference between $\cG_{\cR_{\mi{NM}}}$ and $\cG^i$ is minimized. The $\cR_{\mi{NM}}$ is a good choice for the rule revision of $\cR_\mi{H}$ if it deletes many incorrectly predicted facts from $\cR_H$, and still retains many true ones from $\cR_H$.
 
 Obviously, $\cG^i$ is \emph{unavailable}, hence the truthfulness of predictions cannot be estimated. Consequently, standard ILP measures that rely on CWA cannot be exploited in our work to assess how good a rule revision is. To tackle this issue, we propose to use measures from association rule mining introduced in the previous chapter. Based on our theory revision framework, a ruleset revision is good if its total rule measure is as high as possible, and the inserted NAFs are not over-fitting the KG, i.e., they are relevant exceptions rather than noise.
 
 To fulfill these constraints, we introduce two functions for assessing the quality, $q_{rm}$ and $q_{conflict}$, that take a set of rules $\cR$ and a KG $\cG$ and generate a value which leverages the quality of $\cR$. More specifically, $q_{rm}$ is defined as follows:
 
 \begin{equation}
-q_{\mi{rm}}(\cR,\cG)=\dfrac{\sum_{r\in \cR}rm(r,\cG)}{|\cR|}.
+q_{\mi{rm}}(\cR,\cG)=\dfrac{\sum_{r\in \cR}rm(r,\cG)}{|\cR|}
+\label{eq:avgquality},
 \end{equation}
 
-where $rm$ is a standard association rule measure while $q_{conflict}$ calculates the quantity of conflicting facts predicted by applying the rules in $\cR$ to $\cG$. To find $q_{conflict}$, the given rule set in extended with additional auxiliary rules $\cR_{aux}$ constructed for every revised rule $r \in \cR$ by removing $\naf$ from $body^-(r)$, and subsequently substituting the head predicate $\mi{h}$ of $r$ by a dummy predicate $\mi{not\_h}$. The newly created predicate $\mi{not\_h}$ intuitively corresponds to the negation of $h$. The formula of $q_{conflict}$ is then defined as follows.
+where $rm$ is a standard association rule measure, while $q_{conflict}$ calculates the quantity of conflicting facts predicted by applying the rules in $\cR$ to $\cG$. To find $q_{conflict}$, the given rule set in extended with additional auxiliary rules $\cR_{aux}$ constructed for every revised rule $r \in \cR$ by removing $\naf$ from $body^-(r)$, and subsequently substituting the head predicate $\mi{h}$ of $r$ by a dummy predicate $\mi{not\_h}$. The newly created predicate $\mi{not\_h}$ intuitively corresponds to the negation of $h$. The formula of $q_{conflict}$ is then defined as follows.
 
 \begin{equation}
 q_{conflict}(\cR,\cG)=\sum_{p\in pred(\cR)} \dfrac{|\{ \vec{c}\,|\,p(\vec{c}),not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}{|\{ \vec{c}\,|\,not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}
 \label{eq:conflict},
 \end{equation}
 
-in which $\mi{pred(\cR)}$ is the set of relations occurring in $\cR$, and $\vec{c}$ contains at most two constants in $\cC$. Intuitively, $q_{\mi{conflict}}$ is created to differentiate actual exceptions from noise, by taking the interaction between the rules from $\cR$ into consideration. The following example demonstrates this core idea.
+where $\mi{pred(\cR)}$ is the set of relations occurring in $\cR$, and $\vec{c}$ contains at most two constants in $\cC$. Intuitively, $q_{\mi{conflict}}$ is created to differentiate actual exceptions from noise, by taking the interaction between the rules from $\cR$ into consideration. The following example demonstrates this core idea.
 
 \begin{example}
 
-The occurrence of the unary relation $\mi{researcher}$ is necessary to improve the quality of $\mi{r1}$ mined from the KG in Figure~\ref{fig1.1} based on standard association rule measures. Indeed, thanks to this, the revision may explain why $\mi{livesIn(Dave,Chicago)}$ and $\mi{livesIn(Alice,Berlin)}$ do not appear in the figure. However, the addition of a new nonmonotonic rule to the revision set may break this. For instance, after $\mi{livesIn(Alice,Berlin)}$ is predicted by \textit{r2: livesIn(X,Y) $\leftarrow$ workIn(X,Y), not Artist(X)}, not two but only one red triangle satisfies the revision of $r1$ in the figure. In other words, the impact of the exception $\mi{researcher}$ is weakened.
+The occurrence of the unary relation $\mi{researcher}$ is necessary to improve the quality of $\mi{r1}$ mined from the KG in Figure~\ref{fig1.1} based on standard association rule measures. Indeed, thanks to this, the revision may explain why $\mi{livesIn(Dave,Chicago)}$ and $\mi{livesIn(Alice,Berlin)}$ do not appear in the figure. However, the addition of a new nonmonotonic rule to the rule set may spoil this. For instance, after $\mi{livesIn(Alice,Berlin)}$ is predicted by \textit{r2: livesIn(X,Y) $\leftarrow$ workIn(X,Y), not artist(X)}, the impact of the exception $\mi{researcher}$ is weakened.
 \end{example}
 
 Now we are ready to present our revision framework based on the above quality functions.
 
 \begin{definition}[Quality-based Horn theory revision (QHTR)] \label{def:qhtr}
-Let $\cG$ be a KG over the signature $\Sigma_{\cG}$, $\cR_{\mi{H}}$ are positive rules mined from $\cG$. Besides, let $\mi{q_{rm}}$, $\mi{q_{conflict}}$ be the quality functions, the \emph{quality-based Horn theory revision problem} is to find a revision set $\cR_{\mi{NM}}$ over $\Sigma_{\cG}$ obtained by inserting exceptions to bodies of rules in $\cR_{\mi{H}}$, s.t. $q_{\mi{rm}}(\cR_{\mi{NM}},\cG)$ is maximized and $q_{\mi{conflict}}(\cR_{\mi{NM}},\cG)$ is minimized.
+Let $\cG$ be a KG over the signature $\Sigma_{\cG}$, $\cR_{\mi{H}}$ is a set of positive rules mined from $\cG$. Besides, let $\mi{q_{rm}}$, $\mi{q_{conflict}}$ be the quality functions in \ref{eq:avgquality} and \ref{eq:conflict} resp., the \emph{quality-based Horn theory revision problem} is to find a revision set $\cR_{\mi{NM}}$ over $\Sigma_{\cG}$ obtained by inserting exceptions to bodies of rules in $\cR_{\mi{H}}$, s.t. $q_{\mi{rm}}(\cR_{\mi{NM}},\cG)$ is maximized and $q_{\mi{conflict}}(\cR_{\mi{NM}},\cG)$ is minimized.
 \end{definition}
 
 In the rest of this section we introduce the concepts of $r$-(ab)normal substitutions and Exception Witness Sets (EWSs).
 
 \begin{definition}[$r$-(ab)normal substitutions]\label{sec:rulelearn}
-Given a KG $\cG$, let $\mi{r}$ and $\cV$ be a positive rule learned from $\cG$ and a variable set appearing in $r$, resp. For the substitutions $\theta,\theta':\cV \rightarrow \cC$, we have the following notations:
+Given a KG $\cG$, let $\mi{r}$ and $\cV$ be a positive rule learned from $\cG$ and a variable set appearing in $r$, resp. For the substitutions $\theta,\theta':\cV \rightarrow \cC$, we have:
 
 \begin{itemize}
-\item The $\mi{r}$-normal set of substitutions is defined as $\mi{NS(r, \cG)=\{\theta\, |\, head(r)\theta,body(r)\theta \subseteq \cG\}}$.
-\item The $\mi{r}$-abnormal set of substitutions is $\mi{ABS(r, \cG){=}\{\theta'\, |\, body(r)\theta'}$\\ $\mi{{\subseteq} \cG\,{,}\,head(r)\theta' {\not \in} \cG\}}$.
+\item The $\mi{r}$-normal set of substitutions is $\mi{NS(r, \cG)=\{\theta\, |\, head(r)\theta,body(r)\theta \subseteq \cG\}}$.
+\item The $\mi{r}$-abnormal set of substitutions is $\mi{ABS(r, \cG){=}\{\theta'\, |\, body(r)\theta'} \mi{{\subseteq} \cG\,{,}\,head(r)\theta' {\not \in} \cG\}}$.
 \end{itemize}
 \end{definition}
 
 \begin{example}\label{ex:abns}
-In Figure~\ref{fig1.1} the blue and red triangles indicate the $\mi{NS(r1,\cG)}$ and $\mi{ABS(r1,\cG)}$, resp. More specifically, the normal set is given as $\mi{NS(r1,\cG)}=\{\mi{\theta_1,\theta_2,\theta_3}\}$ with $\theta_1,\theta_2,\theta_3$ being $\{\mi{X/Brad,Y/Ann,Z/Berlin}\}$, $\{\mi{X/John,Y/Kate,Z/Chicago}\}$ and $\{\mi{X/Sue,Y/Li,Z/Beijin}\}$, resp. Similarly, we have three substitutions for the abnormal set $\mi{ABS(r1,\cG)}$ such as $\{\mi{X/Alice,Y/Bob,Z/Berlin}\}$, $\{\mi{X/Dave,Y/Clara,Z/Chicago}\}$ and $\{\mi{X/Lucy,Y/Mat,Z/Amsterdam}\}$.
+In Figure~\ref{fig1.1} the blue and red triangles indicate the $\mi{NS(r1,\cG)}$ and $\mi{ABS(r1,\cG)}$, resp. More specifically, the normal set is given as $\mi{NS(r1,\cG)}=\{\mi{\theta_1,\theta_2,\theta_3}\}$ with $\theta_1,\theta_2,\theta_3$ being $\{\mi{X/Brad,Y/Ann,Z/Berlin}\}$, $\{\mi{X/John,Y/Kate,Z/Chicago}\}$ and $\{\mi{X/Sue,Y/Li,Z/Beijin}\}$, resp. Similarly, we have three substitutions for the abnormal set $\mi{ABS(r1,\cG)}$: $\{\mi{X/Alice,Y/Bob,Z/Berlin}\}$, $\{\mi{X/Dave,Y/Clara,Z/Chicago}\}$ and $\{\mi{X/Lucy,Y/Mat,Z/Amsterdam}\}$.
 \end{example}
 
-The intuition is that given the ideal KG $\cG^i$, the $r$-(ab)normal substitutions correspond to the ground rules which are satisfied (resp. not satisfied) in $\cG^i$. Observe that, due to the incompleteness of the data under the OWA, $r$-abnormal substitutions are not guaranteed to be $r$-abnormal of the ideal graph. To differentiate the ``incorrectly'' and ``correctly'' detected substitutions in the $r$-abnormal set, we exploit the notions of \emph{exception witness sets} ($\mi{EWS}$) defined as follows.
+The intuition is that given the ideal KG $\cG^i$, the $r$-(ab)normal substitutions correspond to the ground rules which are satisfied (resp. not satisfied) in $\cG^i$. Observe that, due to the incompleteness of the data under the OWA, $r$-abnormal substitutions are not guaranteed to be such in the ideal graph. To differentiate the ``incorrectly'' and ``correctly'' detected substitutions in the $r$-abnormal set, we exploit the notions of \emph{exception witness sets} ($\mi{EWS}$) defined as follows.
 
 \begin{definition}[Exception Witness Set] \label{def:ews}
-Given a KG $\cG$ and a rule $r$ extracted from it, let $\cV$ be a set of all variables appearing in $\mi{r}$. Let $\vec{X}$ be a variable subset of $\cV$ and, let $\mi{EWS^+, EWS^-}$ be sets of predicates $\mi{EWS^+}=\{e: \exists \theta \in \mi{ABS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$ and $\mi{EWS^-}=\{e: \exists \theta \in \mi{NS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$. Exception witness set of $r$ \wrt\ $\cG$ and $\vec{X}$ is a set difference $EWS(r,\cG,\vec{X})=EWS^+ \setminus EWS^-$. In other words, it is a set of relations covering some substitutions in $ABS(r, \cG)$ but none in $NS(r, \cG)$.
+Given a KG $\cG$ and a rule $r$ extracted from it, let $\cV$ be a set of all variables appearing in $\mi{r}$. Let $\vec{X}$ be a variable subset of $\cV$ and, let $\mi{EWS^+, EWS^-}$ be sets of predicates $\mi{EWS^+}=\{e: \exists \theta \in \mi{ABS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$ and $\mi{EWS^-}=\{e: \exists \theta \in \mi{NS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$. Exception witness set of $r$ \wrt\ $\cG$ and $\vec{X}$ is a set difference $EWS(r,\cG,\vec{X})=EWS^+ \setminus EWS^-$. In other words, it is a set of predicates covering some substitutions in $ABS(r, \cG)$ but none in $NS(r, \cG)$.
 \end{definition}
 
 \begin{example}
 Consider the rule $r1$, the KG $\cG$ in Figure~\ref{fig1.1} and $\cV = \{X\}$. Based on the Definition~\ref{def:ews}, we have $EWS^+ = \{Researcher\}$ and $EWS^- = \{\}$, then $\mi{EWS(r,\cG,\{X\})}=\{Researcher\}$. Besides, we have no exception candidates for $\cV = \{Z\}$ since $EWS^+ = EWS^- = \{Metropolitan\}$.
 \end{example}
 
-Since the binary exceptions appear in the rules, generally the cardinality of $\mi{EWS}$s can be large. Indeed, for a rule with $n$ distinct variables, there can be up to $n^2$ elements in $\mi{EWS}$s. In addition, a good rule revision may have many exceptions in its body, thus our QHTR problem can have exponentially many solutions. To avoid the explosion of the revision search space, in the current work, we consider only rules with a single negated atom. Handling exception combination is left direction for future work.
+Since the binary exceptions might appear in the rules, generally the cardinality of $\mi{EWS}$s can be large. Indeed, for a rule with $n$ distinct variables, there can be up to $n^2$ elements in $\mi{EWS}$s. In addition, a good rule revision may have many exceptions in its body, thus our QHTR problem can have exponentially many solutions. To avoid the explosion of the revision search space, in the current work, we consider only rules with a single negated atom. Handling exception combination is left for future work.
 
 \begin{definition}[Safely Predicted Facts] \label{def:spf}
 Given a KG $\cG$, a positive rule $r$ extracted from it and all exception candidates, the safely predicted facts of $r$ w.r.t. $\cG$ are all facts from $\cG_{r'} \setminus \cG$ where $r'$ is constructed from $r$ by adding all exception candidates of $r$ to its body at once.
@@ -72,22 +73,22 @@ Consider the rule $r1$ and the KG $\cG$ in Figure~\ref{fig1.1}, applying $r1$ we
 
 \section{Methodology}\label{sec:meth}
 
-Since the number of facts in the KG is large, there can be many candidates in the EWSs to process. Hence, finding the globally best solution for QHTR problem is not feasible. Therefore, in this work we are aiming at finding an approximately best revision is a natural way to overcome this issue. The core idea of our solution is to search for the locally best exception for each rule iteratively, while still taking into account other rules in a set. Our methodology for finding such approximate solutions comprises the following four steps.
+Since the number of facts in the KG is large, there can be many candidates in the EWSs to process. Hence, finding the globally best solution for QHTR problem is not feasible. Therefore, in this work we are aiming at finding an approximately best revision. The core idea of our solution is to search for the locally best exception for each rule iteratively, while still taking into account other rules in a set. Our methodology for finding such approximate solutions comprises the following four steps.
 \medskip
 
 \noindent \textbf{Step 1.} Given a KG $\cG$, first, top Horn rules $\cR_H$ are mined from $\cG$ based on the \textit{absolute support} measure introduced in Chapter~\ref{chap:back}. To execute this step, any top notch relational association rule learning tool can be exploited (e.g., AMIE(+), WARMR, etc). After that, the $r$-\emph{(ab)normal} substitutions for all rules $r\in \cR_H$ are computed.
 \smallskip
 
 
-\noindent \textbf{Step 2 and 3.} For each $r \in \cR_H$ with the head $\mi{h(X,Y)}$, the candidates in $\mi{EWS(r,\cG,X)}$, $\mi{EWS(r,\cG,Y)}$ and $\mi{EWS(r,\cG,\tuple{X,Y})}$ are then found. This step is extended from a research in \cite{ref12} which focuses on flattened representation of the graph. First, $E^+ = \{not\_h(a, b): \exists \theta = \{X/a, Y/b, ... \} \in ABS(r, \cG)\}$ and $E^+ = \{not\_h(a, b): \exists \theta = \{X/c, Y/d, ... \} \in NS(r, \cG)\}$ are computed. Second, we exploit a typical ILP function $learn(E^+, E^-, \cG)$ (according to~\cite{ref55}), which finds hypothesis containing the head $not\_h(X, Y)$ and an atomic predicate in the format $p(X), p'(Y)$ or $p''(X, Y)$ as the body. We want to find hypothesis that do not infer any elements in $E^-$, while inferring some element in $E^+$. The EWS is the collection of relations appearing in the body of the resulting hypothesis.
+\noindent \textbf{Step 2 and 3.} For each $r \in \cR_H$ with the head $\mi{h(X,Y)}$, the candidates in $\mi{EWS(r,\cG,X)}$, $\mi{EWS(r,\cG,Y)}$ and $\mi{EWS(r,\cG,\tuple{X,Y})}$ are found. First, $E^+ = \{not\_h(a, b): \exists \theta = \{X/a, Y/b, ... \} \in ABS(r, \cG)\}$ and $E^+ = \{not\_h(a, b): \exists \theta = \{X/c, Y/d, ... \} \in NS(r, \cG)\}$ are computed. Second, we exploit a typical ILP function $learn(E^+, E^-, \cG)$ (e.g., from~\cite{ref55}), which finds hypothesis containing the head $not\_h(X, Y)$ and an atomic predicate in the format $p(X), p'(Y)$ or $p''(X, Y)$ as the body. We want to find hypothesis that do not infer any elements in $E^-$, while inferring some element in $E^+$. The EWS is the collection of relations appearing in the body of the resulting hypothesis.
 
 Second, potential revisions of each rule $r$ in $\cR_H$ are constructed by alternatively inserting one exception from $EWS(r)$ to the rule body. In total, with every rule $r$, we have $|\mi{EWS(r,\cG,X)}|+|\mi{EWS(r,\cG,Y)}|+|\mi{EWS(r,\cG,\tuple{X,Y})}|$ exceptions to consider.
 
 \smallskip
 
-\noindent \textbf{Steps 4.} For each rule, its revision candidates are ranked and the best one is added to the final result $\cR_{\mi{NM}}$. Since the KG $\cG$ and $\mi{EWS}$s can be very large, the search space for $\cR_{\mi{NM}}$ is huge, and subsequently, searching for the globally optimal result is not feasible in practice. Hence, we propose to gradually construct $\cR_{\mi{NM}}$ by finding the locally optimal revision $r_i^{j}$ for each rule $r_i \in \cR_{H}$. To this end, we propose three ranking strategies Naive, PM, OPM. While the first one processes the rules independently, the other two exploit a novel concept of \emph{partial materialization}. More specifically, the core idea of this concept is to assess potential revisions of the $r_i$ not w.r.t. $\cG$, but w.r.t. $\cG_{\cR'}$ where $\cR'$ is a set of some rules different from $r_i$. This approach enables communication among the rules which differs from the Naive ranking. We now describe each ranking in details.
+\noindent \textbf{Steps 4.} For each rule, its revision candidates are ranked and the best one is added to the final result $\cR_{\mi{NM}}$. Since the KG $\cG$ and $\mi{EWS}$s can be very large, the search space for $\cR_{\mi{NM}}$ is huge, and subsequently, searching for the globally optimal result is not feasible in practice. Hence, we propose to gradually construct $\cR_{\mi{NM}}$ by finding the locally optimal revision $r_i^{j}$ for each rule $r_i \in \cR_{H}$. To this end, we propose three ranking strategies Naive, PM, OPM. While the first one processes the rules independently, the other two exploit a novel concept of \emph{partial materialization}. More specifically, the core idea of this concept is to assess potential revisions of the rule $r_i$ not w.r.t. $\cG$, but w.r.t. $\cG_{\cR'}$ where $\cR'$ is a set of some rules different from $r_i$. This approach enables communication among the rules which differs from the Naive ranking. We now describe each ranking in details.
 
-The \textbf{Naive (N)} ranking strategy does not take the cross-talk between the rules into consideration. For each rule $r_i$ in $R_H$, it selects the optimal revised rule $\mi{r^j_i}$ only according to the chosen measure $rm$, i.e., the revision should have the highest $\mi{rm(r^j_{i},\cG)}$ value to be in the solution set. Hence, the revision $R_{NM}$ obtained by applying the Naive ranking satisfies only (i) of Definition~\ref{def:qhtr}. However, it does not take the criteria (ii) into account at all, and hence may produce noisy revision sets that overfit the data.
+The \textbf{Naive (N)} ranking strategy does not take the cross-talk between the rules into consideration. For each rule $r_i$ in $R_H$, it selects the optimal revised rule $\mi{r^j_i}$ only based on the chosen measure $rm$, i.e., the revision should have the highest $\mi{rm(r^j_{i},\cG)}$ value to be in the solution set. Hence, the revision $R_{NM}$ obtained by applying the Naive ranking satisfies only (i) of Definition~\ref{def:qhtr}. However, it does not take the criteria (ii) into account at all, and hence may produce noisy revisions that overfit the data.
 
 The \textbf{Partial Materialization (PM)} ranking strategy selects the optimal revision $\mi{r^j_i}$ based on the largest value of
 \begin{equation}
@@ -95,7 +96,7 @@ The \textbf{Partial Materialization (PM)} ranking strategy selects the optimal r
 score(r^j_i,\cG)=\dfrac{\mi{rm(r^j_i,\cG_{\cR'})+rm({r^j_i}^{aux},\cG_{\cR'})}}{2}
 \end{equation}
 
-where $\cR'$ contains rules $r_l'$ generated from each $r_l$ in $\cR_H\backslash r_i$ by inserting all exceptions of $r_l$ into $body(r_l)$ at once. In other words, for every $r_i$, $\cG_{\cR'}$ contains facts from $\cG$ and \textit{safe predictions} of all rules other than $r_i$. By injecting all exceptions into every rule, we lower the possibility of wrong predictions.
+where $\cR'$ contains rules $r_l'$ generated from each $r_l$ in $\cR_H\backslash r_i$ by inserting all exceptions of $r_l$ into $body(r_l)$ at once. In other words, for every $r_i$, $\cG_{\cR'}$ contains facts from $\cG$ and \textit{safe predictions} of all rules from $\cR \backslash r_i$. By injecting all exceptions into every rule, we decrease the possibility of wrong predictions.
 
 \begin{example}\label{ex:as}
 Consider the following KG $\cG$ and a revised set $\cR$ where each Horn rule has one exception candidate:\\
@@ -117,7 +118,7 @@ Consider the following KG $\cG$ and a revised set $\cR$ where each Horn rule has
 
 \noindent            
 
-Consider the rule $r_2$ and a set of other ones $\cR' = \cR \setminus \{r_2\} = \{r1\}$. Based on the definition, we have $\cG_{\cR'} = \cG \cup \{livesIn(brad,berlin)\}$, $conf(r_2, \cG_{\cR'}) = \dfrac{0}{1} = 0$ and $conv(r_2, \cG_{\cR'}) = \dfrac{1 - 0}{1 - 0} = 1$. Similarly, we have $conv(r_2^{aux}, \cG_{\cR'}) = \dfrac{1 - 1}{1 - 0} = 0$, hence, $score(r_2, \cG_{\cR'})$ is the average of two above conviction values and equals to $0.5$.
+Consider the rule $r_2$ and a set of other rules $\cR' = \cR \setminus \{r_2\} = \{r1\}$. Based on the definition, we have $\cG_{\cR'} = \cG \cup \{livesIn(brad,berlin)\}$, $conf(r_2, \cG_{\cR'}) = \dfrac{0}{1} = 0$ and $conv(r_2, \cG_{\cR'}) = \dfrac{1 - 0}{1 - 0} = 1$. Similarly, we have $conv(r_2^{aux}, \cG_{\cR'}) = \dfrac{1 - 1}{1 - 0} = 0$, hence, $score(r_2, \cG_{\cR'})$ is the average of two above conviction values and equals to $0.5$.
 }\qed
 \end{example}
 

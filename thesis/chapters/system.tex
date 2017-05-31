@@ -1,7 +1,7 @@
 \chapter{RUMIS - Nonmonotonic Rule Mining System}\label{chap:system}
 \label{chap:system}
 
-RUMIS stands for Nonmonotonic Rule Mining System which is the main tool in the current work and is exploited to revise Horn rules under the OWA. This chapter describes in details the practical implementation of theory framework presented in Chapter~\ref{chap:frame} and uses background definitions in Chapter~\ref{chap:back}. Organization of the chapter is as follows, first, an overview of the RUMIS is discussed. Second, the implementations of main components in the system are presented. Finally, we talk about usage of the system.
+RUMIS stands for Nonmonotonic Rule Mining System which is the tool developed within the current thesis. The RUMIS system aims at revising Horn rules to nonmonotonic ones under the OWA. This chapter describes in details the practical implementation of the theory framework presented in Chapter~\ref{chap:frame} and uses background definitions in Chapter~\ref{chap:back}. First, we present the system overview. Second, the implementations of main components in the system are described. Finally, we discuss the system usage.
 
 \section{System Overview}
 \label{sec:overview}
@@ -11,10 +11,10 @@ There are six components in RUMIS as presented in Figure~\ref{system_overview} w
 \begin{itemize}
 \item In (1), a KG $\cG$ as input is passed to RUMIS. It is then stored and indexed by Component 1 which is exploited to speed up computation in the next steps.
 \item In (2), Horn rules are mined by Component 2 from facts indexed into RUMIS.
-\item In (3), normal and abnormal instance sets are found by Component 3 based on KG $\cG$ and the Horn rules mined in the previous step.
+\item In (3), normal and abnormal instance sets are found by Component 3 based on the KG $\cG$ and the Horn rules mined in the previous step.
 \item Given normal and abnormal sets known for each Horn rule, (4) represents for finding exception witness sets in Component 4.
 \item In (5) and (6), exception candidates are ranked in Component 6 using a measure provided by Component 5. RUMIS allocates a separate component for measure plugin to enable flexibility of ranking criteria.
-\item In (7), RUMIS returns the best revision for Horn rule set as output.
+\item In (7), RUMIS returns the best revision for the Horn rule set as output.
 \end{itemize}
 
 \begin{figure}[ht]
@@ -38,20 +38,20 @@ In this section, the main components mentioned in Section~\ref{sec:overview} are
 \label{data_indexing}
 \end{figure}
 
-Since the KG $\cG$ can be large, computation of (ab)normal instances as well as exception witness sets is time consuming. To overcome this issue, data indexing is exploited. In a traditional search engine setting, terms such as words, n-grams are indexed into the system and their corresponding posting lists~\cite{ref47} are a collection of documents containing them. We exploit the same intuition in our work. To this extent, RUMIS treats every fact as a document and the terms are subjects, predicates, objects or combinations of them.
+Since the KG $\cG$ can be large, computation of (ab)normal instances as well as exception witness sets is time consuming. To overcome this issue, data indexing is exploited. In a traditional search engine setting, terms such as words, n-grams are indexed into the system and their corresponding posting lists~\cite{ref47} are a collection of documents containing them. We exploit the same intuition in our work. More specifically, RUMIS treats every fact as a document and the terms are subjects, predicates, objects or combinations of them.
 
-More specifically, Figure~\ref{data_indexing} presents the data indexed from part of a KG in Figure~\ref{fig1.1}. Hence, given the predicate \textit{isMarriedTo}, one can determine a set of subject-object pairs corresponding to it, i.e., \textit{$<$Brad, Ann$>$} and \textit{$<$John, Kate$>$}. Similarly, given a subject and a relation, the set of objects can be retrieved. For example, we can get ``Berlin" from the question ``Where does Ann live" based on the data indexing model in Figure~\ref{data_indexing}. In this example, the term is the combination of subjects and predicates. More formally, the Data Indexing provides the following functions that are exploited in the rest of the components:
+For example, Figure~\ref{data_indexing} presents the data indexed from part of a KG in Figure~\ref{fig1.1}. Hence, given the predicate \textit{isMarriedTo}, one can determine a set of subject-object pairs corresponding to it, i.e., \textit{$<$Brad, Ann$>$} and \textit{$<$John, Kate$>$}. Similarly, given a subject and a relation, the set of objects can be retrieved. For example, we can get ``Berlin" from the question ``Where does Ann live" based on the data indexing model in Figure~\ref{data_indexing}. In this example, the term is the combination of subjects and predicates. More formally, the Data Indexing provides the following functions that are exploited in the rest of the components:
 
 \begin{itemize}
 \item \textit{getPredicateSubjectSet($\cG$, object):} This function returns a set of predicate-subject pairs corresponding to a given \textit{object} in the KG $\cG$.
 \item \textit{getPredicateSet($\cG$, subject, object)} returns a set of predicates corresponding to the input \textit{subject, object} entities.
-\item \textit{getSubjectSet($\cG$, predicate, object)} retrieves a set of subjects for given \textit{predicate} and\textit{ object}.
-\item \textit{getSubjectObjectSet($\cG$, predicate):} This function outputs a set of subject-object pairs for a given \textit{predicate}.
+\item \textit{getSubjectSet($\cG$, predicate, object)} retrieves a set of subjects for a given \textit{predicate} and an \textit{ object}.
+\item \textit{getSubjectObjectSet($\cG$, predicate)} outputs a set of \textit{subject-object} pairs for a given \textit{predicate}.
 \end{itemize}
 
 \subsection{Positive Rule Mining}
 
-Positive Rule Mining component computes a set of the form $r2$ whose \textit{absolute support} exceeds a given threshold. The Algorithm~\ref{algo1} presents the detailed procedure of the Hon rule learning. First, \textit{absSupp} defined in line 1 is intended to store the absolute support of patterns. In the loop (2), for each triple \textit{$<$Y q Z$>$} from the KG $\cG$, using the \textit{getPredicateSubjectSet} function in the Data Indexing component, a set of pairs \textit{X, p} is found in (3) such that \textit{$<$X p Y$>$} is in $\cG$. Then, from line 5 to 6, with \textit{X, Z} found in the previous step, RUMIS searches for every relation $h$ s.t. \textit{$<$X h Z$>$} is in $\cG$. At this point, it is guaranteed that \textit{h(X, Z), p(X, Y), q(Y, Z)} holds. After that, in line 7, the absolute support of the considered rule is increased by $1$. Finally, all rules are sorted in decreasing order of the absolute support (line 11).
+Positive Rule Mining component computes a set of the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} whose \textit{absolute support} exceeds a given threshold. The Algorithm~\ref{algo1} presents the detailed procedure of the Hon rule learning. First, \textit{absSupp} defined in line 1 is intended to store the absolute support of patterns. In the loop (2), for each triple \textit{$<$Y q Z$>$} from the KG $\cG$, using the \textit{getPredicateSubjectSet} function in the Data Indexing component, a set of pairs \textit{X, p} is found in (3) such that \textit{$<$X p Y$>$} is in $\cG$. Then, from line 5 to 6, with \textit{X, Z} found in the previous step, RUMIS searches for every relation $h$ s.t. \textit{$<$X h Z$>$} is in $\cG$. At this point, it is guaranteed that \textit{h(X, Z), p(X, Y), q(Y, Z)}. After that, in line 7, the absolute support of the considered rule is increased by $1$. Finally, all rules are sorted in decreasing order of the absolute support (line 11).
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -66,15 +66,15 @@ $absSupp \leftarrow \{\}$\\
 \ForEach{Triple $YqZ$ in $\cG$} {
     \BlankLine
 	$pXSet \leftarrow getPredicateSubjectSet(\cG, Y)$\\
-	\ForEach{Pair $pX$ in $pXSet$} {
+	\ForEach{$pX$ in $pXSet$} {
 		$hSet \leftarrow getPredicateSet(\cG, X, Z)$\\
-		\ForEach{Predicate $h$ in $hSet$} {
+		\ForEach{$h$ in $hSet$} {
 			$absSupp[hpq]++$\\
 		}
 	}
 }
 \BlankLine
-Sort $hpq$ according to decreasing order of $absSupp[hpq]$\\
+Sort $hpq$ in a decreasing order of $absSupp[hpq]$\\
 \Return $absSupp$\\
 \caption{Positive Rule Mining}
 \label{algo1}
@@ -83,7 +83,7 @@ Sort $hpq$ according to decreasing order of $absSupp[hpq]$\\
 
 \subsection{Normal and Abnormal Set Mining}
 
-This component computes normal and abnormal instance sets for a given rule and a KG as described in Algorithm~\ref{algo2}. First, in lines 1 and 2, variables for (ab)normal sets are initialized. Second, for each pair \textit{Y, Z} s.t. \textit{$<$Y q Z$>$} is in $\cG$, a set of $X$ for which \textit{$<$X p Y$>$} is in the KG is found based on the Data Indexing component (line 3 to 5). At this point, it is guaranteed that \textit{X, Y, Z} satisfy the body of the given rule. Finally, for every $X$ found in the previous step, \textit{$<$X h Z$>$} is verified to be in the KG or not. If it is in $\cG$, then \textit{$<$X Z$>$} is added to the normal set, otherwise it is added to the abnormal set.
+This component computes normal and abnormal instance sets for a given rule and a KG as described in Algorithm~\ref{algo2}. First, in lines 1 and 2, variables for (ab)normal sets are initialized. Second, for each pair \textit{Y, Z} s.t. \textit{$<$Y q Z$>$} is in $\cG$, a set of $X$ for which \textit{$<$X p Y$>$} is in the KG is found based on the Data Indexing component (line 3 to 5). At this point, it is guaranteed that \textit{X, Y, Z} satisfy the body of the given rule. Finally, for every $X$ found in the previous step, we verify whether \textit{$<$X h Z$>$} is in the KG or not. If it is in $\cG$, then \textit{$<$X Z$>$} is added to the normal set, otherwise it is added to the abnormal set.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -118,7 +118,7 @@ $YZSet \leftarrow getSubjectObjectSet(\cG, q)$\\
 
 \subsection{Exception Witness Set Mining}
 
-We now describe the algorithm for exception witness set construction. Given a KG and a positive rule, this component computes all unary and binary exception candidates. To simplify the presentation, Algorithm~\ref{algo3} focuses only on computing binary exceptions, analogously, unary ones can be mined. More specifically, our goal is to find exceptions of the form \textit{e(X, Z)}, they are then inserted to the body of $r2$ to get its revised rule \textit{h(X, Z) :- p(X, Y), q(Y, Z), not e(X, Z)}. Algorithm~\ref{algo3} processes as follows, first, normal and abnormal instance sets are found in line 1 and 2 following Algorithm~\ref{algo2}. Then the variables $EWS^+$ and $EWS^-$ which store a set of relations between \textit{$<$X Z$>$} in the abnormal and normal sets resp. are created (line 3 and 4). Second, for every pair \textit{$<$X Z$>$} in the abnormal set, all relations between them are added to the $EWS^+$ (line 5 to 8). After that, a similar procedure is applied to $EWS^-$ from line 9 to 12. Finally, exception witness set $EWS$ is constructed as the difference between $EWS^+$ and $EWS^-$ (line 13), which is the output of the algorithm in line 14.
+We now describe the algorithm for exception witness set construction (Algorithm~\ref{algo3}). Given a KG and a positive rule, this component computes all unary and binary exception candidates. To simplify the presentation, Algorithm~\ref{algo3} focuses only on computing binary exceptions, analogously, unary ones can be mined. More specifically, our goal is to find exceptions of the form \textit{e(X, Z)} which are then inserted into the body of \textit{h(X, Z) :- p(X, Y), q(Y, Z)} to get its revised rule \textit{h(X, Z) :- p(X, Y), q(Y, Z), not e(X, Z)}. Algorithm~\ref{algo3} proceeds as follows. First, normal and abnormal instance sets are found in line 1 and 2 by exploiting Algorithm~\ref{algo2}. Then the variables $EWS^+$ and $EWS^-$ which store a set of relations between \textit{$<$X Z$>$} in the abnormal and normal sets resp. are created (line 3 and 4). Second, for every pair \textit{$<$X Z$>$} in the abnormal set, all relations between \textit{X} and \textit{Z} are added to the $EWS^+$ (line 5 to 8). After that, a similar procedure is applied to $EWS^-$ in lines 9 to 12. Finally, exception witness set $EWS$ is constructed as the difference between $EWS^+$ and $EWS^-$ (line 13), which forms the output of the algorithm in line 14.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -150,18 +150,18 @@ $EWS$ $\leftarrow$ $EWS^+$ $\setminus$ $EWS^-$\\
 
 \subsection{Measure Plugin}
 
-The RUMIS system is supplied with the measure plugin where user can conveniently specify various rule quality criteria. In the current implementation, confidence and conviction are supported. While the former is well-suited for descriptive purposes, the latter is accepted as a possible measure for estimating rule's predictive capabilities~\cite{ref46}. Since the main concern of this thesis is the Horn rule revision and subsequent accurate prediction of possibly missing facts in the original KG, conviction is the main measure in RUMIS.
+The RUMIS system is supplied with the measure plugin which allows the user to conveniently specify various rule quality criteria. In the current implementation, confidence and conviction are supported. While the former is well-suited for descriptive purposes, the latter is accepted as a possible measure for estimating rule's predictive capabilities~\cite{ref46}. Since the main concern of this thesis is the Horn rule revision and subsequent application of the revised set for predicting possibly missing facts in the original KG, the conviction is the most suitable measure, which is implemented within the RUMIS system.
 
 \subsection{Exception Ranking}
 \label{intuition_er}
 
-We now describe the exception ranking procedure in details. Figure~\ref{pm_ranking} illustrates the interaction between the KG, revisions and PM ranking component. In general, the communications express the intuition for the ranking as follows.
+We now describe the exception ranking procedure in details which is illustrated in Figure~\ref{pm_ranking} on the PM ranker.
 
 \begin{itemize}
-\item From a KG $\cG$ and a set of Horn rules, EWS mining is executed to find exception candidates for each Horn rule in (1). As in Figure~\ref{pm_ranking}, it can be seen that a Horn rule may have several exceptions.
+\item From a given KG $\cG$ and a set of Horn rules, EWS mining (Algorithm~\ref{algo3}) is executed to find exception candidates for each Horn rule in (1). As shown in Figure~\ref{pm_ranking}, a Horn rule may have several exceptions.
 \item (2) shows that revisions with exceptions (rules $r3, r4, r5, ...$) are used to infer new facts from the original KG.
-\item $\cG'$, i.e., original KG $\cG$ with new predicted facts, is exploited to rank exceptions for each Horn rule in (3). The combination of steps (2) and (3) describes the interaction of different rules, i.e, facts generated by other revisions are taken into account to measure quality of a particular nonmonotonic rule. That is also the intuition of PM ranking.
-\item (4) is a process that exceptions are ranked by Component 5 according to $\cG'$ from (3), the best exception is chosen to be added in final revision set.
+\item $\cG'$, i.e., the original KG $\cG$ with new predicted facts, is exploited to rank exceptions for each Horn rule in (3). The combination of steps (2) and (3) describes the interaction of different rules, i.e, facts generated by other revisions are taken into account to measure quality of a particular nonmonotonic rule.
+\item (4) is a process that exceptions are ranked by Component 5 according to $\cG'$ from (3), the best exception is chosen for the addition to the final revision set.
 \end{itemize}
 
 \begin{figure}[ht]
@@ -171,7 +171,7 @@ We now describe the exception ranking procedure in details. Figure~\ref{pm_ranki
 \label{pm_ranking}
 \end{figure}
 
-\textbf{PM Ranking.} The Algorithm~\ref{bf_pm_ranking_algo} describes PM ranking procedure, which takes as input a KG and a set of positive rules $R_H$ and outputs a set $R_{NM}$ for their revisions. In line 1, a set of revised rules are initialized as an empty set. After that, for each positive rule $r$ in $R_H$, we clone the original KG $\cG$ to a new KG $\cG'$, then all other rules in $R_H$ are exploited to generate their safely predicted facts which are subsequently added to $\cG'$ (line 2 to 6) by Data Indexing component. RUMIS is conservative in revising rules since the KG $\cG$ instead of $\cG'$ is exploited to rank exceptions in every iteration. This eliminates the cases when wrong facts introduce many incorrect ones. Next, in line 7 and 8, based on the new KG, exceptions of $r$ are ranked and the best revision is added to $R_{NM}$. Finally, we return $R_{NM}$ as a result of the algorithm.
+\textbf{PM Ranking.} Algorithm~\ref{bf_pm_ranking_algo} describes PM ranking procedure, which takes as input a KG and a set of positive rules $R_H$ and outputs a set $R_{NM}$ of their revisions. In line 1, a set of the revised rules is initialized as an empty set. After that, for each positive rule $r$ in $R_H$, we clone the original KG $\cG$ to a new KG $\cG'$, then all other rules in $R_H$ are exploited to generate their safely predicted facts which are subsequently added to $\cG'$ (line 2 to 6) by Data Indexing component. RUMIS is conservative in revising rules, since the KG $\cG$ instead of $\cG'$ is exploited to rank exceptions in every iteration. Next, in lines 7 and 8, based on the new KG $\cG'$, exceptions of $r$ are ranked and the best revision is added to $R_{NM}$. Finally, we return $R_{NM}$ as an output of the algorithm.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -197,7 +197,7 @@ $R_{NM} \leftarrow \{\}$\\
 \end{algorithm}
 \DecMargin{1.5em}
 
-\textbf{OPM Ranking.} This function is similar to PM ranking, the major difference is the way how the revisions are selected for expansion. Indeed, as an initial step, Horn rules are sorted in decreasing order of conviction measure. After that, only safely predicted facts from previous rules are exploited to assess the quality of $r$. In the OPM ranking, the order of Horn rules matters, i.e., the higher is the conviction of a Horn rule, the more important it impacts revisions of other rules. In other words, the OPM is more conservative than the PM ranking, only safely predicted facts of better Horn rules are taken into account when revising a particular rule.
+\textbf{OPM Ranking.} This function is similar to PM ranking, the major difference is the way how the revisions are selected for expansion. At the initial step, Horn rules are sorted in decreasing order of conviction measure. After that, only safely predicted facts from previous rules are exploited to assess the quality of a given rule $r$. In the OPM ranking, the order of Horn rules matters, i.e., the higher is the conviction of a Horn rule, the more prominent is its impact on other rules.
 
 %\IncMargin{1.5em}
 %\begin{algorithm}[H]
@@ -224,11 +224,11 @@ $R_{NM} \leftarrow \{\}$\\
 
 \section{Optimization}
 
-In Algorithm~\ref{bf_pm_ranking_algo}, the KG $\cG$ cloning and indexing procedure of the safely predicted facts are executed $|R_H|$ and $|R_H|^2$ times, resp. Since the number of facts in $\cG$ and positive rules can be large, these operations are time-consuming. To optimize Algorithm~\ref{bf_pm_ranking_algo} s.t. the KG cloning should be performed less frequently. Besides, accessing the Data Indexer should likewise be restricted to speed up PM ranking. This is a motivation for introducing Algorithm~\ref{pm_ranking} as a refined algorithm for PM ranking, which we describe next.
+In Algorithm~\ref{bf_pm_ranking_algo}, the KG $\cG$ cloning and indexing procedures of the safely predicted facts are executed $|R_H|$ and $|R_H|^2$ times, resp. Since the number of facts in $\cG$ and positive rules can be large, these operations are time-consuming. We now discuss possible optimizations of Algorithm~\ref{bf_pm_ranking_algo}, which concern the KG cloning and data indexing operations. In Algorithm~\ref{pm_ranking_algo}, we present possible refinements of Algorithm~\ref{bf_pm_ranking_algo} for the PM ranking.
 
-In lines 1 and 2 of the Algorithm~\ref{pm_ranking}, we clone an original graph $\cG$ to $\cG'$ and create an empty nonmonotonic rule set $R_{NM}$. After that, from line 3 to 5, for every Horn rule $r$ in $R_H$, its safely predicted facts are added to $\cG'$ using the Data Indexing component.
+In lines 1 and 2 of the Algorithm~\ref{pm_ranking_algo}, we clone the original graph $\cG$ to $\cG'$ and create an empty nonmonotonic rule set $R_{NM}$. After that, from line 3 to 5, for every Horn rule $r$ in $R_H$, its safely predicted facts are added to $\cG'$ using the Data Indexing component.
 
-Now RUMIS is ready to refine PM ranking. In line 7, for each Horn rule $r$, indexes of its safely predicted facts are removed from $\cG'$. This step is needed in order to make sure that safely predicted facts of all other rules ($r$ excluded) are exploited to determine the quality of $r$ (line 8). Thanks to this, the interaction between nonmonotonic rules is taken into consideration during the ranking. After that, the best revision of $r$ is added to the final result in line 9. Line 10 shows a step that reverses what is done in line 7, i.e., safely predicted facts of the rule $r$ based on $\cG$ are added to $\cG'$ again. This guarantees that the same state in the next iteration can be processed with a new rule.
+Now RUMIS is ready to refine PM ranking. In line 7, for each Horn rule $r$, indexes of its safely predicted facts are removed from $\cG'$. This step is needed in order to make sure that safely predicted facts of all other rules apart from $r$ are exploited to determine the quality of $r$ (line 8). This witnesses that the interaction between nonmonotonic rules is taken into consideration during the ranking. After that, the best revision of $r$ is added to the final result in line 9. Line 10 shows a step that reverses what is done in line 7, i.e., safely predicted facts of the rule $r$ based on $\cG$ are added to $\cG'$ again. This guarantees that the same state in the next iteration can be processed with a new rule.
 
 \IncMargin{1.5em}
 \begin{algorithm}[H]
@@ -257,20 +257,20 @@ $R_{NM} \leftarrow \{\}$\\
 \end{algorithm}
 \DecMargin{1.5em}
 
-With the optimized algorithm, we only need $O(|R_H|)$ times for indexing new predicted facts and one time for cloning the KG. This is a significant improvement compared to the original version. The difference is visible in practice if the KG is large and we have a lot of rules that interact.
+With the optimized algorithm, we only need $O(|R_H|)$ operations for indexing new predicted facts and one operation for cloning the KG. This is a significant improvement compared to the original version of the algorithm. The difference is visible in practice if the KG is large and many rules are considered.
 
 \section{Usage}
 
-RUMIS~\footnote{\url{https://github.com/htran010589/nonmonotonic-rule-mining}} is developed and currently tested in Linux, we may extend it to Windows in the future. The system requires the installation of Java 8 as well as the DLV~\footnote{\url{http://www.dlvsystem.com/html/DLV_User_Manual.html}} tool for conducting experiment. There are four main features in RUMIS as follows:
+RUMIS~\footnote{\url{https://github.com/htran010589/nonmonotonic-rule-mining}} is developed and currently tested in Linux, we may extend it to Windows in the future. The system requires the installation of Java 8 as well as the DLV~\footnote{\url{http://www.dlvsystem.com/html/DLV_User_Manual.html}} tool for conducting experiments. RUMIS supports the following main tasks:
 
 \begin{itemize}
-\item \textit{Training data generation:} Given the ideal KG, the training KG can be chosen automatically where 20\% facts of each binary predicate are removed.
-\item \textit{Horn rule mining:} With the training KG, a list of Horn rules can be learned with the introduced format in Algorithm~\ref{algo1}.
+\item \textit{Training data generation:} Given the ideal KG, the training KG is constructed automatically by removing 20\% of facts from $\cG$ for every binary predicate.
+\item \textit{Horn rule mining:} With the training KG, a list of Horn rules of the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} can be learned exploiting Algorithm~\ref{algo1}.
 \item \textit{Non-monotonic rule mining:} Based on the training KG, exceptions for each positive rule are ranked and the best one is chosen to generate the revision.
-\item \textit{Automatic experiment:} With these two above KGs, the experiment can be executed to measure the quality of revision sets and predict new facts from training data.
+\item \textit{Automatic experiment:} With the KGs $\cG$ and $\cG^i$, the experiment can be executed to measure the quality of revision sets and predict new facts from the training data.
 \end{itemize}
 
-In the rest of this section, these features of RUMIS are listed by the following command line interface.
+In the rest of this section, we list the command line options of RUMIS and explain them in details.
 
 %\subsection{Setting}
 %
@@ -280,19 +280,19 @@ In the rest of this section, these features of RUMIS are listed by the following
 %
 %\textbf{Working Folder.} Working folder is a location for experiment where we have learning and approximated ideal KGs in SPO format (\textit{training.data.txt} and \textit{ideal.data.txt}, resp.), positive rule and sampled positive rule files (\textit{horn-rules.txt} and \textit{selected.horn-rules.txt}, resp.) in format~\ref{form2}. Besides, DLV binary file\footnote{\url{http://www.dlvsystem.com/files/dlv.x86-64-linux-elf-static.bin}} should be downloaded and renamed to \textit{dlv.bin} in this folder. The \textit{selected.horn-rules.txt} containing a subset of rules in \textit{horn-rules.txt}, it is only necessary if we want to revise some rules in this file.
 
-\textbf{Command Line Options.} For detailed instructions, please take a look at the below GitHub website for RUMIS. In brief, users can choose one of the following options provided by the tool:
+\textbf{Command Line Options.} The RUMIS system supports the following options:
 
 \begin{itemize}
 \item \textit{-d:} This flag enables DLV in order to extend the KG.
-\item \textit{-e=[execution function]:} This requires a string as a function for execution, i.e., \textit{new, pos, neg, exp} correspond to creating a new learning KG, positve and nonmonotonic rule mining and conducting an experiment, resp.
+\item \textit{-e=[execution function]:} This requires a string as a function for execution, i.e., \textit{new, pos, neg, exp} correspond to creating a new learning KG, positve and nonmonotonic rule mining and conducting the experiment, resp.
 \item \textit{-f=[working folder path]:} With this option, experiment folder path can be specified.
-\item \textit{-h:} This is the command line interface description, i.e., help menu.
+\item \textit{-h:} Option used to retrieve the help menu of the system.
 \item \textit{-l=[KG file path]:} This requires a string as a KG file path in the SPO format.
 \item \textit{-o=[predicate ratio]:} With this option, one can fix the percentage of facts to be removed for the creation of a learning KG.
-\item \textit{-p=[Horn rule file path]:} This requires a string as an Horn rule file path in format~\ref{form2}.
-\item \textit{-r=[ranking]:} This requires an integer as a ranking type, i.e., 0, 1, 2 for Naive, PM, OPM ranking, resp.
-\item \textit{-s:} This flag is to enable sampling positive rules.
-\item \textit{-t=[number of top Horn rules]:} This requires an integer as a number of positive rules with the top absolute support.
+\item \textit{-p=[Horn rule file path]:} This requires a string as an Horn rule file path, each line in this file is a positive rule in the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}.
+\item \textit{-r=[ranking]:} Option allows one to specify the ranking type, i.e., 0, 1, 2 standing for Naive, PM, OPM ranking, resp.
+\item \textit{-s:} This flag is used to enable sampling of the positive rules.
+\item \textit{-t=[number of top Horn rules]:} This requires an integer as a number of positive rules with the top absolute support that will be considered for revision.
 \end{itemize}
 
 %\subsection{Usage Description}

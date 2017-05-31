@@ -1,0 +1,75 @@
+% \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+% \hline
+%         \multirow{2}{*}{}              &   \multirow{2}{*}{Predicates}         & \multicolumn{3}{c|}{Predictions} & \multirow{2}{*}{Conflicts} & \multicolumn{2}{c|}{in $\cG_i$} & \multicolumn{2}{c|}{out $\cG_i$} & \multicolumn{2}{c|}{Removed Facts} \\ \cline{3-5} \cline{7-12} 
+%                       &  & $\cR_\mi{H}$     & $\cR_{OPM}$     & $\cR_{\mi{OPM}}^{\mi{aux}}$     &    & $\cR_\mi{H}$     & $\cR_{\mi{OPM}}$ & $\cR_\mi{H}$     & $\cR_{\mi{OPM}}$            & Correctly    & Incorrectly   \\ \hline
+% \multirow{5}{*}{YAGO} &     created       &        &     946     &              &    6                        &       &   29   &               &    917            &              &               \\ \cline{2-12}
+%  &     dealsWith       &        &     4421     &              &    0                        &       &   52   &               &    4369            &              &               \\ \cline{2-12}
+%  &     hasChild       &        &     2113     &              &    0                        &       &   143   &               &    1970            &              &               \\ \cline{2-12}
+%  &     isCitizenOf       &        &     1146     &              &    5                        &       &   62   &               &    1084            &              &               \\ \cline{2-12}
+%  &     livesIn       &        &     3746     &              &    5                        &       &   36   &               &    3710            &              &              
+%   \\ \hline
+% \multirow{7}{*}{IMDB} &     directed       &        &     339     &              &    0                        &       &   53   &               &    286            &              &               \\ \cline{2-12}
+%   &     directedBy       &        &     429     &              &    0                        &       &   60   &               &    369            &              &               \\ \cline{2-12}
+%  &     hasLanguage       &        &     248     &              &    0                        &       &   57   &               &    191            &              &               \\ \cline{2-12}
+%    &     hasProductionLanguage       &        &     317     &              &    2                        &       &   149   &               &    168            &              &               \\ \cline{2-12}
+%    &     producedIn       &        &     239     &              &    0                        &       &   54   &               &    185            &              &               \\ \cline{2-12}
+%     &     writtenBy       &        &     5     &              &    0                        &       &   4   &               &    1            &              &               \\ \cline{2-12}
+%     &     wrote       &        &     18     &              &    0                        &       &   7   &               &    11            &              &               \\ \cline{1-12}
+% %%  \\ \hline
+% \end{tabular}
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ \multirow{2}{*}{}              &   \multirow{2}{*}{\textbf{predicates}}         & \multicolumn{3}{c|}{\textbf{predictions}} & \multicolumn{2}{c|}{\textbf{from} $\cG^i_{appr}$} & \multicolumn{2}{c|}{outside $\cG^i_{appr}$} & \multicolumn{2}{c|}{\textbf{removed facts}} \\ \cline{3-11} 
+         &  & $\cR_\mi{H}$  & $\cR_{PM}$  & $\cR_{OPM}$     &  $\cR_\mi{H}$     & $\cR_{\mi{OPM}}$ & $\cR_\mi{H}$     & $\cR_{\mi{OPM}}$            & correctly    & incorrectly   \\ \hline
+\multirow{5}{*}{YAGO} &     hasChild       &    5443    & 5414  &  5414                &   744    &   743   &    4699           &    4671            &              &               \\ \cline{2-11}
+ &     hasGender       &  4539      &  4528  & 4528                           &   2297    &   2291   &     2242          &    2237            &              &               \\ \cline{2-11}
+ &     isCitizenOf       &  339707      &  301375  & 330531                           &   1535    &   1535   &     338172          &    328996            &              &               \\ \cline{2-11}
+ &     isLocatedIn       &  252768      & 251838 &   251838                  &    1038   &   1038   &     251730          &    250800            &              &              
+\\ \cline{2-11}
+%\\ \hline
+ &     livesIn       &  90542      & 72987 &   72987                  &    873   &   873   &     89669          &    72114            &              &              
+  \\ \hline
+\multirow{3}{*}{IMDB} &     actedIn       &    1231    &  1214 & 1214         &     83   &   83   &    1148           &    1131            &              &               \\ \cline{2-11}
+  &     hasGenre       &    1263    &  1239 &  1230           &    210    &   206   &   1053            &    1024            &              &               \\ \cline{2-11}
+ &     hasLanguage       &   324     & 317 &   317           &   151    &   149   &  173             &    168            &              &               \\ \cline{1-11}
+%%  \\ \hline
+\end{tabular}
+
+% \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+% \hline
+%  \multirow{2}{*}{}              &   \multirow{2}{*}{predicates}         & \multicolumn{3}{c|}{predictions} & \multicolumn{3}{c|}{conflicts}& \multicolumn{2}{c|}{in $\cG_i$} & \multicolumn{2}{c|}{outside $\cG_i$} & \multicolumn{2}{c|}{removed Facts} \\ \cline{3-14} 
+%          &  & $\cR_\mi{H}$     & $\cR_{OPM}$     & $\cR_{\mi{OPM}}^{\mi{aux}}$     & $\cR_{\mi{N}}$       & $\cR_{\mi{PM}}$     & $\cR_{\mi{OPM}}$  & $\cR_\mi{H}$     & $\cR_{\mi{OPM}}$ & $\cR_\mi{H}$     & $\cR_{\mi{OPM}}$            & Correctly    & Incorrectly   \\ \hline
+% \multirow{5}{*}{YAGO manual} &     actedIn       &   37623     &     36932     &       188     & 0 &    0  &   0                   &      41 &   40   &      37582         &    36892            &              &               \\ \cline{2-14}
+%  &     diedIn       &    38567    &     38018     &      506        & 4 &           24      &  11       &   177    &   177   &    38390           &    37841            &              &               \\ \cline{2-14}
+%  &     isCitizenOf       &  44059      &     41631     &     2696         &  0 &          993       &  1005      &    179   &   179   &       43880        &    41452            &              &               \\ \cline{2-14}
+%  &     livesIn       &  7717      &     7456     &     65         & 0 &  0   &    0                  &   52    &   52   &     7665          &    7404            &              &               \\ \cline{2-14}
+%  &     wasBornIn       &  36029      &     35520     &      511        &  14  &        14        &  14      &    314   &   314   &     35715          &    35206            &              &              
+%   \\ \hline
+% \multirow{6}{*}{IMDB top rules} &     actedIn       &    185234    &    168705      &   28    &   194    &    104   &   194                  &    810   &   626   &    184424           &    168079            &              &               \\ \cline{2-14}
+%   &     directed       &    7176    &     6475     &      17        & 5 &          4        &    5    &   106    &   105   &   7070            &    6370            &              &               \\ \cline{2-14}
+%  &     directedBy       &   5324     &     5118     &      12        & 0  &         0        &   0     &   64    &   63   &  5260             &    5055            &              &               \\ \cline{2-14}
+%    &     hasGenre       &    38632    &     36794     &   25    &  19     &   11     &    19                &   1051    &   966   &       37581        &    35828            &              &               \\ \cline{2-14}
+%    &     hasProdLang       &  8150      &     7995     &   8           & 0  &    3          &    3       &   1431    &   1403   &       6719        &    6592            &              &               \\ \cline{2-14}
+%     &     hasSuccessor       &    261180    &     221145     &   34854           &  0  &      0      &  0          &    70   &   68   &      261110         &    221077            &              &               \\ \cline{1-14}
+% %%  \\ \hline
+% \end{tabular}
+
+%--------------------------------------------------------
+%With in Gi:
+
+
+\begin{tabular}{c|l|llll|llll|llll}
+\hline
+ \multirow{2}{*}{}              &   \multirow{2}{*}{\textbf{predicates}}   	& \multicolumn{4}{c|}{\textbf{predictions}} 						& \multicolumn{4}{c|}{\textbf{from $\cG^i_{appr}$}} 	& \multicolumn{4}{c}{\textbf{outside $\cG^i_{appr}$}}  				\\ \cline{3-14} 
+         						&  									& $\cR_\mi{H}$  & $\cR_{N}$ & $\cR_{PM}$  		& $\cR_{OPM}$ & $\cR_{H}$ & $\cR_{N}$ & $\cR_{PM}$ & $\cR_{OPM}$     	&  $\cR_\mi{H}$     & $\cR_{\mi{N}}$ 	& $\cR_\mi{PM}$     & $\cR_{\mi{OPM}}$    \\ \hline
+\multirow{4}{*}{\rotatebox{90}{YAGO}} & directed & 41079 & 39174 & 39174 & 39174 & 58 & 58 & 58 & 58 & 41021 & 39116 & 39116 & 39116 \\ %\cline{2-14}
+ & graduatedFrom & 3519 & 3456 & 3456 & 3456 & 156 & 156 & 156 & 156 & 3363 & 3300 & 3300 & 3300 \\ %\cline{2-14}
+ & isCitizenOf & 3407 & 2883 & 2883 & 2883 & 47 & 47 & 47 & 47 & 3360 & 2836 & 2836 & 2836 \\ %\cline{2-14}
+ & wasBornIn & 110283 & 108317 & 109846 & 108317 & 711 & 710 & 709 & 710 & 109572 & 107607 & 109137 & 107607 \\ \cline{1-14}
+\multirow{4}{*}{\rotatebox{90}{IMDB}} & actedIn & 1231 & 1214 & 1230 & 1214 & 83 & 83 & 83 & 83 & 1148 & 1131 & 1147 & 1131 \\ %\cline{2-14}
+ & hasGenre & 629 & 609 & 618 & 609 & 136 & 132 & 136 & 132 & 493 & 477 & 482 & 477 \\% \cline{2-14}
+ & hasLanguage & 173 & 102 & 125 & 102 & 10 & 10 & 10 & 10 & 163 & 92 & 115 & 92 \\ %\cline{2-14}
+ & producedIn & 2489 & 2256 & 2327 & 2327 & 1 & 1 & 1 & 1 & 2488 & 2255 & 2326 & 2326 \\ \cline{1-14}
+\end{tabular}
+

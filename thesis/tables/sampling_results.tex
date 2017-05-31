@@ -1,0 +1,17 @@
+\begin{tabular}{c|l|lll}
+\hline
+ \multirow{2}{*}{}  &   \multirow{2}{*}{\textbf{predicates}}&   \multicolumn{3}{c}{\textbf{correctly removed}}  \\ \cline{3-5} 
+         			&  	& $\cR_{\mi{N}}$ 	& $\cR_\mi{PM}$     & $\cR_{\mi{OPM}}$    \\ \hline
+                    \multirow{4}{*}{\rotatebox{90}{IMDB}} & actedIn  & 90 & 100 & 90 \\ %\cline{2-10}
+
+& hasGenre    & 50 & 20 & 50 \\% \cline{2-10}
+ & hasLanguage  & 60 & 100 & 60 \\ %\cline{2-10}
+ & producedIn   & 10 & 10 & 30 \\ \cline{3-5}
+ & 				& 52.50  & 45.16   & \textbf{57.75}  \\ \cline{1-5}
+\multirow{4}{*}{\rotatebox{90}{YAGO}} & directed   & 100 & 100 & 100 \\ %\cline{2-10}
+ & graduateFrom    & 100 & 100 & 70 \\ %\cline{2-10}
+ & isCitizenOf    & 50 & 50 & 70 \\ %\cline{2-10}
+ & wasBornIn  &  90& 90 & 100 \\ \cline{3-5}
+  & 				& 85  & 85   & 85  \\ \cline{1-5}
+
+\end{tabular}
