@@ -50,18 +50,27 @@ The enhancement ratio trend between revisions of the three ranking methods and t
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.75\textwidth]{figures/table_1_5_yago.jpeg}
+\includegraphics[width=0.85\textwidth]{figures/table_1_5_yago.jpeg}
 \caption{The Average Quality Improvement Rate (\%) against Positive Rules in YAGO.}
 \label{fig_1_5_yago}
 \end{figure}
 
-With IMDB dataset, the results of Naive and OPM ranking are approximately the same, it is good to see that the quality of OPM revisions are the best while minimizing number of conflicts is still taken into consideration for this method. Especially with top 100 rules, the discrepancy rate reaches the peak of more than 7\% improvement which is significantly larger than the statistics with the same data.
+With IMDB dataset, the results of Naive and OPM ranking are approximately the same and slightly better than PM ranking. For the top 100 rules, the best average improvement of 7.8\% is achieved. It can be seen that the quality of positive rules around top 100 are much worse than the rest, resulting in the sharp increase between top 80 and 100 in the Figure~\ref{fig_1_5_imdb}.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.75\textwidth]{figures/table_1_5_imdb.jpeg}
+\includegraphics[width=0.85\textwidth]{figures/table_1_5_imdb.jpeg}
 \caption{The Average Quality Improvement Rate (\%) against Positive Rules in IMDB.}
 \label{fig_1_5_imdb}
+\end{figure}
+
+In general, the improvement rates for average conviction in Wikidata increase. However, the contrast between the higest and the lowest is not as large as in IMDB data due to the qualities of top 100 Horn rules in Wikidata are not highly different.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/table_1_5_wikidata.jpeg}
+\caption{The Average Quality Improvement Rate (\%) against Positive Rules in WIKIDATA.}
+\label{fig_1_5_wikidata}
 \end{figure}
 
 \section{Prediction Quality}
@@ -87,9 +96,28 @@ Since the size of the set difference between predictions made by $\cR_H$ and ext
 
 \section{Running Times}
 
-RUMIS mines 100 positive rules and their $\mi{EWS}$s from IMDB and YAGO in 7 and 68 seconds, resp. The mean number of exceptions for each positive rule is 1600 for the former and 10900 for the latter. With IMDB, the exceptions for Naive, PM and OPM strategies are ranked within 9, 62 and 24 seconds, resp. Meanwhile in YAGO, these numbers are 45, 177 and 112 seconds with the same ranking function. As regards the step of applying final revisions to the KG $\cG$, the DLV tool finishes after 8 and 310 seconds with IMDB and YAGO, resp.
+In our experiment, top 100 positive rules are mined from IMDB and YAGO while this number of Wikidata is 300. Figure~\ref{tab:run_time} provides statistics about running times (in seconds) of three different steps in the RUMIS system. More specifically, the second row of this table indicates how long for mining Horn rules and exception witness set. In addition, the third and fourth rows present the average running times (over three ranking methods Naive, PM, OPM) of resp. ranking exception and extending KG with DLV.
 
-As regards sampled Wikidata, 300 Horn rules and their EWSs are explored in 20 and 173 seconds, resp. The exceptions are ranked in resp. 1.5, 115 and 31 minutes by Naive, Pm, OPM methods and training KG is extended in 3 minutes by using DLV in average.
+\begin{table}[ht]
+\centering
+\footnotesize{
+\begin{tabular}{|c|ccc|}
+\hline
+\textbf{Steps} & \textbf{IMDB} & \textbf{YAGO} & \textbf{WIKIDATA}\\
+\hline
+ \textit{Horn Rule and EWS Mining} & 7 & 68 & 193\\
+ \textit{Exception Ranking} & 32 & 111 & 2940\\
+ \textit{Extension with DLV} & 8 & 310 & 180\\
+ \hline 
+\end{tabular}
+}
+\smallskip
+\caption{Running Times for Each Step of the Three Datasets}
+\label{tab:run_time}
+%\vspace*{-1.7\baselineskip}
+\end{table}
+
+It can be seen that the numbers of Wikidata for the first two steps are the largest since the quantity of positive rules mined from this dataset is much bigger than that of IMDB or YAGO. Meanwhile, among the three datasets, YAGO has the most number of facts, resulting in the longest time to extend the KG using DLV (310 seconds).
 
 \begin{figure}[t]
     \centering
