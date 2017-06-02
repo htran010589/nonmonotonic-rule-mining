@@ -16,14 +16,14 @@ q_{\mi{rm}}(\cR,\cG)=\dfrac{\sum_{r\in \cR}rm(r,\cG)}{|\cR|}
 \label{eq:avgquality},
 \end{equation}
 
-where $rm$ is a standard association rule measure, while $q_{conflict}$ calculates the quantity of conflicting facts predicted by applying the rules in $\cR$ to $\cG$. To find $q_{conflict}$, the given rule set in extended with additional auxiliary rules $\cR_{aux}$ constructed for every revised rule $r \in \cR$ by removing $\naf$ from $body^-(r)$, and subsequently substituting the head predicate $\mi{h}$ of $r$ by a dummy predicate $\mi{not\_h}$. The newly created predicate $\mi{not\_h}$ intuitively corresponds to the negation of $h$. The formula of $q_{conflict}$ is then defined as follows.
+\noindent where $rm$ is a standard association rule measure, while $q_{conflict}$ calculates the quantity of conflicting facts predicted by applying the rules in $\cR$ to $\cG$. To find $q_{conflict}$, the given rule set in extended with additional auxiliary rules $\cR_{aux}$ constructed for every revised rule $r \in \cR$ by removing $\naf$ from $body^-(r)$, and subsequently substituting the head predicate $\mi{h}$ of $r$ by a dummy predicate $\mi{not\_h}$. The newly created predicate $\mi{not\_h}$ intuitively corresponds to the negation of $h$. The formula of $q_{conflict}$ is then defined as follows.
 
 \begin{equation}
 q_{conflict}(\cR,\cG)=\sum_{p\in pred(\cR)} \dfrac{|\{ \vec{c}\,|\,p(\vec{c}),not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}{|\{ \vec{c}\,|\,not\_p(\vec{c})\in \cG_{\cR^{\mi{aux}}}\} |}
 \label{eq:conflict},
 \end{equation}
 
-where $\mi{pred(\cR)}$ is the set of relations occurring in $\cR$, and $\vec{c}$ contains at most two constants in $\cC$. Intuitively, $q_{\mi{conflict}}$ is created to differentiate actual exceptions from noise, by taking the interaction between the rules from $\cR$ into consideration. The following example demonstrates this core idea.
+\noindent where $\mi{pred(\cR)}$ is the set of relations occurring in $\cR$, and $\vec{c}$ contains at most two constants in $\cC$. Intuitively, $q_{\mi{conflict}}$ is created to differentiate actual exceptions from noise, by taking the interaction between the rules from $\cR$ into consideration. The following example demonstrates this core idea.
 
 \begin{example}
 
