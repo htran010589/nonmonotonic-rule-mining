@@ -43,7 +43,7 @@ Since the KG $\cG$ can be large, computation of (ab)normal instances as well as 
 For example, Figure~\ref{data_indexing} presents the data indexed from part of a KG in Figure~\ref{fig1.1}. Hence, given the predicate \textit{isMarriedTo}, one can determine a set of subject-object pairs corresponding to it, i.e., \textit{$<$Brad, Ann$>$} and \textit{$<$John, Kate$>$}. Similarly, given a subject and a relation, the set of objects can be retrieved. For example, we can get ``Berlin" from the question ``Where does Ann live" based on the data indexing model in Figure~\ref{data_indexing}. In this example, the term is the combination of subjects and predicates. More formally, the Data Indexing provides the following functions that are exploited in the rest of the components:
 
 \begin{itemize}
-\item \textit{getPredicateSubjectSet($\cG$, object):} This function returns a set of predicate-subject pairs corresponding to a given \textit{object} in the KG $\cG$.
+\item \textit{getPredicateSubjectSet($\cG$, object)} returns a set of predicate-subject pairs corresponding to a given \textit{object} in the KG $\cG$.
 \item \textit{getPredicateSet($\cG$, subject, object)} returns a set of predicates corresponding to the input \textit{subject, object} entities.
 \item \textit{getSubjectSet($\cG$, predicate, object)} retrieves a set of subjects for a given \textit{predicate} and an \textit{ object}.
 \item \textit{getSubjectObjectSet($\cG$, predicate)} outputs a set of \textit{subject-object} pairs for a given \textit{predicate}.
@@ -266,7 +266,7 @@ RUMIS~\footnote{\url{https://github.com/htran010589/nonmonotonic-rule-mining}} i
 \begin{itemize}
 \item \textit{Training data generation:} Given the ideal KG, the training KG is constructed automatically by removing 20\% of facts from $\cG$ for every binary predicate.
 \item \textit{Horn rule mining:} With the training KG, a list of Horn rules of the form \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} can be learned exploiting Algorithm~\ref{algo1}.
-\item \textit{Non-monotonic rule mining:} Based on the training KG, exceptions for each positive rule are ranked and the best one is chosen to generate the revision.
+\item \textit{Nonmonotonic rule mining:} Based on the training KG, exceptions for each positive rule are ranked and the best one is chosen to generate the revision.
 \item \textit{Automatic experiment:} With the KGs $\cG$ and $\cG^i$, the experiment can be executed to measure the quality of revision sets and predict new facts from the training data.
 \end{itemize}
 
@@ -301,7 +301,7 @@ In the rest of this section, we list the command line options of RUMIS and expla
 
 \textit{Horn rule mining.} Please run the following command for executing IMDB Horn rule mining: \textit{\$ java -jar rumis-1.0.jar -e=pos -l=data/sample.imdb.txt}. Then \textit{horn-rules.txt} and can be seen in the same folder with RUMIS jar file where explored positive rules are listed.
 
-\textit{Non-monotonic rule mining.} Please run the following command for executing IMDB nonmonotonic rule mining with OPM ranking: \textit{\$ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2}. One may just want to revise top 10 Horn rules with the \textit{-t} option: \textit{\$ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2 -t=10}. After these commands, \textit{revised-rules.txt} in the root folder is the list of non-monotonic rules.
+\textit{Nonmonotonic rule mining.} Please run the following command for executing IMDB nonmonotonic rule mining with OPM ranking: \textit{\$ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2}. One may just want to revise top 10 Horn rules with the \textit{-t} option: \textit{\$ java -jar rumis-1.0.jar -e=neg -p=horn-rules.txt -l=data/sample.imdb.txt -r=2 -t=10}. After these commands, \textit{revised-rules.txt} in the root folder is the list of nonmonotonic rules.
 
 \textit{Automatic experiment.} The working folder can be built as a directory \textit{data/experiment/IMDB} that contains all of the following files. First, please rename \textit{sample.imdb.txt} file to \textit{ideal.data.txt} in the directory. Second, please sample the learning data of the ideal KG file and get \textit{training.data.txt}. Third, one should generate \textit{horn-rules.txt} as an output of positive rule mining function applied to the learning data. If only some positive rules need to be revised, we can list them in \textit{selected.horn-rules.txt}. Finally, DLV binary file should be downloaded to the directory and renamed as \textit{dlv.bin}.
 
