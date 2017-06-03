@@ -136,6 +136,9 @@ $\mi{r_2:  actedIn(X, Z)}  \leftarrow
           {\scriptsize 
 $\mi{r_3:  isPoliticianOf(X, Z)}  \leftarrow
         \mi{hasChild(X, Y)}{,}\mi{isPoliticianOf(Y, Z)}{,}$$ \textbf{not}$  $\mi{vicepresidentOfMexico(X)} $} \\
+          {\scriptsize 
+$\mi{r_4:  hasCitizenship(X, Z)}  \leftarrow
+        \mi{hasFather(X, Y)}{,}\mi{hasCitizenship(Y, Z)}{,}$$ \textbf{not}$  $\mi{countryOfTheUK(Z)} $} \\
  \end{tabular}            
     \caption{Examples of the Revised Rules}
  \label{fig:examplerules}
@@ -143,4 +146,4 @@ $\mi{r_3:  isPoliticianOf(X, Z)}  \leftarrow
 \end{figure}
 
 \textbf{Example rules.} Some interesting examples are presented in the Figure~\ref{fig:examplerules}. Here 
-the rule $\mi{r_1}$ mined from IMDB dataset indicates that normally movies in the same series are written by the same writer except the American movies. The rule $\mi{r_3}$ generated from YAGO reveals an interesting pattern from domain politics, i.e, typically fathers and sons are politicians in the same country unless the fathers are Mexican vice-presidents.
+the rule $\mi{r_1}$ mined from IMDB dataset indicates that normally movies in the same series are written by the same writer except the American movies. The rule $\mi{r_3}$ generated from YAGO reveals an interesting pattern from domain politics, i.e, typically fathers and sons are politicians in the same country unless the fathers are Mexican vice-presidents. Being mined from Wikidata Football, the rule $\mi{r_4}$ shows that father and son usually have the same citizenship, except the case that the father holds a citizenship in the UK (countries such as England, Northern Ireland, Wales and Scotland).
