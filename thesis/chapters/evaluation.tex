@@ -5,9 +5,9 @@ In this chapter, we present the evaluation results of the RUMIS system. We focus
 
 \section{Setting}
 
-\textbf{Dataset.} To measure the quality of rules and their predictions, the ideal graph $\cG^i$, i.e. the KG containing all true facts about the real world, is required. However, constructing $\cG^i$ is obviously not possible. Hence, instead we treat the given graph as an approximation of the ideal KG $\cG^i_{\mi{appr}}$. To obtain the available (training) KG we remove from $\cG^i_{\mi{appr}}$ 20\% of the facts from every binary relation, and retain all unary facts in $\cG^i_{\mi{appr}}$. It is guaranteed that there is no isolated vertex in $\cG^a$, i.e the node which is not connected to any other nodes in the graph. In our experiment, YAGO3~\cite{ref28}, Wikidata Football~\footnote{\url{https://www.wikidata.org}} and IMDB~\footnote{\url{http://people.mpi-inf.mpg.de/~gadelrab/downloads/ILP2016}} datasets are used as the ideal KGs. YAGO3 covers a variety of domains and contains roughly 1.8 million entities, 38 predicates, and 20.7 million triples. Meanwhile, IMDB only focus on movie content collected from the IMDB website~\footnote{\url{http://imdb.com}}, there are 112 thousand entities, 38 predicates and 583 thousand triples in this KG. Besides, to construct the Wikidata Football for our experiments, we sample 1 million facts with 238 thousand entities and 443 predicates from football domain of the original KG. %In details, thanks to randomly choosing facts in the format \textit{$<$subject$>$ $<$memberOf$>$ $<$object$>$} where \textit{$<$object$>$} is in the list of manually chosen popular football clubs, famous footballers and coaches (seeding set) are sampled from Wikidata. After that, all the entities that can be visited from any node in the seeding set (chosen entities) by following paths (one or more consecutive links/edges/predicates in the original Wikidata KG) are collected for the ideal KG. These chosen entities and all possible links between them in the original Wikidata KG are sampled for the smaller scale. This new KG is expected to have specific domain where facts are related to football and sports.
+\textbf{Dataset.} To measure the quality of rules and their predictions, the ideal graph $\cG^i$, i.e. the KG containing all true facts about the real world, is required. However, constructing $\cG^i$ is obviously not possible. Hence, instead we treat the given graph as an approximation of the ideal KG $\cG^i_{\mi{appr}}$. To obtain the available (training) KG $\cG^a$ we remove from $\cG^i_{\mi{appr}}$ 20\% of the facts for every binary relation, and retain all unary facts in $\cG^i_{\mi{appr}}$. It is guaranteed that there is no isolated vertex in $\cG^a$, i.e the node which is not connected to any other nodes in the graph. In our experiment, YAGO3~\cite{ref28}, Wikidata Football and IMDB~\footnote{\url{http://people.mpi-inf.mpg.de/~gadelrab/downloads/ILP2016}} datasets are used as the ideal KGs. YAGO3 covers a variety of domains and contains roughly 1.8 million entities, 38 predicates, and 20.7 million triples. Meanwhile, IMDB only focus on movie content collected from the IMDB website~\footnote{\url{http://imdb.com}}, there are 112 thousand entities, 38 predicates and 583 thousand triples in this KG. Besides, to construct the Wikidata Football for our experiments, we sample 1 million facts with 238 thousand entities and 443 predicates from football domain of the original Wikidata KG~\footnote{\url{https://www.wikidata.org}}. %In details, thanks to randomly choosing facts in the format \textit{$<$subject$>$ $<$memberOf$>$ $<$object$>$} where \textit{$<$object$>$} is in the list of manually chosen popular football clubs, famous footballers and coaches (seeding set) are sampled from Wikidata. After that, all the entities that can be visited from any node in the seeding set (chosen entities) by following paths (one or more consecutive links/edges/predicates in the original Wikidata KG) are collected for the ideal KG. These chosen entities and all possible links between them in the original Wikidata KG are sampled for the smaller scale. This new KG is expected to have specific domain where facts are related to football and sports.
 
-Figure~\ref{fig:venn} depicts the ideal, approximated and available KGs as well the extended KGs $\cG_{\cR_{\mi{H}}}$, $\cG_{\cR_{\mi{NM}}}$ obtained by resp. applying $\cR_H$ and its revision $\cR_{NM}$ to $\cG$. The RUMIS system aims to tackle the KG completion problem by narrowing the difference between the $\cG_{\cR_{\mi{NM}}}$ and $ \cG^i$.
+Figure~\ref{fig:venn} depicts the ideal, approximated and available KGs as well the extended KGs $\cG_{\cR_{\mi{H}}}$, $\cG_{\cR_{\mi{NM}}}$ obtained by resp. applying $\cR_H$ and its revision $\cR_{NM}$ to $\cG^a$. The RUMIS system aims to tackle the KG completion problem by narrowing the difference between the $\cG_{\cR_{\mi{NM}}}$ and $ \cG^i$.
 
 \begin{figure}[ht]
 \centering
@@ -20,7 +20,7 @@ Figure~\ref{fig:venn} depicts the ideal, approximated and available KGs as well 
 
 \section{Ruleset Quality}
 
-We present the evaluation results of the rule quality assessment in Table~\ref{tab:rules_quality1} and~\ref{tab:rules_quality2} for YAGO, IMDB and Wikidata Football, resp. For every row in the tables, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ that will be subsequently revised. Then the \textit{average conviction} of the rules and their revisions are found for YAGO, IMDB and Wikidata Football by using RUMIS. Naturally the quality of the revised rules is better than that of their positive versions w.r.t. conviction. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision levels, the enhancement ratio between positive rules and their revisions increases and reaches the peak of $7\%$ and $10\%$ for top-100 IMDB and top-30 Wikidata rules, resp. The results show that the introduction of negated atoms significantly boost up the rule precision.
+We present the evaluation results of the rule quality assessment in Table~\ref{tab:rules_quality1} and~\ref{tab:rules_quality2} for YAGO, IMDB and Wikidata Football, resp. For every row in the tables, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ that will be subsequently revised. Then the \textit{average conviction} of the rules and their revisions are found for YAGO, IMDB and Wikidata Football by using RUMIS. Naturally the quality of the revised rules is better than that of their positive versions w.r.t. conviction. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision levels, the enhancement ratio between positive rules and their revisions increases and reaches the peak of $7.8\%$ and $10.3\%$ for top-100 IMDB and top-30 Wikidata Football rules, resp. The results show that the introduction of negated atoms significantly boost up the rule precision.
 
 \begin{table}[ht]
 \centering
@@ -41,43 +41,46 @@ We present the evaluation results of the rule quality assessment in Table~\ref{t
 \centering
 \input{tables/rules_quality_wikidata}
 \smallskip
-\caption{The Average Quality of the Top Positive and Nonmonotonic Rules for Sample Wikidata.}
+\caption{The Average Quality of the Top Positive and Nonmonotonic Rules for Wikidata Football.}
 \label{tab:rules_quality2}
 %\vspace*{-1.7\baselineskip}
 \end{table}
 
-The enhancement ratio trend between revisions of the three ranking methods and the top positive rules is shown in Figure~\ref{fig_1_5_yago} and~\ref{fig_1_5_imdb} for YAGO and IMDB, resp. One can observe that the rate has an uptrend, in general the more low quality Horn rules are added to the top ruleset, the higher is the improvement rate. The Naive ranking shows the best results w.r.t. the rule quality, which is obviously expected.
+The enhancement ratio between revisions of the three ranking methods and the top positive rules is shown in Figure~\ref{fig_1_5_imdb}, ~\ref{fig_1_5_yago} and ~\ref{fig_1_5_wikidata} for IMDB, YAGO and Wikidata Football, resp. In these figures, the height and the width are corresponding to the top-$k$ and the improvement rate of the average conviction. One can observe that the rate has an uptrend, in general the more low quality Horn rules are added to the top ruleset, the higher is the improvement rate. The Naive ranking shows the best results w.r.t. the rule quality, which is obviously expected.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.85\textwidth]{figures/table_1_5_yago.jpeg}
-\caption{The Average Quality Improvement Rate (\%) against Positive Rules in YAGO.}
-\label{fig_1_5_yago}
-\end{figure}
-
-With IMDB dataset, the results of Naive and OPM ranking are approximately the same and slightly better than PM ranking. For the top 100 rules, the best average improvement of 7.8\% is achieved. It can be seen that the quality of positive rules around top 100 are much worse than the rest, resulting in the sharp increase between top 80 and 100 in the Figure~\ref{fig_1_5_imdb}.
+With IMDB dataset, the results of Naive and OPM ranking are approximately the same and slightly better than PM ranking. For the top-100 rules, the best average improvement of 7.8\% is achieved. It can be seen that the quality of positive rules around top-100 are much worse than the rest, resulting in the sharp increase between top-80 and top-100 in the Figure~\ref{fig_1_5_imdb}.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/table_1_5_imdb.jpeg}
-\caption{The Average Quality Improvement Rate (\%) against Positive Rules in IMDB.}
+\caption{The Average Conviction Improvement Rate (\%) of Rules Revised using Our Methods and IMDB Dataset.}
 \label{fig_1_5_imdb}
 \end{figure}
 
-In general, the improvement rates for average conviction in Wikidata increase. However, the contrast between the higest and the lowest is not as large as in IMDB data due to the qualities of top 100 Horn rules in Wikidata are not highly different.
+In general, the improvement rates for the average conviction in YAGO increase. However, the contrast between the highest and the lowest in this figure is not as large as in IMDB data due to the qualities of top-100 Horn rules in YAGO are not highly different.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/table_1_5_yago.jpeg}
+\caption{The Average Conviction Improvement Rate (\%) of Rules Revised using Our Methods and YAGO Dataset.}
+\label{fig_1_5_yago}
+\end{figure}
+
+As regards the Wikidata Football, Figure~\ref{fig_1_5_wikidata} witnesses an interesting pattern where the improvement rate significantly climbs from top-5 to top-30. It can be seen that RUMIS mines very good exceptions for positive rules around top-30, 
+resulting in a peak of more than 10\% enhancement ratio for this dataset.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/table_1_5_wikidata.jpeg}
-\caption{The Average Quality Improvement Rate (\%) against Positive Rules in WIKIDATA.}
+\caption{The Average Conviction Improvement Rate (\%) of Rules Revised using Our Methods and Wikidata Football Dataset.}
 \label{fig_1_5_wikidata}
 \end{figure}
 
 \section{Prediction Quality}
 
-We now describe the evaluation procedure for estimating the predictive quality of the revised rules. Among top-50 (for IMDB, YAGO3) and top-300 (for Wikidata) positive rules mined from the KG, 5 are sampled as $\cR_H$ and then the revision procedure is applied for these rules. After that, the predictions of the rules from $\cR_H$ and their revisions are analyzed to evaluate our approaches.
+We now describe the evaluation procedure for estimating the predictive quality of the revised rules. Among top-50 (for IMDB, YAGO3) and top-300 (for Wikidata Football) positive rules mined from the KG, 5 are sampled as $\cR_H$ and then the revision procedure is applied for these rules. After that, the predictions of the rules from $\cR_H$ and their revisions are analyzed to evaluate our approaches.
 
-To this end, these rulesets are applied to the learning KG $\cG$ and the corresponding predicted facts are generated by DLV tool~\cite{dlv}. Subsequently, we achieve $\cG_{\cR_\mi{H}}$, $\cG_{\cR_\mi{N}}$, $\cG_{\cR_\mi{PM}}$ and $\cG_{\cR_\mi{OPM}}$ for $\cR_H$ and revisions of $\cR_H$, resp. The statistics is shown in Table~\ref{tab:prediction_res}, where the first three columns indicate the head relations of the rules in $\cR_H$, the number of new predictions, i.e. predicted facts not included in $\cG$ and the part of these predictions which are outside $\cG^i_{\mi{appr}}$, resp. The statistics in the second and third columns is available for positive rules and all of their revisions.
+To this end, these rulesets are applied to the learning KG $\cG^a$ and the corresponding predicted facts are generated by DLV tool~\cite{dlv}. Subsequently, we achieve $\cG_{\cR_\mi{H}}$, $\cG_{\cR_\mi{N}}$, $\cG_{\cR_\mi{PM}}$ and $\cG_{\cR_\mi{OPM}}$ for $\cR_H$ and revisions of $\cR_H$, resp. The statistics is shown in Table~\ref{tab:prediction_res}, where the first three columns indicate the head relations of the rules in $\cR_H$, the number of new predictions, i.e. predicted facts not included in $\cG^a$ and the part of these predictions which are outside $\cG^i_{\mi{appr}}$, resp. The statistics in the second and third columns is available for positive rules and all of their revisions.
 
 \begin{table}[ht]
 \centering
@@ -88,22 +91,22 @@ To this end, these rulesets are applied to the learning KG $\cG$ and the corresp
 %\vspace*{-1.7\baselineskip}
 \end{table}
 
-One can see that not many predicted facts are included in $\cG^i_{\mi{appr}}$ ($\approx$9\% for IMDB and $\approx$2\% for YAGO ideal KGs). This can be explained by the fact that YAGO is a highly incomplete general purpose KG. Moreover, it is crucial to note that the sampled Horn rules and their revisions generate approximately the same number of correctly predicted facts which are present in $\cG^i_{\mi{appr}}$. More specifically, in YAGO $\cG_{\mi{\cR_H}}\backslash \cG_{\mi{\cR_{PM}}} \cap \cG^i_{\mi{appr}}=\emptyset$ means that the grey region has nothing in common with the approximated ideal KG in Figure~\ref{fig:venn}, in other words, the addition of exceptions does not lead to the removal of correct predictions from $\cG^i_{\mi{appr}}$.
+One can see that not many predicted facts are included in $\cG^i_{\mi{appr}}$ ($\approx$9\% for IMDB and $\approx$2\% for YAGO ideal KGs). This can be explained by the fact that YAGO is a highly incomplete general purpose KG. Moreover, it is crucial to note that the sampled Horn rules and their revisions generate approximately the same number of correctly predicted facts which are present in $\cG^i_{\mi{appr}}$. More specifically, in all three datasets $\cG_{\mi{\cR_H}}\backslash \cG_{\mi{\cR_{PM}}} \cap \cG^i_{\mi{appr}}=\emptyset$ means that the grey region has nothing in common with the approximated ideal KG in Figure~\ref{fig:venn}, in other words, the addition of exceptions does not lead to the removal of correct predictions from $\cG^i_{\mi{appr}}$.
 
-To guarantee the fairness of the comparison between predictions generated by different rulesets, it is necessary to keep the $\cR_H$ not totally imprecise. Indeed, provided that the sampled positive rules always generate incorrect facts, inserting arbitrary negated atoms may filter out some incorrect predictions, resulting in the rule enhancement, yet the rules themselves would still be of poor quality. Furthermore, observe that the number of predictions made by $\cR_H$ outside $\cG^i_{\mi{appr}}$ (third column of Table~\ref{tab:prediction_res}) is rather large. To verify these predictions, unfortunately no ground truth is available. Thus, we have to manually check the generated facts using the Internet resource. Since the number of the facts to be checked is huge, we propose to randomly select maximum 20 new predictions for each head predicate in $\cR_H$ and verify them. For the IMDB, YAGO and Wikidata Football, 70\%, 30\% and 55\% of predictions respectively turned out to be in deed correct. This shows that the quality of the positive rules that we start with is acceptable.
+To guarantee the fairness of the comparison between predictions generated by different rulesets, it is necessary to keep the $\cR_H$ not totally incorrect. Indeed, provided that the sampled positive rules always generate inaccurate facts, inserting arbitrary negated atoms may filter out some incorrect predictions, resulting in the rule enhancement, yet the rules themselves would still be of poor quality. Furthermore, observe that the number of predictions made by $\cR_H$ outside $\cG^i_{\mi{appr}}$ (third column of Table~\ref{tab:prediction_res}) is rather large. To verify these predictions, unfortunately no ground truth is available. Thus, we have to manually check the generated facts using the Internet resource. Since the number of the facts to be checked is huge, we propose to randomly select maximum 20 new predictions for each head predicate in $\cR_H$ and verify them. For the IMDB, YAGO and Wikidata Football, 70\%, 30\% and 55\% of predictions respectively turned out to be indeed correct. This shows that the quality of the positive rules that we start with is acceptable.
 
 Since the size of the set difference between predictions made by $\cR_H$ and extended by applying $\cR_H$ and its revisions is also huge, we have to proceed further with sampling to evaluate the predictive quality of the revision. Here for each head relation from the set differences $\cG_{\cR_\mi{H}}\backslash \cG_{\cR_{\mi{N}}}$, $\cG_{\cR_\mi{H}}\backslash \cG_{\cR_{\mi{PM}}}$ and $\cG_{\cR_\mi{H}}\backslash \cG_{\cR_{\mi{OPM}}}$, 10 facts have been randomly sampled for manual check. In the last column of the Table~\ref{tab:prediction_res}, the proportion of incorrect facts in the difference sets are presented. These facts are called ``correctly removed", since they correspond to false prediction made by $\cR_H$ but avoided by the respective revisions (the grey region in in Figure~\ref{fig:venn}). For the IMDB dataset, among all the revision strategies, OPM ranking always performs best with 57.75\% and 97.5\% correctly removed predictions for IMDB and Wikidata Football, resp. Meanwhile, all the rankers demonstrate the same results (85\%) for the YAGO KG. Since the predictive power of the positive rules in IMDB is better than those in YAGO, the revision of the latter makes a more visible impact than the former.
 
 \section{Running Times}
 
-In our experiment, top 100 positive rules are mined from IMDB and YAGO while this number of Wikidata is 300. Figure~\ref{tab:run_time} provides statistics about running times (in seconds) of three different steps in the RUMIS system. More specifically, the second row of this table indicates how long for mining Horn rules and exception witness set. In addition, the third and fourth rows present the average running times (over three ranking methods Naive, PM, OPM) of resp. ranking exception and extending KG with DLV.
+In our experiment, top-100 positive rules are mined from IMDB and YAGO while this number of Wikidata Football is 300. Table~\ref{tab:run_time} provides statistics about running times (in seconds) of three different steps in the RUMIS system. More specifically, the second row of this table indicates how long for mining Horn rules and exception witness sets. In addition, the third and fourth rows present the average running times (over three ranking methods Naive, PM, OPM) of resp. ranking exceptions and extending KGs with DLV.
 
 \begin{table}[ht]
 \centering
 \footnotesize{
 \begin{tabular}{|c|ccc|}
 \hline
-\textbf{Steps} & \textbf{IMDB} & \textbf{YAGO} & \textbf{WIKIDATA}\\
+\textbf{Steps} & \textbf{IMDB} & \textbf{YAGO} & \textbf{Wikidata Football}\\
 \hline
  \textit{Horn Rule and EWS Mining} & 7 & 68 & 193\\
  \textit{Exception Ranking} & 32 & 111 & 2940\\
@@ -117,7 +120,7 @@ In our experiment, top 100 positive rules are mined from IMDB and YAGO while thi
 %\vspace*{-1.7\baselineskip}
 \end{table}
 
-It can be seen that the numbers of Wikidata for the first two steps are the largest since the quantity of positive rules mined from this dataset is much bigger than that of IMDB or YAGO. Meanwhile, among the three datasets, YAGO has the most number of facts, resulting in the longest time to extend the KG using DLV (310 seconds).
+It can be seen that the numbers of Wikidata Football for the first two steps are the largest since the quantity of positive rules mined from this dataset is much bigger than that of IMDB or YAGO. Meanwhile, among the three datasets, YAGO has the most number of facts, resulting in the longest time to extend the KG using DLV (310 seconds).
 
 \begin{figure}[t]
     \centering
