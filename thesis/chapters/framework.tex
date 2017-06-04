@@ -53,7 +53,7 @@ In Figure~\ref{fig1.1} the blue and red triangles indicate the $\mi{NS(r1,\cG)}$
 
 The intuition is that given the ideal KG $\cG^i$, the $r$-(ab)normal substitutions correspond to the ground rules which are satisfied (resp. not satisfied) in $\cG^i$. Observe that, due to the incompleteness of the data under the OWA, $r$-abnormal substitutions are not guaranteed to be such in the ideal graph. To differentiate the ``incorrectly'' and ``correctly'' detected substitutions in the $r$-abnormal set, we exploit the notions of \emph{exception witness sets} ($\mi{EWS}$) defined as follows.
 
-\begin{definition}[Exception Witness Set] \label{def:ews}
+\begin{definition}[Exception witness set] \label{def:ews}
 Given a KG $\cG$ and a rule $r$ extracted from it, let $\cV$ be a set of all variables appearing in $\mi{r}$. Let $\vec{X}$ be a variable subset of $\cV$ and, let $EWS^+(r,\cG,\vec{X}), EWS^-(r,\cG,\vec{X})$ be sets of predicates $EWS^+(r,\cG,\vec{X})=\{e: \exists \theta \in \mi{ABS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$ and $EWS^-(r,\cG,\vec{X})=\{e: \exists \theta \in \mi{NS(r,\cG)}: \mi{e}(\vec{X}\theta)\in \cG\}$. Exception witness set of $r$ \wrt\ $\cG$ and $\vec{X}$ is a set difference $EWS(r,\cG,\vec{X})=EWS^+(r,\cG,\vec{X}) \setminus EWS^-(r,\cG,\vec{X})$. In other words, it is a set of predicates covering some substitutions in $ABS(r, \cG)$ but none in $NS(r, \cG)$.
 \end{definition}
 
@@ -63,7 +63,7 @@ Consider the rule $r1$, the KG $\cG$ in Figure~\ref{fig1.1} and $\cV = \{X\}$. B
 
 Since the binary exceptions might appear in the rules, generally the cardinality of $\mi{EWS}$s can be large. Indeed, for a rule with $n$ distinct variables, there can be up to $n^2$ elements in $\mi{EWS}$s. In addition, a good rule revision may have many exceptions in its body, thus our QHTR problem can have exponentially many solutions. To avoid the explosion of the revision search space, in the current work, we consider only rules with a single negated atom. Handling exception combination is left for future work.
 
-\begin{definition}[Safely Predicted Facts] \label{def:spf}
+\begin{definition}[Safely predicted facts] \label{def:spf}
 Given a KG $\cG$, a positive rule $r$ extracted from it and all exception candidates, the safely predicted facts of $r$ w.r.t. $\cG$ are all facts from $\cG_{r'} \setminus \cG$ where $r'$ is constructed from $r$ by adding all exception candidates of $r$ to its body at once.
 \end{definition}
 
@@ -80,7 +80,7 @@ Since the number of facts in the KG is large, there can be many candidates in th
 \smallskip
 
 
-\noindent \textbf{Step 2 and 3.} For each $r \in \cR_H$ with the head $\mi{h(X,Y)}$, the candidates in $\mi{EWS(r,\cG,X)}$, $\mi{EWS(r,\cG,Y)}$ and $\mi{EWS(r,\cG,\tuple{X,Y})}$ are found. First, $E^+ = \{not\_h(a, b): \exists \theta = \{X/a, Y/b, ... \} \in ABS(r, \cG)\}$ and $E^+ = \{not\_h(a, b): \exists \theta = \{X/c, Y/d, ... \} \in NS(r, \cG)\}$ are computed. Second, we exploit a typical ILP function $learn(E^+, E^-, \cG)$ (e.g., from~\cite{ref55}), which finds hypothesis containing the head $not\_h(X, Y)$ and an atomic predicate in the format $p(X), p'(Y)$ or $p''(X, Y)$ as the body. We want to find hypothesis that do not infer any elements in $E^-$, while inferring some element in $E^+$. The EWS is the collection of relations appearing in the body of the resulting hypothesis.
+\noindent \textbf{Step 2 and 3.} For each $r \in \cR_H$ with the head $\mi{h(X,Y)}$, the candidates in $\mi{EWS(r,\cG,X)}$, $\mi{EWS(r,\cG,Y)}$ and $\mi{EWS(r,\cG,\tuple{X,Y})}$ are found. First, $E^+ = \{not\_h(a, b): \exists \theta = \{X/a, Y/b, ... \} \in ABS(r, \cG)\}$ and $E^- = \{not\_h(a, b): \exists \theta = \{X/c, Y/d, ... \} \in NS(r, \cG)\}$ are computed. Second, we exploit a typical ILP function $learn(E^+, E^-, \cG)$ (e.g., from~\cite{ref55}), which finds hypothesis containing the head $not\_h(X, Y)$ and an atomic predicate in the format $p(X), p'(Y)$ or $p''(X, Y)$ as the body. We want to find hypothesis that do not infer any elements in $E^-$, while inferring some element in $E^+$. The EWS is the collection of relations appearing in the body of the resulting hypothesis.
 
 Second, potential revisions of each rule $r$ in $\cR_H$ are constructed by alternatively inserting one exception from $EWS(r)$ to the rule body. In total, with every rule $r$, we have $|\mi{EWS(r,\cG,X)}|+|\mi{EWS(r,\cG,Y)}|+|\mi{EWS(r,\cG,\tuple{X,Y})}|$ exceptions to consider.
 
