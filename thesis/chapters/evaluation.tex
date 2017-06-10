@@ -16,7 +16,7 @@ Figure~\ref{fig:venn} depicts the ideal, approximated and available KGs as well 
 \label{fig:venn}
 \end{figure}
 
-\textbf{Experimental Setup.} In our experiments, RUMIS is executed on a server which has Linux OS, 40 cores and 400GB RAM memory. As the data preparation, positive rules in the format \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} are extracted from $\cG^a$ and ranked according to the \textit{absolute support} measure. The positive rule mining function of RUMIS (see Chapter~\ref{chap:system}) is exploited in this step. After that, the positive rules are revised following the approach presented in Chapter~\ref{chap:frame}. The \textit{conviction} measure is used as the $\mi{rm}$ rule measure. Various exception ranking earlier described strategies are realized in RUMIS. The resulting rule revisions are stored in $\mi{\cR_{N}}$, $\mi{\cR_{PM}}$, and $\mi{\cR_{OPM}}$, resp.
+\textbf{Experimental Setup.} In our experiments, RUMIS is executed on a server which has Linux OS, 40 cores and 400GB RAM memory. As the data preparation, positive rules in the format \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} are extracted from $\cG^a$ and ranked according to the \textit{absolute support} measure. The positive rule mining function of RUMIS (see Chapter~\ref{chap:system}) is exploited in this step. After that, the positive rules are revised following the approach presented in Chapter~\ref{chap:frame}. The \textit{conviction} measure is used as the $\mi{rm}$ rule measure. Various exception ranking earlier described strategies are realized in RUMIS. The resulting rule revisions are stored in $\mi{\cR_{N}}$, $\mi{\cR_{PM}}$ and $\mi{\cR_{OPM}}$, resp.
 
 \section{Ruleset Quality}
 

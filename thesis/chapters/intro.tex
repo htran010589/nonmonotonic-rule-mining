@@ -13,7 +13,7 @@ r1: livesIn(X,Z) \leftarrow isMarriedTo(X,Y), livesIn(Y,Z)
 \end{equation}
 \label{rule1}
 
-can be discovered from the graph in Figure~\ref{fig1.1} and exploited to predict new facts $livesIn(Alice, Berlin), livesIn(Dave, Chicago)$ and $livesIn(Lucy, Amsterdam)$. However, in reality the first two facts might be incorrect, since $Alice$ and $Dave$ are researchers and the rule $r1$ might have researcher as an exception. Exceptions should be taken into account in rule learning to improve both the rule quality and the quality of facts it produces.
+\noindent can be discovered from the graph in Figure~\ref{fig1.1} and exploited to predict new facts $livesIn(Alice, Berlin), livesIn(Dave, Chicago)$ and $livesIn(Lucy, Amsterdam)$. However, in reality the first two facts might be incorrect, since $Alice$ and $Dave$ are researchers and the rule $r1$ might have researcher as an exception. Exceptions should be taken into account in rule learning to improve both the rule quality and the quality of facts it produces.
 
 \begin{figure}[t]
 \centering
@@ -52,7 +52,7 @@ Our approach consists of four steps. First, for each positive rule, we try to fi
 \item We introduce a framework to revise and improve quality of positive rules by incorporating negated atoms into their bodies.
 \item We propose a method for finding exception candidates, assessing their quality and ranking them based on the defined measures. With the novel concept of \textit{partial materialization}, the cross-talk between the rules is taken into account during the revision process.
 \item We implement a system that mines Horn rules from a KG and enriches them with exceptions.
-\item We construct benchmarks and conduct experiments with YAGO3 and IMDB datasets to test the above-mentioned methodology and the partial materialization concept.
+\item We construct benchmarks and conduct experiments with YAGO3, IMDB and a fragment of Wikidata to test the above-mentioned methodology and the partial materialization concept.
 \end{itemize}
 
 \section{Structure}
