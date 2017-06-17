@@ -132,6 +132,7 @@
    \let\\\space
 }
 \newcommand*{\supervisor}[1]{\def\supname{#1}}
+\newcommand*{\advisor}[1]{\def\adname{#1}}
 \newcommand*{\examiner}[1]{\def\examname{#1}}
 \newcommand*{\reviewer}[1]{\def\revname{#1}}
 \newcommand*{\degree}[1]{\def\degreename{#1}}
@@ -147,7 +148,8 @@
 \newcommand*{\FACULTY}[1]{\def\FACNAME{#1}}
 \newcommand*{\subject}[1]{\def\subjectname{#1}}
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
-\supervisor  {Dr. Daria Stepanova}
+\supervisor  {Prof. Dr. Gerhard Weikum}
+\advisor  {Dr. Daria Stepanova}
 \examiner    {}
 \reviewer    {Prof. Dr. Gerhard Weikum}
 \degree      {}
@@ -247,9 +249,15 @@
       \bigskip
       \bigskip
       \bigskip 
+      {\large betreut von / advised by \par}
+      {\LARGE \adname \par}
+ 
+      \bigskip
+      \bigskip
+      \bigskip 
       {\large begutachtet von / reviewers \par}
       {\LARGE  \supname \par}
-      {\LARGE \revname \par}
+      {\LARGE \adname \par}
       
       %\vfill
       %{\large A thesis submitted in partial fulfillment for the \par}
