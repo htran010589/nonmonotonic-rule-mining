@@ -2,12 +2,12 @@
 \abstract{
 \addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
 
-These days witness the development of information extraction, which leads to the birth of knowledge graphs (KGs), i.e., large collections of relational facts. Since these KGs are automatically built, it is not guaranteed that they are precise and complete. Hence, Open World Assumption (OWA) should be applied to them, that is, facts which are not given can be treated as true or false. Rule mining approaches can be applied to tackle the problem of KG completion. However, the existing approaches focus on positive rules, which do not take exceptions or negated atoms into consideration and may therefore infer wrong facts. Recently a rule-based technique that bridges this gap has been proposed, but it only works on a flattened presentation of a KG, that is, a collection of unary facts. This work extends the previous results and presents an approach for mining nonmonotonic rules (i.e., rules with exceptions in the body) from KGs in the relational format. The contributions of this thesis are:
+These days witness the development of information extraction, which leads to the birth of knowledge graphs (KGs), i.e., large collections of relational facts. Since these KGs are automatically built, it is not guaranteed that they are precise and complete. Hence, Open World Assumption (OWA) should be applied to them, that is, facts which are not present in the KG can be treated as true or as false. Rule mining approaches can be applied to tackle the problem of KG completion. However, the existing approaches focus on positive rules, which do not take exceptions or negated atoms into consideration and may therefore infer wrong facts. Recently, a rule-based technique that bridges this gap has been proposed, but it only works on a flattened presentation of a KG, that is, a collection of unary facts. This work extends the previous results and presents an approach for mining nonmonotonic rules (i.e., rules with exceptions in the body) from KGs in the relational format. The contributions of this thesis are:
 
 \begin{itemize}
-\item We have introduced a framework to revise and improve quality of positive rules.
-\item We have proposed a method for finding exception candidates, assessing their quality and ranking them based on chosen measure with a novel concept of partial materialization.
-\item We have implemented a system and conducted experiments to test our methodology. The obtained results are promising and they demonstrate the effectiveness of our approach.
+\item We have introduced a theory revision framework for learning nonmonotonic relational rules from KGs.
+\item We have proposed a method for finding exception candidates for positive rules, assessing their quality and ranking them based on several measures with a novel concept of partial materialization.
+\item We have developed a system prototype RUMIS and conducted experiments to test our methodology. The obtained results are promising and they demonstrate the effectiveness of our approach.
 
 \end{itemize}
 \clearpage
