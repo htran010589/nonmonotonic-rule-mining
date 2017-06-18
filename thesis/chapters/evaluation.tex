@@ -7,7 +7,7 @@ In this chapter, we present the evaluation results of the RUMIS system. We focus
 
 \textbf{Dataset.} To measure the quality of rules and their predictions, the ideal graph $\cG^i$, i.e. the KG containing all true facts about the real world, is required. However, constructing $\cG^i$ is obviously not possible. Hence, instead we treat the given graph as an approximation of the ideal KG $\cG^i_{\mi{appr}}$. To obtain the available (training) KG $\cG^a$ we remove from $\cG^i_{\mi{appr}}$ 20\% of the facts for every binary relation, and retain all unary facts in $\cG^i_{\mi{appr}}$. It is guaranteed that there is no isolated vertex in $\cG^a$, i.e the node which is not connected to any other nodes in the graph. In our experiment, YAGO3~\cite{ref28}, Wikidata Football and IMDB~\footnote{\url{http://people.mpi-inf.mpg.de/~gadelrab/downloads/ILP2016}} datasets are used as the ideal KGs. YAGO3 covers a variety of domains and contains roughly 1.8 million entities, 38 predicates, and 20.7 million triples. Meanwhile, IMDB only focuses on movie content collected from the IMDB website~\footnote{\url{http://imdb.com}}; there are 112K entities, 38 predicates and 583K triples in this KG. To construct the Wikidata Football for our experiments, we sample 1M facts with 238K entities and 443 predicates from the football domain of the original Wikidata KG~\footnote{\url{https://www.wikidata.org}}. %In details, thanks to randomly choosing facts in the format \textit{$<$subject$>$ $<$memberOf$>$ $<$object$>$} where \textit{$<$object$>$} is in the list of manually chosen popular football clubs, famous footballers and coaches (seeding set) are sampled from Wikidata. After that, all the entities that can be visited from any node in the seeding set (chosen entities) by following paths (one or more consecutive links/edges/predicates in the original Wikidata KG) are collected for the ideal KG. These chosen entities and all possible links between them in the original Wikidata KG are sampled for the smaller scale. This new KG is expected to have specific domain where facts are related to football and sports.
 
-Figure~\ref{fig:venn} depicts the ideal, approximated and available KGs as well the extended KGs $\cG_{\cR_{\mi{H}}}$, $\cG_{\cR_{\mi{NM}}}$ obtained by resp. applying $\cR_H$ and its revision $\cR_{NM}$ to $\cG^a$. The RUMIS system aims to tackle the KG completion problem by reducing the difference between the $\cG_{\cR_{\mi{NM}}}$ and $ \cG^i$.
+Figure~\ref{fig:venn} depicts the ideal, approximated and available KGs as well the extended KGs $\cG_{\cR_{\mi{H}}}$, $\cG_{\cR_{\mi{NM}}}$ obtained by respectively. applying $\cR_H$ and its revision $\cR_{NM}$ to $\cG^a$. The RUMIS system aims to tackle the KG completion problem by reducing the difference between the $\cG_{\cR_{\mi{NM}}}$ and $ \cG^i$.
 
 \begin{figure}[ht]
 \centering
@@ -16,11 +16,11 @@ Figure~\ref{fig:venn} depicts the ideal, approximated and available KGs as well 
 \label{fig:venn}
 \end{figure}
 
-\textbf{Experimental Setup.} In our experiments, RUMIS is executed on a server which has Linux OS, 40 cores and 400GB RAM memory. As the data preparation, positive rules in the format \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} are extracted from $\cG^a$ and ranked according to the \textit{absolute support} measure. The positive rule mining function of RUMIS (see Chapter~\ref{chap:system}) is exploited in this step. After that, the positive rules are revised following the approach presented in Chapter~\ref{chap:frame}. The \textit{conviction} measure is used as the $\mi{rm}$ rule measure. Various earlier described exception ranking strategies are then executed in RUMIS. The resulting rule revisions are stored in $\mi{\cR_{N}}$, $\mi{\cR_{PM}}$ and $\mi{\cR_{OPM}}$, resp.
+\textbf{Experimental Setup.} In our experiments, RUMIS is executed on a server which has Linux OS, 40 cores and 400GB RAM memory. As the data preparation, positive rules in the format \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)} are extracted from $\cG^a$ and ranked according to the \textit{absolute support} measure. The positive rule mining function of RUMIS (see Chapter~\ref{chap:system}) is exploited in this step. After that, the positive rules are revised following the approach presented in Chapter~\ref{chap:frame}. The \textit{conviction} measure is used as the $\mi{rm}$ rule measure. Various earlier described exception ranking strategies are then executed in RUMIS. The resulting rule revisions are stored in $\mi{\cR_{N}}$, $\mi{\cR_{PM}}$ and $\mi{\cR_{OPM}}$, respectively.
 
 \section{Ruleset Quality}
 
-We present the evaluation results of the rule quality assessment in Table~\ref{tab:rules_quality1} and~\ref{tab:rules_quality2} for YAGO, IMDB and Wikidata Football, resp. For every row in the tables, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ that will be subsequently revised. Then the \textit{average conviction} of the rules and their revisions are found for YAGO, IMDB and Wikidata Football using RUMIS. Naturally, the quality of the revised rules is better than that of their positive versions w.r.t. conviction. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision, the enhancement ratio between positive rules and their revisions increases and reaches the peak of $7.8\%$ and $10.3\%$ for top-100 IMDB and top-30 Wikidata Football rules, resp. The results show that the introduction of negated atoms significantly boosts up the rules' precision.
+We present the evaluation results of the rule quality assessment in Table~\ref{tab:rules_quality1} and~\ref{tab:rules_quality2} for YAGO, IMDB and Wikidata Football, respectively. For every row in the tables, we fix the top-$\mi{k}$ ($k=5,30,$ ... $100$) positive rules $\cR_{H}$ that will be subsequently revised. Then the \textit{average conviction} of the rules and their revisions are found for YAGO, IMDB and Wikidata Football using RUMIS. Naturally, the quality of the revised rules is better than that of their positive versions w.r.t. conviction. Besides, in general while the average quality of every column has a decreasing trend with the appearance of rules having lower precision, the enhancement ratio between positive rules and their revisions increases and reaches the peak of $7.8\%$ and $10.3\%$ for top-100 IMDB and top-30 Wikidata Football rules, respectively. The results show that the introduction of negated atoms significantly boosts up the rules' precision.
 
 \begin{table}[ht]
 \centering
@@ -29,7 +29,7 @@ We present the evaluation results of the rule quality assessment in Table~\ref{t
 \centering
 \input{tables/rules_quality_yago_imdb}
 \smallskip
-\caption{The Average Quality of the Top Positive and Nonmonotonic Rules for YAGO, IMDB.}
+\caption{The average quality of the Top Positive and Nonmonotonic Rules for YAGO, IMDB.}
 \label{tab:rules_quality1}
 %\vspace*{-1.7\baselineskip}
 \end{table}
@@ -41,7 +41,7 @@ We present the evaluation results of the rule quality assessment in Table~\ref{t
 \centering
 \input{tables/rules_quality_wikidata}
 \smallskip
-\caption{The Average Quality of the Top Positive and Nonmonotonic Rules for Wikidata Football.}
+\caption{The average quality of the Top Positive and Nonmonotonic Rules for Wikidata Football.}
 \label{tab:rules_quality2}
 %\vspace*{-1.7\baselineskip}
 \end{table}
@@ -99,7 +99,7 @@ Since the size of the set difference between predictions made by $\cR_H$ and ext
 
 \section{Running Times}
 
-In our experiment, top-100 positive rules are mined from IMDB and YAGO, while this number for Wikidata Football is 300. Table~\ref{tab:run_time} provides statistics about running times (in seconds) of three different steps in the RUMIS system. More specifically, the second row of this table indicates how long it taks RUMIS to mine Horn rules and exception witness sets. In addition, the third and fourth rows present the average running times (over three ranking methods Naive, PM, OPM) of resp. ranking exceptions and extending KGs using DLV.
+In our experiment, top-100 positive rules are mined from IMDB and YAGO, while this number for Wikidata Football is 300. Table~\ref{tab:run_time} provides statistics about running times (in seconds) of three different steps in the RUMIS system. More specifically, the second row of this table indicates how long it taks RUMIS to mine Horn rules and exception witness sets. In addition, the third and fourth rows present the average running times (over three ranking methods Naive, PM, OPM) of respective ranking exceptions and extending KGs using DLV.
 
 \begin{table}[ht]
 \centering
@@ -115,7 +115,7 @@ In our experiment, top-100 positive rules are mined from IMDB and YAGO, while th
 \end{tabular}
 }
 \smallskip
-\caption{Running Times for Each Step of the Three Datasets}
+\caption{Running times for each step of the three datasets}
 \label{tab:run_time}
 %\vspace*{-1.7\baselineskip}
 \end{table}

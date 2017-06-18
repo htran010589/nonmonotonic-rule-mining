@@ -12,7 +12,7 @@ The World Wide Web Consortium (W3C) defines the Semantic Web and the Resource De
 \begin{figure}
 \centering
 \includegraphics[width=0.65\textwidth]{figures/semantic_web.png}
-\caption{The Semantic Web Technologies}
+\caption{The Semantic Web technologies}
 \label{fig1}
 \end{figure}
 
@@ -53,7 +53,7 @@ IMDB & 117,551 & 134,639 & 17,049 & 39 \\
 \hline
 \end{tabular}
 \end{center}
-\caption{List of Typical Knowledge Graphs}
+\caption{List of typical knowledge graphs}
 \label{table1}
 \end{table}
 
@@ -75,7 +75,7 @@ In the rest of this section, we review some of the most prominent logic-based re
 
 \subsection{Inductive Logic Programming Systems}
 
-Inductive Logic Programming~\cite{ref9} (ILP) is a combination of Machine Learning and Logic Programming fields whose goals is to generate hypothesis from background knowledge and specific examples, which are normally classified into positive and negative ones. The aim is to find a hypothesis that covers all positive examples and none of the negative ones.
+Inductive Logic Programming~\cite{ref9} (ILP) is a combination of Machine Learning and Logic Programming fields whose goal is to generate hypothesis from background knowledge and specific examples, which are normally classified into positive and negative ones. The aim is to find a hypothesis that covers all positive examples and none of the negative ones.
 
 Rule mining is a core problem in ILP, however, applying ILP algorithms to Semantic Web data is problematic for the following reasons. First, ILP tools are not scalable for large knowlege graphs such as YAGO, Freebase, Wikidata~\cite{ref10}. In some experiments conducted in~\cite{ref10}, it has been shown that the cutting edge ILP tools, for example, ALEPH~\cite{ref14, ref10}, QuickFoil~\cite{ref15, ref10} require several days to process the YAGO KG.
 
@@ -97,7 +97,7 @@ Though this algorithm is among the most popular ones in ILP, experiments in~\cit
 \textbf{QuickFOIL.} To address the scalability issues of ILP systems, an optimized version of FOIL~\cite{ref36}, i.e., the system QuickFOIL~\cite{ref45} has been developed, which performs the following steps:
 
 \begin{itemize}
-\item First, QuickFOIL produces a new Horn rule that maximizes the difference between the number of covered positive and negative examples in the training data. This criteria is different from traditional ILP where among the rules that do not infer negative examples, the one covering highest number of positive examples is chosen.
+\item First, QuickFOIL produces a new Horn rule that maximizes the difference between the number of covered positive and negative examples in the training data. This criteria is different from traditional ILP where among the rules that do not infer negative examples, the one covering the highest number of positive examples is chosen.
 \item Second, whenever the chosen rule covers an example, the latter is removed from the set of positive ones~\cite{ref10}. Intuitively, the collection of found rules at each step can be used to summarize original dataset. QuickFOIL uses pruning techniques where duplicates (i.e., rules that are equivalent to those generated before) are removed to process large-scale input with millions of facts.
 
 \end{itemize}
@@ -122,7 +122,7 @@ Like other ILP platforms, Relational Learning tools only focus on positive (Horn
 
 Rules with exceptions are traditionally learned by nonmonotonic rule learning systems. The research work in~\cite{ref32} is devoted to the problem of learning nonmonotonic rules. The idea behind it is to convert an ILP task into an ALP~\cite{ref31} instance, and then, the way the ALP instance is solved can be mapped to the ILP one 's solutions. However, this system adopts CWA, and therefore cannot be applied in our work. There is another nonmonotonic rule learning method that accounts for incomplete data~\cite{ref34} where a coordination of Semantic Web ontology and positive/negative rules is exploited to explore patterns. The work~\cite{ref34} pays attention to complicated communication between different reasoning components. This is different from the current work where we focus on the quality of the predicted data.
 
-\textbf{Nonmonotonic Rule Mining under OWA over the flattened data.} The work~\cite{ref12} made some steps towards learning nonmonotonic programs from incomplete KGs. However, the developed methods work only on flattened KGs, i.e., the graphs in which all RDF triples are converted to unary facts by concatenating predicates and objects. More specifically, a binary fact such as \textit{bornIn(s1, US)} is transformed to a fact in the unary form \textit{bornInUS(s1)}. This way, a KG is converted to a binary transaction table (for example, see Table~\ref{table2}) where 1 (resp., 0) appears in the intersection of a column $c$ and a row $r$ if the fact $c(r)$ is present (resp., not present) in the KG. For instance, Table~\ref{table2} reflects that \textit{bornInUS(s1)} is included in the KG while \textit{livesInUS(s6)} is not. This representation allows one to apply highly optimized Item Set Mining algorithms~\cite{ref37} to extract data patterns which can then be used to create positive association rules~\cite{ref13}.
+\textbf{Nonmonotonic Rule Mining under OWA over the flattened data.} The work~\cite{ref12} made some steps towards learning nonmonotonic programs from incomplete KGs. However, the developed methods work only on flattened KGs, i.e., the graphs in which all RDF triples are converted to unary facts by concatenating predicates and objects. More specifically, a binary fact such as \textit{bornIn(s1, US)} is transformed to a fact in the unary form \textit{bornInUS(s1)}. This way, a KG is converted to a binary transaction table (for example, see Table~\ref{table2}) where 1 (respectively, 0) appears in the intersection of a column $c$ and a row $r$ if the fact $c(r)$ is present (respectively, not present) in the KG. For instance, Table~\ref{table2} reflects that \textit{bornInUS(s1)} is included in the KG while \textit{livesInUS(s6)} is not. This representation allows one to apply highly optimized Item Set Mining algorithms~\cite{ref37} to extract data patterns which can then be used to create positive association rules~\cite{ref13}.
 
 \begin{table}
 \begin{center}
@@ -152,7 +152,7 @@ s10 & 0 & 1 & 0 & 1\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Transaction Table as Flattened Knowledge Graph Data.}
+\caption{Transaction table as flattened knowledge graph data.}
 \label{table2}
 \end{table}
 
@@ -164,6 +164,6 @@ Both statistics-based and logic-based approaches are internal methods, i.e., onl
 
 Wikipedia pages can be used to identify relations between entities~\cite{ref18}. On a larger scale, an algorithm in~\cite{ref19} is developed to learn lexical predicate patterns, for example, \textit{isMarriedTo} predicate in Figure~\ref{fig1.1} can be expressed  as ``married to", ``engaged with", etc in some documents. Then these patterns are being searched for all over the Internet to find subject-object pairs corresponding to them. These new pairs can be added to the original graph. For example, in ~\cite{ref19} a  big text corpus is used to learn relations.
 
-In~\cite{ref20} the authors refine KGs by exploiting the assumption that entities appearing in the same table should have the same relations. Similarly, ~\cite{ref21} and ~\cite{ref22} exploit page lists and HTML tables, resp.
+In~\cite{ref20} the authors refine KGs by exploiting the assumption that entities appearing in the same table should have the same relations. Similarly, ~\cite{ref21} and ~\cite{ref22} exploit page lists and HTML tables, respectively.
 
 Instead of documents, interlinks between the same entities in different KGs can be used to add new facts~\cite{ref23, ref24}. More specifically, relations of two entities in Freebase can be inserted into YAGO if they also appear in the latter KG. In~\cite{ref25} this approach has been extended to a probabilistic setting, where for every deduced relation a corresponding probabilistic weight is computed.
