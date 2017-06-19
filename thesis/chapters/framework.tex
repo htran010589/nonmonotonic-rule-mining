@@ -68,7 +68,7 @@ Given a KG $\cG$, a positive rule $r$ extracted from it and all exception candid
 \end{definition}
 
 \begin{example}
-Consider the rule $r1$ and the KG $\cG$ in Figure~\ref{fig1.1}, applying $r1$ we obtain the following set \textit{$\{$livesIn(Alice, Berlin), livesIn(Dave, Chicago), livesIn(Lucy, Amstersam)$\}$}. The rule $r1$ revised with exceptions results in \textit{$\{$livesIn(Lucy, Amstersam)$\}$}. Thus, based on Definition~\ref{def:spf}, the fact safely predicted by $r1$ w.r.t. $\cG$ is \textit{$\{$livesIn(Lucy, Amstersam)$\}$}.
+Consider the rule $\mi{r1}$ and the KG $\cG$ in Figure~\ref{fig1.1}, applying $\mi{r1}$ we obtain the following set \textit{$\{$livesIn(Alice, Berlin), livesIn(Dave, Chicago), livesIn(Lucy, Amstersam)$\}$}. The rule $\mi{r1}$ revised with exceptions results in \textit{$\{$livesIn(Lucy, Amstersam)$\}$}. Thus, based on Definition~\ref{def:spf}, the fact safely predicted by $\mi{r1}$ w.r.t. $\cG$ is \textit{$\{$livesIn(Lucy, Amstersam)$\}$}.
 \end{example}
 
 \section{Methodology}\label{sec:meth}
@@ -96,7 +96,7 @@ The \textbf{Partial Materialization (PM)} ranking strategy selects the optimal r
 score(r^j_i,\cG)=\dfrac{\mi{rm(r^j_i,\cG_{\cR'})+rm({r^j_i}^{aux},\cG_{\cR'})}}{2}
 \end{equation}
 
-where $\cR'$ contains rules $r_l'$ generated from each $r_l$ in $\cR_H\backslash r_i$ by inserting all exceptions of $r_l$ into $body(r_l)$ at once. In other words, for every $r_i$, $\cG_{\cR'}$ contains facts from $\cG$ and \textit{safe predictions} of all rules from $\cR \backslash r_i$. By injecting all exceptions into every rule, we decrease the possibility of wrong predictions.
+\noindent where $\cR'$ contains rules $r_l'$ generated from each $r_l$ in $\cR_H\backslash r_i$ by inserting all exceptions of $r_l$ into $body(r_l)$ at once. In other words, for every $r_i$, $\cG_{\cR'}$ contains facts from $\cG$ and \textit{safe predictions} of all rules from $\cR \backslash r_i$. By injecting all exceptions into every rule, we decrease the possibility of wrong predictions.
 
 \begin{example}\label{ex:as}
 Consider the following KG $\cG$ and a revised set $\cR$ where each Horn rule has one exception candidate:\\
@@ -118,7 +118,7 @@ Consider the following KG $\cG$ and a revised set $\cR$ where each Horn rule has
 
 \noindent            
 
-Consider the rule $r_2$ and a set of other rules $\cR' = \cR \setminus \{r_2\} = \{r1\}$. Based on the definition, we have $\cG_{\cR'} = \cG \cup \{livesIn(brad,berlin)\}$, $conf(r_2, \cG_{\cR'}) = \dfrac{0}{1} = 0$ and $conv(r_2, \cG_{\cR'}) = \dfrac{1 - 0}{1 - 0} = 1$. Similarly, we have $conv(r_2^{aux}, \cG_{\cR'}) = \dfrac{1 - 1}{1 - 0} = 0$, hence, $score(r_2, \cG_{\cR'})$ is the average of two above conviction values and equals to $0.5$.
+Consider the rule $r_2$ and a set of other rules $\cR' = \cR \setminus \{r_2\} = \{r_1\}$. Based on the definition, we have $\cG_{\cR'} = \cG \cup \{livesIn(brad,berlin)\}$, $conf(r_2, \cG_{\cR'}) = \dfrac{0}{1} = 0$ and $conv(r_2, \cG_{\cR'}) = \dfrac{1 - 0}{1 - 0} = 1$. Similarly, we have $conv(r_2^{aux}, \cG_{\cR'}) = \dfrac{1 - 1}{1 - 0} = 0$, hence, $score(r_2, \cG_{\cR'})$ is the average of two above conviction values and equals to $0.5$.
 }\qed
 \end{example}
 

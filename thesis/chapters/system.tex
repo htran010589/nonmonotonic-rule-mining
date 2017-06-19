@@ -88,8 +88,8 @@ Positive Rule Mining component computes a set of rules of the form \textit{h(X, 
 \DontPrintSemicolon
 \SetAlgoLined
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{KG $\cG$, $h$, $p$, $q$ predicates in the rule $r2$}
-\Output{Normal and abnormal sets of the rule $r2$}
+\Input{KG $\cG$, $h$, $p$, $q$ predicates in the rule \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
+\Output{Normal and abnormal sets of the rule \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
 \BlankLine
 $NS \leftarrow \{\}$\\
 $ABS \leftarrow \{\}$\\
@@ -123,8 +123,8 @@ This component computes normal and abnormal instance sets for a given rule and a
 \DontPrintSemicolon
 \SetAlgoLined
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{KG $\cG$, $h$, $p$, $q$ predicates of the rule $r2$}
-\Output{Exception witness set of the rule $r2$}
+\Input{KG $\cG$, $h$, $p$, $q$ predicates of the rule \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
+\Output{Exception witness set of the rule \textit{h(X, Z) $\leftarrow$ p(X, Y), q(Y, Z)}}
 \BlankLine
 $NS \leftarrow getNormalSet(\cG, h, p, q)$\\
 $ABS \leftarrow getAbnormalSet(\cG, h, p, q)$\\
