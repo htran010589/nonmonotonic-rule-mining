@@ -148,8 +148,7 @@
 \newcommand*{\FACULTY}[1]{\def\FACNAME{#1}}
 \newcommand*{\subject}[1]{\def\subjectname{#1}}
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
-\supervisor  {Prof. Dr. Gerhard Weikum}
-\advisor  {Dr. Daria Stepanova}
+\supervisor  {Dr. Daria Stepanova}
 \examiner    {}
 \reviewer    {Prof. Dr. Gerhard Weikum}
 \degree      {}
@@ -249,15 +248,9 @@
       \bigskip
       \bigskip
       \bigskip 
-      {\large betreut von / advised by \par}
-      {\LARGE \adname \par}
- 
-      \bigskip
-      \bigskip
-      \bigskip 
       {\large begutachtet von / reviewers \par}
-      {\LARGE  \supname \par}
-      {\LARGE \adname \par}
+      {\LARGE \supname \par}
+      {\LARGE  \revname \par}
       
       %\vfill
       %{\large A thesis submitted in partial fulfillment for the \par}
